@@ -106,14 +106,14 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             color: theme.cardTextPrimary,
           }}
         >
-          <div className="w-full h-full border border-dashed border-amber-500/30 rounded-lg p-2 flex flex-col items-center justify-center">
-            <span className="text-[10px] tracking-[0.25em] font-sans uppercase opacity-80">
-              {wedding.headline}
+          <div className="w-full h-full border border-dashed rounded-lg p-2 flex flex-col items-center justify-center" style={{ borderColor: theme.cardBorder || '#d4af37' }}>
+            <span className="text-[10px] tracking-[0.25em] font-sans uppercase font-bold" style={{ color: theme.cardAccentColor || theme.cardTextPrimary }}>
+              {wedding.headline || 'YOU ARE CORDIALLY INVITED'}
             </span>
-            <p className="font-script text-2xl text-amber-200 mt-0.5">
+            <p className="font-script text-3xl font-bold mt-1" style={{ color: theme.cardTextPrimary }}>
               {wedding.coupleName1} & {wedding.coupleName2}
             </p>
-            <div className="mt-1 text-[11px] font-serif tracking-wider opacity-90">
+            <div className="mt-1 text-xs font-serif font-medium tracking-wider" style={{ color: theme.cardTextSecondary || theme.cardTextPrimary }}>
               {wedding.weddingDate} · {wedding.cityState}
             </div>
           </div>

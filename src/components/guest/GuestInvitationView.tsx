@@ -129,18 +129,18 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                 }}
               >
                 <div className="space-y-1">
-                  <span className="text-[10px] tracking-[0.25em] uppercase opacity-75 font-sans">
+                  <span className="text-[10px] tracking-[0.25em] uppercase font-sans font-bold" style={{ color: theme.cardAccentColor || theme.cardTextSecondary || theme.cardTextPrimary }}>
                     {wedding.headline}
                   </span>
-                  <h2 className="font-script text-4xl text-amber-100 font-normal mt-2 leading-none">
+                  <h2 className="font-script text-4xl font-bold mt-2 leading-none" style={{ color: theme.cardTextPrimary }}>
                     {wedding.coupleName1}
                   </h2>
-                  <span className="font-serif text-xl italic text-amber-300/80 block">&</span>
-                  <h2 className="font-script text-4xl text-amber-100 font-normal leading-none">
+                  <span className="font-serif text-xl italic font-bold block" style={{ color: theme.cardAccentColor || theme.cardTextPrimary }}>&</span>
+                  <h2 className="font-script text-4xl font-bold leading-none" style={{ color: theme.cardTextPrimary }}>
                     {wedding.coupleName2}
                   </h2>
                 </div>
-                <div className="mt-4 pt-3 border-t border-amber-400/20 text-[11px] font-sans opacity-80">
+                <div className="mt-4 pt-3 border-t text-[11px] font-sans font-medium" style={{ borderColor: theme.cardBorder, color: theme.cardTextSecondary || theme.cardTextPrimary }}>
                   Celebrate our wedding ceremony & reception
                 </div>
               </div>

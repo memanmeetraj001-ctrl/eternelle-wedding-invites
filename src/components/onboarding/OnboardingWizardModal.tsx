@@ -519,25 +519,25 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
               {initials || 'É'}
             </div>
 
-            <p className="text-[9px] tracking-widest uppercase mb-1 font-mono font-bold opacity-80" style={{ color: currentTheme.cardAccentColor || currentTheme.cardTextPrimary }}>
+            <p className="text-[9px] tracking-widest uppercase mb-1 font-mono font-bold" style={{ color: currentTheme.cardAccentColor || currentTheme.cardTextPrimary }}>
               TOGETHER WITH THEIR FAMILIES
             </p>
 
-            <h3 className="font-serif text-xl font-bold tracking-tight mb-2 leading-tight">
+            <h3 className="font-serif text-xl font-bold tracking-tight mb-2 leading-tight" style={{ color: currentTheme.cardTextPrimary }}>
               {partner1 || 'Scarlett'} & {partner2 || 'Julian'}
             </h3>
 
-            <p className="text-[11px] mb-3 font-medium opacity-90">
+            <p className="text-[11px] mb-3 font-semibold" style={{ color: currentTheme.cardTextSecondary || currentTheme.cardTextPrimary }}>
               {weddingDate || 'June 18, 2027'} • {venueName || 'Villa Balbiano'}
             </p>
 
-            <div className="w-12 h-0.5 opacity-40 my-1" style={{ backgroundColor: currentTheme.cardAccentColor }} />
+            <div className="w-12 h-0.5 my-1.5" style={{ backgroundColor: currentTheme.cardAccentColor || '#d4af37' }} />
 
-            <p className="text-[10px] italic opacity-85 mt-2 font-medium">
+            <p className="text-[10px] italic mt-2 font-medium" style={{ color: currentTheme.cardTextSecondary || currentTheme.cardTextPrimary }}>
               {cityState || 'Lake Como, Italy'}
             </p>
 
-            <div className="mt-4 pt-3 border-t border-black/10 w-full flex items-center justify-between text-[9px] opacity-75 font-mono">
+            <div className="mt-4 pt-3 border-t w-full flex items-center justify-between text-[9px] font-mono font-semibold" style={{ borderColor: 'rgba(0,0,0,0.15)', color: currentTheme.cardTextSecondary || currentTheme.cardTextPrimary }}>
               <span>3D Wax Reveal</span>
               <span>1-Tap RSVP</span>
             </div>

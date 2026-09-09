@@ -449,14 +449,14 @@ export function LandingPage({
             <p className="text-[10px] tracking-widest uppercase mb-1 font-mono font-bold" style={{ color: selectedPreset.cardAccentColor || selectedPreset.cardTextPrimary }}>
               {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
             </p>
-            <h3 className="font-serif text-2xl font-bold tracking-tight mb-2">
+            <h3 className="font-serif text-2xl font-bold tracking-tight mb-2" style={{ color: selectedPreset.cardTextPrimary }}>
               {wedding.coupleName1} & {wedding.coupleName2}
             </h3>
-            <p className="text-xs mb-3 font-medium opacity-90">
+            <p className="text-xs mb-3 font-semibold" style={{ color: selectedPreset.cardTextSecondary || selectedPreset.cardTextPrimary }}>
               {wedding.weddingDate} • {wedding.venueName}
             </p>
-            <div className="w-16 h-0.5 opacity-40 my-1" style={{ backgroundColor: selectedPreset.cardAccentColor }} />
-            <p className="text-[11px] italic opacity-90 mt-2 font-medium">
+            <div className="w-16 h-0.5 my-1.5" style={{ backgroundColor: selectedPreset.cardAccentColor || '#d4af37' }} />
+            <p className="text-[11px] italic mt-2 font-medium" style={{ color: selectedPreset.cardTextSecondary || selectedPreset.cardTextPrimary }}>
               Dress Code: {wedding.dressCode.title}
             </p>
           </div>
