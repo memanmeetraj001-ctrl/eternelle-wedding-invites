@@ -881,7 +881,7 @@ export function LandingPage({
           <div className="flex items-center gap-3">
             <BrandLogo size="sm" showText={false} />
             <span className="font-serif text-sm tracking-widest text-amber-200/80 font-medium">
-              ÉTERNELLER
+              ÉTERNELLE
             </span>
           </div>
           

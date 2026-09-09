@@ -49,7 +49,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ size = 'md', showText = tr
       {showText && (
         <div>
           <span className="font-serif text-lg tracking-[0.2em] text-amber-100 font-semibold block leading-none">
-            ETERNELLER
+            ÉTERNELLE
           </span>
           <span className="text-[9px] text-stone-400 font-sans tracking-wider block mt-0.5">
             LUXURY DIGITAL SUITES

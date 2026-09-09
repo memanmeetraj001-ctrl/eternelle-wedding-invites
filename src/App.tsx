@@ -43,8 +43,14 @@ export function App() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [viewMode, setViewMode] = useState<AppViewMode>('landing');
-  const [isMobileFrame, setIsMobileFrame] = useState(true);
+  const isDirectInviteUrl = typeof window !== 'undefined' && (
+    window.location.pathname.startsWith('/invite') || 
+    window.location.pathname.startsWith('/invitation') ||
+    window.location.search.includes('view=guest')
+  );
+
+  const [viewMode, setViewMode] = useState<AppViewMode>(() => isDirectInviteUrl ? 'guest' : 'landing');
+  const [isMobileFrame, setIsMobileFrame] = useState(!isDirectInviteUrl);
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState<'signin' | 'signup'>('signup');
@@ -214,7 +220,7 @@ export function App() {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-serif text-lg tracking-widest text-amber-100 font-medium">
-                ÉTERNELLER
+                ÉTERNELLE
               </span>
               {user?.plan && (
                 <span className={'px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase ' + (
