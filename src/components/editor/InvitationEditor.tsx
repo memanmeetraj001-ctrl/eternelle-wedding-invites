@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Palette, Heart, Calendar, MapPin, Clock, Hotel, 
   Sparkles, Music, Image as ImageIcon, Save, CheckCircle2,
   Plus, Trash2, Eye, Utensils, HelpCircle, Navigation, 
-  Upload, Check, Volume2, VolumeX, ExternalLink, Tag
+  Upload, Check, Volume2, VolumeX, ExternalLink, Tag,
+  Play, Pause, Radio, Disc
 } from 'lucide-react';
-import { WeddingData, ThemeConfig, ThemeId, TimelineEvent, HotelLodging, MenuItem, WeddingFAQ, PhotoMoment } from '../../types/invitation';
-import { THEME_PRESETS } from '../../constants/themes';
+import { WeddingData, ThemeConfig, ThemeId, TimelineEvent, HotelLodging, MenuItem, WeddingFAQ, PhotoMoment, MusicTrack } from '../../types/invitation';
+import { THEME_PRESETS, CURATED_MUSIC_OPTIONS } from '../../constants/themes';
 
 interface InvitationEditorProps {
   wedding: WeddingData;
@@ -36,6 +37,45 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
   const [newPhotoCaption, setNewPhotoCaption] = useState('');
   const [newPhotoDate, setNewPhotoDate] = useState('');
   const [photoUploadError, setPhotoUploadError] = useState<string | null>(null);
+
+  // Audio Preview State
+  const [previewingTrackId, setPreviewingTrackId] = useState<string | null>(null);
+  const [previewAudio, setPreviewAudio] = useState<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewAudio) {
+        previewAudio.pause();
+      }
+    };
+  }, [previewAudio]);
+
+  const handleTogglePreviewTrack = (track: MusicTrack) => {
+    if (previewingTrackId === track.id) {
+      // Pause
+      if (previewAudio) {
+        previewAudio.pause();
+      }
+      setPreviewingTrackId(null);
+    } else {
+      // Stop old audio if running
+      if (previewAudio) {
+        previewAudio.pause();
+      }
+      const audio = new Audio(track.url);
+      audio.play().catch(() => {});
+      audio.onended = () => setPreviewingTrackId(null);
+      setPreviewAudio(audio);
+      setPreviewingTrackId(track.id);
+    }
+  };
+
+  const handleSelectTrack = (track: MusicTrack) => {
+    handleFieldChange('backgroundMusicUrl', track.url);
+    if (!wedding.musicEnabled) {
+      handleFieldChange('musicEnabled', true);
+    }
+  };
 
   const notifyChange = (updated: WeddingData) => {
     onChangeWedding(updated);
@@ -1104,15 +1144,16 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
             <div>
               <h3 className="font-serif text-2xl text-stone-900 font-normal">Background Romance Music & Audio</h3>
               <p className="text-xs text-stone-500 mt-0.5">
-                Play a romantic instrumental track when guests open their 3D wax seal envelope.
+                Play romantic instrumental music when guests open their 3D wax seal envelope. Choose from 5 curated royalty-free tracks or use your own custom MP3.
               </p>
             </div>
 
-            <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200 space-y-4">
+            {/* Master Toggle */}
+            <div className="p-5 rounded-2xl bg-white border border-amber-200/80 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-semibold text-stone-900 text-sm">Enable Ambient Background Music</h4>
-                  <p className="text-xs text-stone-500">Auto-plays with subtle volume when envelope seal is unboxed.</p>
+                  <p className="text-xs text-stone-500">Auto-plays with smooth loop when the envelope is unsealed.</p>
                 </div>
                 <button
                   type="button"
@@ -1130,30 +1171,147 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
               </div>
 
               {wedding.musicEnabled && (
-                <div className="space-y-3 pt-3 border-t border-stone-200">
+                <div className="space-y-6 pt-4 border-t border-stone-200">
+                  {/* Curated 5 Best Free Tracks */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-stone-600 mb-1">Direct MP3 Audio URL</label>
-                    <input
-                      type="url"
-                      value={wedding.backgroundMusicUrl}
-                      onChange={(e) => handleFieldChange('backgroundMusicUrl', e.target.value)}
-                      className="w-full px-4 py-2 rounded-xl border border-stone-300 bg-white text-xs text-stone-900 font-mono"
-                      placeholder="https://cdn.pixabay.com/...romantic-piano.mp3"
-                    />
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-mono uppercase text-amber-700 tracking-wider font-bold">
+                        5 Curated Royalty-Free Wedding Tracks
+                      </span>
+                      <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 font-medium">
+                        ✨ 100% Free & No License Required
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                      {CURATED_MUSIC_OPTIONS.map((track) => {
+                        const isSelected = wedding.backgroundMusicUrl === track.url;
+                        const isPreviewing = previewingTrackId === track.id;
+
+                        return (
+                          <div
+                            key={track.id}
+                            className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+                              isSelected
+                                ? 'bg-amber-50/70 border-amber-400 ring-2 ring-amber-400/20 shadow-sm'
+                                : 'bg-[#FAF7F2] border-stone-200 hover:border-amber-300 hover:bg-white'
+                            }`}
+                          >
+                            <div className="space-y-2">
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="flex items-center gap-2.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleTogglePreviewTrack(track)}
+                                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-xs ${
+                                      isPreviewing
+                                        ? 'bg-rose-600 text-white animate-pulse'
+                                        : 'bg-white hover:bg-stone-100 text-stone-900 border border-stone-300'
+                                    }`}
+                                    title={isPreviewing ? 'Pause Preview' : 'Listen Preview'}
+                                  >
+                                    {isPreviewing ? <Pause size={16} /> : <Play size={16} className="ml-0.5 text-stone-900" />}
+                                  </button>
+                                  <div>
+                                    <h5 className="font-semibold text-xs text-stone-900 leading-tight">
+                                      {track.title}
+                                    </h5>
+                                    <span className="text-[10px] text-stone-500">
+                                      {track.artist}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-stone-200/70 text-stone-700">
+                                    {track.genre}
+                                  </span>
+                                  {track.duration && (
+                                    <span className="text-[10px] font-mono text-stone-500">
+                                      {track.duration}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+
+                              <p className="text-[11px] text-stone-600 leading-relaxed font-light pl-1">
+                                {track.description}
+                              </p>
+                            </div>
+
+                            <div className="pt-3 mt-3 border-t border-stone-200/60 flex items-center justify-between">
+                              <button
+                                type="button"
+                                onClick={() => handleTogglePreviewTrack(track)}
+                                className="text-[11px] font-semibold text-stone-600 hover:text-stone-900 flex items-center gap-1 cursor-pointer"
+                              >
+                                {isPreviewing ? (
+                                  <span className="text-rose-600 font-bold flex items-center gap-1">
+                                    <Volume2 size={13} /> Playing preview...
+                                  </span>
+                                ) : (
+                                  <span className="flex items-center gap-1">
+                                    <Play size={12} /> Preview Track
+                                  </span>
+                                )}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleSelectTrack(track)}
+                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-amber-700 text-white shadow-xs'
+                                    : 'bg-white hover:bg-amber-100 text-stone-800 border border-stone-300'
+                                }`}
+                              >
+                                {isSelected ? (
+                                  <>
+                                    <Check size={13} />
+                                    <span>Selected</span>
+                                  </>
+                                ) : (
+                                  <span>Use Track</span>
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const audio = new Audio(wedding.backgroundMusicUrl);
-                        audio.play().catch(() => {});
-                      }}
-                      className="px-4 py-2 rounded-xl bg-stone-800 text-stone-100 text-xs font-semibold flex items-center gap-1.5 transition-colors"
-                    >
-                      <Volume2 size={14} />
-                      <span>Test Audio Playback</span>
-                    </button>
+                  {/* Custom MP3 Audio URL (Advanced Option) */}
+                  <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h5 className="font-semibold text-xs text-stone-900">Custom MP3 Audio URL</h5>
+                        <p className="text-[11px] text-stone-500">Paste any direct MP3 audio link (e.g. from your cloud storage, Dropbox, or custom host).</p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center gap-2">
+                      <input
+                        type="url"
+                        value={wedding.backgroundMusicUrl}
+                        onChange={(e) => handleFieldChange('backgroundMusicUrl', e.target.value)}
+                        className="w-full px-4 py-2 rounded-xl border border-stone-300 bg-white text-xs text-stone-900 font-mono focus:outline-none focus:border-amber-400"
+                        placeholder="https://your-host.com/music.mp3"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (previewAudio) previewAudio.pause();
+                          const audio = new Audio(wedding.backgroundMusicUrl);
+                          audio.play().catch(() => {});
+                          setPreviewAudio(audio);
+                        }}
+                        className="w-full sm:w-auto px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer shadow-xs"
+                      >
+                        <Volume2 size={14} />
+                        <span>Test Playback</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

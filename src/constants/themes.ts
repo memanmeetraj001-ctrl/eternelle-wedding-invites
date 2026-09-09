@@ -1,4 +1,4 @@
-import { ThemeConfig, ThemeId, WeddingData, RSVPRecord, MarketplaceOrder } from '../types/invitation';
+import { ThemeConfig, ThemeId, WeddingData, RSVPRecord, MarketplaceOrder, MusicTrack } from '../types/invitation';
 
 export const THEME_PRESETS: Record<ThemeId, ThemeConfig> = {
   'olive-burgundy': {
@@ -390,4 +390,52 @@ export const INITIAL_ORDERS: MarketplaceOrder[] = [
     createdAt: '2026-09-07 14:10',
     claimedAt: '2026-09-07 15:00',
   }
+];
+
+export const CURATED_MUSIC_OPTIONS: MusicTrack[] = [
+  {
+    id: 'piano-romance',
+    title: 'Cinematic Piano Romance',
+    artist: 'Eternelle Studio',
+    genre: 'Solo Piano',
+    duration: '2:45',
+    url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3',
+    description: 'Heartfelt, emotional solo piano ballad with classic romantic chords.',
+  },
+  {
+    id: 'acoustic-vows',
+    title: 'Acoustic Sunset Guitar',
+    artist: 'Acoustic Serenade',
+    genre: 'Fingerstyle Guitar',
+    duration: '3:12',
+    url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=acoustic-guitar-wedding-18088.mp3',
+    description: 'Warm fingerpicked acoustic guitar suited for outdoor, rustic & coastal weddings.',
+  },
+  {
+    id: 'harp-celestial',
+    title: 'Celestial Wedding Harp',
+    artist: 'St. Claire Ensemble',
+    genre: 'Cathedral Harp',
+    duration: '2:15',
+    url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=wedding-harp-10548.mp3',
+    description: 'Ethereal angelic harp arpeggios providing pure fairy-tale luxury.',
+  },
+  {
+    id: 'royal-strings',
+    title: 'Bridgerton String Quartet',
+    artist: 'Mayfair Chamber Players',
+    genre: 'String Quartet',
+    duration: '3:30',
+    url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_bb630cc098.mp3?filename=cinematic-strings-wedding-6430.mp3',
+    description: 'Opulent violin and cello arrangement for grand ballroom ceremonies.',
+  },
+  {
+    id: 'lofi-twilight',
+    title: 'Twilight Lo-Fi Vows',
+    artist: 'Sunset Chords',
+    genre: 'Modern Ambient Lo-Fi',
+    duration: '2:50',
+    url: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f77c30.mp3?filename=lofi-romance-124018.mp3',
+    description: 'Modern, chill romantic beat with soft tape-decay Rhodes piano.',
+  },
 ];

@@ -74,6 +74,16 @@ export interface WeddingFAQ {
   answer: string;
 }
 
+export interface MusicTrack {
+  id: string;
+  title: string;
+  artist: string;
+  genre: string;
+  duration?: string;
+  url: string;
+  description: string;
+}
+
 export interface WeddingData {
   id: string;
   userId?: string;

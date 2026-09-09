@@ -599,6 +599,26 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
             </div>
 
           </section>
+
+          {/* Floating Background Ambient Music Pill */}
+          {wedding.musicEnabled && wedding.backgroundMusicUrl && (
+            <button
+              onClick={toggleMusic}
+              className="fixed bottom-5 right-5 z-50 px-3.5 py-2 rounded-full bg-stone-900/90 backdrop-blur-md border border-amber-400/40 text-amber-200 text-xs font-sans font-medium flex items-center gap-2 shadow-2xl hover:scale-105 transition-all cursor-pointer"
+              title={isPlayingMusic ? 'Mute Music' : 'Play Romantic Music'}
+            >
+              <Music size={14} className={isPlayingMusic ? 'text-amber-400 animate-bounce' : 'text-stone-400'} />
+              <span>{isPlayingMusic ? 'Music On' : 'Play Music'}</span>
+              {isPlayingMusic && (
+                <span className="flex items-center gap-0.5 ml-1">
+                  <span className="w-1 h-3 bg-amber-400 rounded-full animate-pulse" />
+                  <span className="w-1 h-4 bg-amber-400 rounded-full animate-pulse" />
+                  <span className="w-1 h-2 bg-amber-400 rounded-full animate-pulse" />
+                </span>
+              )}
+            </button>
+          )}
+
         </div>
       )}
     </div>
