@@ -51,7 +51,7 @@ export function App() {
   }, []);
 
   // 1. Detect Direct Guest Slug or Admin URL
-  const getInitialRouting = (): { view: AppViewMode; slug?: string } => {
+  const getInitialRouting = (): { view: AppViewMode; slug?: string; isDirectInvite?: boolean } => {
     if (typeof window === 'undefined') return { view: 'landing' };
 
     const path = window.location.pathname.toLowerCase();
@@ -65,17 +65,17 @@ export function App() {
     // Guest Invite Slug Detection: /invite/:slug or /w/:slug or ?invite=:slug
     const inviteMatch = path.match(/^\/(?:invite|w|invitation)\/([a-zA-Z0-9-_]+)/);
     if (inviteMatch && inviteMatch[1]) {
-      return { view: 'guest', slug: inviteMatch[1] };
+      return { view: 'guest', slug: inviteMatch[1], isDirectInvite: true };
     }
 
     const searchParams = new URLSearchParams(search);
     const inviteQuery = searchParams.get('invite') || searchParams.get('i');
     if (inviteQuery) {
-      return { view: 'guest', slug: inviteQuery };
+      return { view: 'guest', slug: inviteQuery, isDirectInvite: true };
     }
 
     if (search.includes('view=guest')) {
-      return { view: 'guest' };
+      return { view: 'guest', isDirectInvite: false };
     }
 
     return { view: 'landing' };
@@ -84,6 +84,7 @@ export function App() {
   const initialRoute = getInitialRouting();
 
   const [user, setUser] = useState<UserAccount | null>(() => {
+    // If opening a direct shared invite link, don't auto-expose creator session to the invite view
     try {
       const saved = localStorage.getItem('eternelle_user_session');
       return saved ? JSON.parse(saved) : null;
@@ -98,7 +99,7 @@ export function App() {
       if (found) return found;
     }
     const savedUserStr = localStorage.getItem('eternelle_user_session');
-    if (savedUserStr) {
+    if (savedUserStr && !initialRoute.slug && !initialRoute.isDirectInvite) {
       try {
         const u: UserAccount = JSON.parse(savedUserStr);
         const userWed = getWeddingForUser(u.id);
@@ -119,7 +120,7 @@ export function App() {
   const [viewMode, setViewMode] = useState<AppViewMode>(() => {
     if (initialRoute.view === 'guest') return 'guest';
     if (initialRoute.view === 'admin') return 'admin';
-    // If user is already logged in, take them straight to dashboard
+    // If user is already logged in, take them to dashboard only if on landing root
     return user ? 'dashboard' : 'landing';
   });
 
@@ -136,34 +137,38 @@ export function App() {
   useEffect(() => {
     async function syncBackendData() {
       try {
+        // If a direct invite slug is opened, fetch that specific wedding
+        if (initialRoute.slug) {
+          const remoteWedding = await apiGetWeddingBySlug(initialRoute.slug);
+          if (remoteWedding) {
+            setWedding(remoteWedding);
+            return; // Do not overwrite with user session wedding when viewing a shared link
+          }
+        }
+
         const remoteUser = await apiGetMe();
         if (remoteUser) {
           setUser(remoteUser);
           saveUser(remoteUser);
 
-          // Fetch user's wedding
-          const myWedding = await apiGetMyWedding();
-          if (myWedding) {
-            setWedding(myWedding);
-            saveWedding(myWedding);
-            saveWeddingForUser(remoteUser.id, myWedding);
-            const remoteRSVPs = await apiGetRSVPs(myWedding.id);
-            setRsvps(remoteRSVPs || []);
-          } else {
-            const localUserWedding = getWeddingForUser(remoteUser.id);
-            if (localUserWedding) {
-              setWedding(localUserWedding);
-              apiSaveWedding(localUserWedding).catch(() => {});
-              const rsvps = getRSVPsForWedding(localUserWedding.id);
-              setRsvps(rsvps || []);
+          // ONLY fetch user's wedding if on home/dashboard (not viewing an invite link)
+          if (!initialRoute.slug && !initialRoute.isDirectInvite) {
+            const myWedding = await apiGetMyWedding();
+            if (myWedding) {
+              setWedding(myWedding);
+              saveWedding(myWedding);
+              saveWeddingForUser(remoteUser.id, myWedding);
+              const remoteRSVPs = await apiGetRSVPs(myWedding.id);
+              setRsvps(remoteRSVPs || []);
+            } else {
+              const localUserWedding = getWeddingForUser(remoteUser.id);
+              if (localUserWedding) {
+                setWedding(localUserWedding);
+                apiSaveWedding(localUserWedding).catch(() => {});
+                const rsvps = getRSVPsForWedding(localUserWedding.id);
+                setRsvps(rsvps || []);
+              }
             }
-          }
-        }
-
-        if (initialRoute.slug) {
-          const remoteWedding = await apiGetWeddingBySlug(initialRoute.slug);
-          if (remoteWedding) {
-            setWedding(remoteWedding);
           }
         }
       } catch (e) {
@@ -409,10 +414,7 @@ export function App() {
 
   const activeTheme = THEME_PRESETS[wedding.themeId] || THEME_PRESETS['olive-burgundy'];
 
-  // Check if viewing as an external guest on a clean slug
-  const isPureGuestMode = viewMode === 'guest' && !user;
-
-  // Render Master Admin Panel
+  // 1. Render Master Admin Panel
   if (viewMode === 'admin') {
     return (
       <MasterAdminPanel
@@ -426,15 +428,61 @@ export function App() {
     );
   }
 
-  // If pure guest mode (opened direct /invite/:slug link with no user session), render full screen invitation
-  if (isPureGuestMode) {
+  // 2. Dedicated Standalone Wedding Invitation Page (Clean link for guests)
+  if (viewMode === 'guest') {
     return (
-      <div className="w-full min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans">
-        <GuestInvitationView
-          wedding={wedding}
-          theme={activeTheme}
-          onOpenRSVP={() => setIsRSVPModalOpen(true)}
-        />
+      <div className="w-full min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans relative select-none">
+        {/* If creator is previewing from dashboard (not via direct shared invite link), show a subtle back button */}
+        {user && !initialRoute.isDirectInvite && (
+          <div className="fixed top-3 left-3 z-50 flex items-center gap-2">
+            <button
+              onClick={() => setViewMode('dashboard')}
+              className="px-3.5 py-1.5 rounded-full bg-stone-900/90 hover:bg-stone-800 text-amber-200 border border-amber-500/40 text-xs font-semibold flex items-center gap-1.5 shadow-2xl backdrop-blur-md cursor-pointer transition-all"
+            >
+              <LayoutDashboard size={13} className="text-amber-400" />
+              <span>← Back to Creator Studio</span>
+            </button>
+            <div className="flex items-center bg-stone-900/90 border border-stone-800 rounded-full p-1 text-xs backdrop-blur-md">
+              <button
+                onClick={() => setIsMobileFrame(false)}
+                className={'p-1.5 rounded-full transition-colors cursor-pointer ' + (!isMobileFrame ? 'bg-amber-950 text-amber-200 shadow' : 'text-stone-400 hover:text-stone-200')}
+                title="Desktop View"
+              >
+                <Monitor size={14} />
+              </button>
+              <button
+                onClick={() => setIsMobileFrame(true)}
+                className={'p-1.5 rounded-full transition-colors cursor-pointer ' + (isMobileFrame ? 'bg-amber-950 text-amber-200 shadow' : 'text-stone-400 hover:text-stone-200')}
+                title="Mobile Phone View"
+              >
+                <Smartphone size={14} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {isMobileFrame ? (
+          <div className="w-full flex-1 flex items-center justify-center p-4 my-auto">
+            <div className="w-full max-w-[400px] h-[860px] max-h-[92vh] rounded-[44px] border-[10px] border-stone-800 shadow-2xl overflow-y-auto relative bg-stone-950 scrollbar-none">
+              <div className="sticky top-0 left-0 right-0 h-6 bg-stone-800 flex items-center justify-center z-50 rounded-t-[32px]">
+                <div className="w-20 h-3.5 bg-stone-950 rounded-full" />
+              </div>
+              <GuestInvitationView
+                wedding={wedding}
+                theme={activeTheme}
+                onOpenRSVP={() => setIsRSVPModalOpen(true)}
+              />
+            </div>
+          </div>
+        ) : (
+          <GuestInvitationView
+            wedding={wedding}
+            theme={activeTheme}
+            onOpenRSVP={() => setIsRSVPModalOpen(true)}
+          />
+        )}
+
+        {/* RSVP Modal */}
         <RSVPModal
           isOpen={isRSVPModalOpen}
           onClose={() => setIsRSVPModalOpen(false)}
@@ -447,9 +495,7 @@ export function App() {
   }
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans selection:bg-amber-200 selection:text-stone-900 ${
-      viewMode === 'guest' ? 'bg-stone-950 text-stone-100' : 'bg-[#FAF7F2] text-stone-900'
-    }`}>
+    <div className="min-h-screen flex flex-col font-sans selection:bg-amber-200 selection:text-stone-900 bg-[#FAF7F2] text-stone-900">
       
       {/* Gumroad Purchase Activation Banner */}
       {purchaseNotification && (
@@ -468,11 +514,7 @@ export function App() {
       )}
 
       {/* TOP HEADER */}
-      <header className={`sticky top-0 z-50 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 transition-colors ${
-        viewMode === 'guest'
-          ? 'bg-stone-950/90 border-stone-800/80 text-stone-100 shadow-2xl'
-          : 'bg-white/95 border-amber-200/70 text-stone-900 shadow-xs'
-      }`}>
+      <header className="sticky top-0 z-50 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 transition-colors bg-white/95 border-amber-200/70 text-stone-900 shadow-xs">
         
         {/* Brand Logo */}
         <div 
@@ -482,9 +524,7 @@ export function App() {
           <BrandLogo size="md" showText={false} />
           <div>
             <div className="flex items-center gap-2">
-              <span className={`font-serif text-lg tracking-widest font-semibold ${
-                viewMode === 'guest' ? 'text-amber-100' : 'text-stone-900'
-              }`}>
+              <span className="font-serif text-lg tracking-widest font-semibold text-stone-900">
                 ÉTERNELLE
               </span>
               {user?.plan && (
@@ -497,9 +537,7 @@ export function App() {
                 </span>
               )}
             </div>
-            <p className={`text-[10px] -mt-0.5 hidden sm:block ${
-              viewMode === 'guest' ? 'text-stone-400' : 'text-stone-500'
-            }`}>
+            <p className="text-[10px] -mt-0.5 hidden sm:block text-stone-500">
               Interactive Luxury Wedding Invitations & Micro-Sites
             </p>
           </div>
@@ -507,9 +545,7 @@ export function App() {
 
         {/* Center Navigation - ONLY DISPLAYED WHEN LOGGED IN */}
         {user ? (
-          <div className={`flex items-center gap-1 p-1 rounded-2xl border text-xs font-sans overflow-x-auto ${
-            viewMode === 'guest' ? 'bg-stone-900/80 border-stone-800' : 'bg-[#FAF7F2] border-stone-200'
-          }`}>
+          <div className="flex items-center gap-1 p-1 rounded-2xl border text-xs font-sans overflow-x-auto bg-[#FAF7F2] border-stone-200">
             <button
               onClick={() => setViewMode('dashboard')}
               className={'px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer ' + (
@@ -524,14 +560,10 @@ export function App() {
 
             <button
               onClick={() => setViewMode('guest')}
-              className={'px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer ' + (
-                viewMode === 'guest'
-                  ? 'bg-amber-950 text-amber-200 border border-amber-600/40 shadow-sm'
-                  : 'text-stone-600 hover:text-stone-900'
-              )}
+              className="px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer text-stone-600 hover:text-stone-900"
             >
-              <Eye size={13} className={viewMode === 'guest' ? 'text-amber-300' : ''} />
-              <span>Live Guest View</span>
+              <Eye size={13} className="text-amber-700" />
+              <span>Preview Live Guest View</span>
             </button>
 
             {user.role === 'admin' && (
@@ -557,48 +589,15 @@ export function App() {
 
         {/* View Switchers & Account Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {viewMode === 'guest' && (
-            <div className="flex items-center bg-stone-900 border border-stone-800 rounded-xl p-1 text-xs">
-              <button
-                onClick={() => setIsMobileFrame(false)}
-                className={'p-1.5 rounded-lg transition-colors cursor-pointer ' + (!isMobileFrame ? 'bg-amber-950/80 text-amber-200 shadow' : 'text-stone-400 hover:text-stone-200')}
-                title="Desktop View"
-              >
-                <Monitor size={15} />
-              </button>
-              <button
-                onClick={() => setIsMobileFrame(true)}
-                className={'p-1.5 rounded-lg transition-colors cursor-pointer ' + (isMobileFrame ? 'bg-amber-950/80 text-amber-200 shadow' : 'text-stone-400 hover:text-stone-200')}
-                title="Mobile Phone View"
-              >
-                <Smartphone size={15} />
-              </button>
-            </div>
-          )}
-
-          {user && viewMode !== 'dashboard' && (
-            <button
-              onClick={() => setViewMode('dashboard')}
-              className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
-            >
-              <LayoutDashboard size={14} className="text-amber-700" />
-              <span>Creator Studio</span>
-            </button>
-          )}
-
           {user ? (
             <div className="flex items-center gap-2">
               <div className="hidden sm:flex flex-col text-right">
-                <span className={`text-xs font-semibold ${viewMode === 'guest' ? 'text-stone-200' : 'text-stone-900'}`}>{user.name}</span>
-                <span className={`text-[10px] font-mono ${viewMode === 'guest' ? 'text-stone-500' : 'text-stone-500'}`}>{user.email}</span>
+                <span className="text-xs font-semibold text-stone-900">{user.name}</span>
+                <span className="text-[10px] font-mono text-stone-500">{user.email}</span>
               </div>
               <button
                 onClick={handleSignOut}
-                className={`p-2 rounded-xl border transition-colors cursor-pointer ${
-                  viewMode === 'guest' 
-                    ? 'bg-stone-900 hover:bg-stone-800 border-stone-800 text-stone-400 hover:text-rose-400' 
-                    : 'bg-white hover:bg-stone-50 border-stone-200 text-stone-500 hover:text-rose-600 shadow-xs'
-                }`}
+                className="p-2 rounded-xl border transition-colors cursor-pointer bg-white hover:bg-stone-50 border-stone-200 text-stone-500 hover:text-rose-600 shadow-xs"
                 title="Sign Out"
               >
                 <LogOut size={14} />
@@ -655,29 +654,6 @@ export function App() {
             onOpenCheckout={handleOpenCheckout}
             onSignOut={handleSignOut}
           />
-        )}
-
-        {viewMode === 'guest' && (
-          <div className="w-full flex-1 flex flex-col items-center justify-center p-0 sm:p-4 bg-stone-950">
-            {isMobileFrame ? (
-              <div className="w-full max-w-[400px] h-[860px] max-h-[92vh] rounded-[44px] border-[10px] border-stone-800 shadow-2xl overflow-y-auto relative bg-stone-950 scrollbar-none my-auto">
-                <div className="sticky top-0 left-0 right-0 h-6 bg-stone-800 flex items-center justify-center z-50 rounded-t-[32px]">
-                  <div className="w-20 h-3.5 bg-stone-950 rounded-full" />
-                </div>
-                <GuestInvitationView
-                  wedding={wedding}
-                  theme={activeTheme}
-                  onOpenRSVP={() => setIsRSVPModalOpen(true)}
-                />
-              </div>
-            ) : (
-              <GuestInvitationView
-                wedding={wedding}
-                theme={activeTheme}
-                onOpenRSVP={() => setIsRSVPModalOpen(true)}
-              />
-            )}
-          </div>
         )}
       </main>
 
