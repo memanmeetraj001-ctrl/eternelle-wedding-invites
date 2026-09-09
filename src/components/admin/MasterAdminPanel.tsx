@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   Users, DollarSign, Award, TrendingUp, ShieldCheck, 
   Search, ArrowUpRight, CheckCircle2, Sparkles, Filter, 
-  ExternalLink, RefreshCw, Key, Mail, Calendar, Heart, ArrowLeft
+  ExternalLink, RefreshCw, Key, Mail, Calendar, Heart, ArrowLeft,
+  Lock, Eye, EyeOff, ShieldAlert
 } from 'lucide-react';
 import { 
   getAllUsers, 
@@ -22,11 +23,31 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
   onBackToStudio,
   onOpenLiveInvite,
 }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem('eternelle_admin_authenticated') === 'true';
+  });
+  const [passkey, setPasskey] = useState('');
+  const [passkeyError, setPasskeyError] = useState(false);
+  const [showPasskey, setShowPasskey] = useState(false);
+
   const [analytics, setAnalytics] = useState<PlatformAnalytics>(getPlatformAnalytics());
   const [users, setUsers] = useState<UserAccount[]>(getAllUsers());
   const [searchTerm, setSearchTerm] = useState('');
   const [planFilter, setPlanFilter] = useState<'all' | 'free' | 'pro' | 'lifetime'>('all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleVerifyPasskey = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Valid secret admin passkeys
+    const validKeys = ['admin123', 'eternelle2026', 'admin@eternelle.com', 'superadmin'];
+    if (validKeys.includes(passkey.trim().toLowerCase())) {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('eternelle_admin_authenticated', 'true');
+      setPasskeyError(false);
+    } else {
+      setPasskeyError(true);
+    }
+  };
 
   const refreshData = () => {
     setAnalytics(getPlatformAnalytics());
@@ -48,6 +69,81 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
     return matchesSearch && matchesPlan;
   });
 
+  // 1. SECRET PASSKEY CHALLENGE SCREEN
+  if (!isAuthenticated) {
+    return (
+      <div className="w-full min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center p-4 font-sans selection:bg-rose-900 selection:text-rose-100">
+        <div className="w-full max-w-md bg-stone-900 border border-stone-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden text-center">
+          
+          <div className="w-12 h-12 rounded-2xl bg-purple-950/80 border border-purple-800/80 flex items-center justify-center text-purple-400 mx-auto mb-4 shadow-lg">
+            <Lock size={22} />
+          </div>
+
+          <h2 className="font-serif text-2xl font-bold text-stone-100 mb-1">
+            Restricted Admin Portal
+          </h2>
+          <p className="text-xs text-stone-400 mb-6">
+            Authorized personnel only. Please enter the master access key.
+          </p>
+
+          <form onSubmit={handleVerifyPasskey} className="space-y-4 text-left">
+            <div>
+              <label className="block text-xs font-semibold text-stone-300 mb-1">Master Security Key</label>
+              <div className="relative">
+                <Key size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500" />
+                <input
+                  type={showPasskey ? 'text' : 'password'}
+                  required
+                  autoFocus
+                  value={passkey}
+                  onChange={(e) => {
+                    setPasskey(e.target.value);
+                    setPasskeyError(false);
+                  }}
+                  placeholder="Enter master key..."
+                  className="w-full pl-10 pr-10 py-3 rounded-xl bg-stone-950 border border-stone-800 text-stone-100 text-xs focus:outline-none focus:border-purple-500 font-mono shadow-inner"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPasskey(!showPasskey)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-500 hover:text-stone-300"
+                >
+                  {showPasskey ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
+              {passkeyError && (
+                <p className="text-[11px] text-rose-400 mt-1.5 font-medium flex items-center gap-1">
+                  <ShieldAlert size={12} />
+                  <span>Invalid master security key. Access denied.</span>
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:brightness-110 text-white font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <ShieldCheck size={16} />
+              <span>Unlock Admin Command</span>
+            </button>
+          </form>
+
+          <div className="mt-6 pt-4 border-t border-stone-800 flex items-center justify-center">
+            <button
+              onClick={onBackToStudio}
+              className="text-xs text-stone-500 hover:text-stone-300 flex items-center gap-1 cursor-pointer transition-colors"
+            >
+              <ArrowLeft size={12} />
+              <span>Return to Public Site</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  // 2. AUTHENTICATED MASTER ADMIN DASHBOARD
   return (
     <div className="w-full min-h-screen bg-stone-950 text-stone-100 p-4 sm:p-8 font-sans selection:bg-rose-900 selection:text-rose-100">
       
@@ -64,10 +160,10 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
         <div className="flex items-center gap-4">
           <button
             onClick={onBackToStudio}
-            className="p-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300 hover:text-white transition-all flex items-center gap-1.5 text-xs"
+            className="p-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-300 hover:text-white transition-all flex items-center gap-1.5 text-xs cursor-pointer"
           >
             <ArrowLeft size={14} />
-            <span>Studio</span>
+            <span>Studio / Exit</span>
           </button>
           <BrandLogo size="md" showText={false} />
           <div>
@@ -76,7 +172,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
                 Master Admin Command
               </h1>
               <span className="px-2.5 py-0.5 rounded-full bg-rose-950/80 border border-rose-800 text-rose-300 text-[10px] font-mono uppercase font-bold tracking-wider">
-                SuperAdmin Access
+                SuperAdmin
               </span>
             </div>
             <p className="text-xs text-stone-400 mt-0.5">
@@ -88,10 +184,20 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
         <div className="flex items-center gap-2.5">
           <button
             onClick={refreshData}
-            className="px-3.5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-800 text-xs text-stone-300 flex items-center gap-1.5 transition-all"
+            className="px-3.5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-800 text-xs text-stone-300 flex items-center gap-1.5 transition-all cursor-pointer"
           >
             <RefreshCw size={13} />
-            <span>Refresh Analytics</span>
+            <span>Refresh Data</span>
+          </button>
+          <button
+            onClick={() => {
+              sessionStorage.removeItem('eternelle_admin_authenticated');
+              setIsAuthenticated(false);
+            }}
+            className="px-3.5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-800 text-xs text-stone-400 hover:text-rose-400 flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <Lock size={13} />
+            <span>Lock</span>
           </button>
         </div>
       </div>
@@ -244,25 +350,25 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
               <div className="flex bg-stone-900 p-1 rounded-xl border border-stone-800 text-xs">
                 <button
                   onClick={() => setPlanFilter('all')}
-                  className={'px-2.5 py-1 rounded-lg transition-all ' + (planFilter === 'all' ? 'bg-amber-950 text-amber-200 font-bold' : 'text-stone-400')}
+                  className={'px-2.5 py-1 rounded-lg transition-all cursor-pointer ' + (planFilter === 'all' ? 'bg-amber-950 text-amber-200 font-bold' : 'text-stone-400')}
                 >
                   All ({users.length})
                 </button>
                 <button
                   onClick={() => setPlanFilter('free')}
-                  className={'px-2.5 py-1 rounded-lg transition-all ' + (planFilter === 'free' ? 'bg-stone-800 text-stone-200 font-bold' : 'text-stone-400')}
+                  className={'px-2.5 py-1 rounded-lg transition-all cursor-pointer ' + (planFilter === 'free' ? 'bg-stone-800 text-stone-200 font-bold' : 'text-stone-400')}
                 >
                   Free
                 </button>
                 <button
                   onClick={() => setPlanFilter('pro')}
-                  className={'px-2.5 py-1 rounded-lg transition-all ' + (planFilter === 'pro' ? 'bg-amber-950 text-amber-200 font-bold' : 'text-stone-400')}
+                  className={'px-2.5 py-1 rounded-lg transition-all cursor-pointer ' + (planFilter === 'pro' ? 'bg-amber-950 text-amber-200 font-bold' : 'text-stone-400')}
                 >
                   Pro
                 </button>
                 <button
                   onClick={() => setPlanFilter('lifetime')}
-                  className={'px-2.5 py-1 rounded-lg transition-all ' + (planFilter === 'lifetime' ? 'bg-rose-950 text-rose-200 font-bold' : 'text-stone-400')}
+                  className={'px-2.5 py-1 rounded-lg transition-all cursor-pointer ' + (planFilter === 'lifetime' ? 'bg-rose-950 text-rose-200 font-bold' : 'text-stone-400')}
                 >
                   Lifetime
                 </button>
@@ -325,7 +431,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
                       {user.weddingSlug ? (
                         <button
                           onClick={() => onOpenLiveInvite(user.weddingSlug || '')}
-                          className="text-amber-400 hover:underline flex items-center gap-1 font-mono text-[11px]"
+                          className="text-amber-400 hover:underline flex items-center gap-1 font-mono text-[11px] cursor-pointer"
                         >
                           <span>/invite/{user.weddingSlug}</span>
                           <ExternalLink size={10} />
@@ -344,7 +450,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
                         {user.plan !== 'lifetime' && (
                           <button
                             onClick={() => handlePlanChange(user.id, 'lifetime')}
-                            className="px-2 py-1 rounded-lg bg-rose-950/60 hover:bg-rose-900 border border-rose-800/80 text-rose-300 text-[10px] font-semibold transition-all"
+                            className="px-2 py-1 rounded-lg bg-rose-950/60 hover:bg-rose-900 border border-rose-800/80 text-rose-300 text-[10px] font-semibold transition-all cursor-pointer"
                             title="Upgrade user to Lifetime"
                           >
                             Grant Lifetime
@@ -353,7 +459,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
                         {user.plan !== 'pro' && (
                           <button
                             onClick={() => handlePlanChange(user.id, 'pro')}
-                            className="px-2 py-1 rounded-lg bg-amber-950/60 hover:bg-amber-900 border border-amber-800/80 text-amber-300 text-[10px] font-semibold transition-all"
+                            className="px-2 py-1 rounded-lg bg-amber-950/60 hover:bg-amber-900 border border-amber-800/80 text-amber-300 text-[10px] font-semibold transition-all cursor-pointer"
                             title="Upgrade user to Pro"
                           >
                             Grant Pro
@@ -362,7 +468,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
                         {user.plan !== 'free' && (
                           <button
                             onClick={() => handlePlanChange(user.id, 'free')}
-                            className="px-2 py-1 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-400 text-[10px] transition-all"
+                            className="px-2 py-1 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-400 text-[10px] transition-all cursor-pointer"
                             title="Reset user to Free"
                           >
                             Reset Free

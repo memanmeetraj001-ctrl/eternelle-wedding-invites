@@ -480,7 +480,6 @@ export function App() {
             onOpenAuth={handleOpenAuth}
             onOpenCheckout={handleOpenCheckout}
             onSelectTheme={(themeId) => setWedding({ ...wedding, themeId })}
-            onOpenAdmin={() => setViewMode('admin')}
           />
         )}
 

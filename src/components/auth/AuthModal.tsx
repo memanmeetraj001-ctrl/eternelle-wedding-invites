@@ -147,18 +147,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </button>
         </form>
 
-        {/* 1-Click Master Admin Demo Login */}
-        <div className="mt-5 pt-4 border-t border-stone-800/80">
-          <button
-            onClick={handleQuickAdminLogin}
-            className="w-full py-2.5 px-3 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-800/80 text-purple-200 text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
-          >
-            <ShieldCheck size={14} className="text-purple-400" />
-            <span>⚡ 1-Click Master Admin Sign In (admin@eternelle.com)</span>
-          </button>
-        </div>
-
-        <div className="mt-3 text-center text-[10px] text-stone-500">
+        <div className="mt-6 pt-4 border-t border-stone-800/80 text-center text-[10px] text-stone-500">
           <p>
             🔒 256-Bit SSL Encrypted • Zero Spam • Instant Access
           </p>
