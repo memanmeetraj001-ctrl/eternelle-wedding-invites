@@ -22,6 +22,9 @@ import { MasterAdminPanel } from './components/admin/MasterAdminPanel';
 import { 
   initializeStorage, 
   getWeddingBySlug, 
+  getWeddingForUser,
+  saveWeddingForUser,
+  createNewWeddingForUser,
   saveWedding, 
   saveRSVPForWedding, 
   getRSVPsForWedding, 
@@ -32,6 +35,7 @@ import {
 import {
   apiGetMe,
   apiLogout,
+  apiGetMyWedding,
   apiGetWeddingBySlug,
   apiSaveWedding,
   apiGetRSVPs,
@@ -93,6 +97,14 @@ export function App() {
       const found = getWeddingBySlug(initialRoute.slug);
       if (found) return found;
     }
+    const savedUserStr = localStorage.getItem('eternelle_user_session');
+    if (savedUserStr) {
+      try {
+        const u: UserAccount = JSON.parse(savedUserStr);
+        const userWed = getWeddingForUser(u.id);
+        if (userWed) return userWed;
+      } catch {}
+    }
     const saved = localStorage.getItem('eternelle_wedding_data');
     return saved ? JSON.parse(saved) : INITIAL_WEDDING_DATA;
   });
@@ -128,6 +140,24 @@ export function App() {
         if (remoteUser) {
           setUser(remoteUser);
           saveUser(remoteUser);
+
+          // Fetch user's wedding
+          const myWedding = await apiGetMyWedding();
+          if (myWedding) {
+            setWedding(myWedding);
+            saveWedding(myWedding);
+            saveWeddingForUser(remoteUser.id, myWedding);
+            const remoteRSVPs = await apiGetRSVPs(myWedding.id);
+            setRsvps(remoteRSVPs || []);
+          } else {
+            const localUserWedding = getWeddingForUser(remoteUser.id);
+            if (localUserWedding) {
+              setWedding(localUserWedding);
+              apiSaveWedding(localUserWedding).catch(() => {});
+              const rsvps = getRSVPsForWedding(localUserWedding.id);
+              setRsvps(rsvps || []);
+            }
+          }
         }
 
         if (initialRoute.slug) {
@@ -161,6 +191,7 @@ export function App() {
     localStorage.setItem('eternelle_wedding_data', JSON.stringify(wedding));
     saveWedding(wedding);
     if (user) {
+      saveWeddingForUser(user.id, wedding);
       apiSaveWedding(wedding).catch(() => {});
     }
   }, [wedding, user]);
@@ -263,30 +294,76 @@ export function App() {
     saveUser(userAccount);
     setViewMode('dashboard');
 
-    if (userAccount.weddingSlug) {
-      const w = await apiGetWeddingBySlug(userAccount.weddingSlug);
-      if (w) {
-        setWedding(w);
-        const remoteRSVPs = await apiGetRSVPs(w.id);
+    // 1. Try fetching user's saved wedding from backend
+    let userWedding: WeddingData | null = null;
+    try {
+      userWedding = await apiGetMyWedding();
+    } catch {}
+
+    // 2. If not found via apiGetMyWedding, try by weddingSlug
+    if (!userWedding && userAccount.weddingSlug) {
+      try {
+        userWedding = await apiGetWeddingBySlug(userAccount.weddingSlug);
+      } catch {}
+    }
+
+    // 3. If not found, check user-scoped local storage
+    if (!userWedding) {
+      userWedding = getWeddingForUser(userAccount.id);
+    }
+
+    // 4. If brand new user without any existing wedding, create a fresh zero-state wedding tailored to them
+    if (!userWedding) {
+      userWedding = createNewWeddingForUser(userAccount);
+      userAccount.weddingSlug = userWedding.slug;
+      saveUser(userAccount);
+      await apiSaveWedding(userWedding).catch(() => {});
+    }
+
+    setWedding(userWedding);
+    saveWedding(userWedding);
+    saveWeddingForUser(userAccount.id, userWedding);
+
+    // 5. Fetch their specific RSVPs (brand new starts with 0)
+    if (userWedding?.id) {
+      try {
+        const remoteRSVPs = await apiGetRSVPs(userWedding.id);
         setRsvps(remoteRSVPs || []);
+      } catch {
+        setRsvps(getRSVPsForWedding(userWedding.id) || []);
       }
+    } else {
+      setRsvps([]);
     }
   };
 
   const handleOnboardingComplete = async (newWedding: WeddingData, userAccount: UserAccount) => {
-    setWedding(newWedding);
-    saveWedding(newWedding);
-    setRsvps([]); // Brand new wedding starts with 0 RSVPs
-    await apiSaveWedding(newWedding);
+    const weddingWithUser: WeddingData = {
+      ...newWedding,
+      userId: userAccount.id,
+    };
+    userAccount.weddingSlug = weddingWithUser.slug;
 
     setUser(userAccount);
     saveUser(userAccount);
+
+    setWedding(weddingWithUser);
+    saveWedding(weddingWithUser);
+    saveWeddingForUser(userAccount.id, weddingWithUser);
+
+    setRsvps([]); // Brand new wedding starts with 0 RSVPs
+    await apiSaveWedding(weddingWithUser).catch(() => {});
+
     setViewMode('dashboard');
   };
 
   const handleSignOut = async () => {
     await apiLogout();
+    localStorage.removeItem('eternelle_user_session');
+    localStorage.removeItem('eternelle_jwt_token');
     setUser(null);
+    setWedding(INITIAL_WEDDING_DATA);
+    setRsvps([]);
     setViewMode('landing');
   };
 
@@ -319,6 +396,15 @@ export function App() {
     });
 
     setPurchaseNotification(`🎉 ${plan === 'lifetime' ? 'Lifetime Creator Deal' : 'Pro Wedding Pass'} successfully unlocked!`);
+  };
+
+  const handleUpdateWedding = (updated: WeddingData) => {
+    setWedding(updated);
+    saveWedding(updated);
+    if (user) {
+      saveWeddingForUser(user.id, updated);
+      apiSaveWedding(updated).catch(() => {});
+    }
   };
 
   const activeTheme = THEME_PRESETS[wedding.themeId] || THEME_PRESETS['olive-burgundy'];
@@ -465,31 +551,35 @@ export function App() {
           </div>
         )}
 
-        {/* Right CTA / Session Buttons */}
-        <div className="flex items-center gap-2.5">
-          {viewMode === 'guest' && user && (
-            <div className="hidden sm:flex items-center bg-stone-900 p-1 rounded-xl border border-stone-800 text-xs">
+        {/* View Switchers & Account Controls */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {viewMode === 'guest' && (
+            <div className="flex items-center bg-stone-900 border border-stone-800 rounded-xl p-1 text-xs">
               <button
                 onClick={() => setIsMobileFrame(false)}
-                className={`px-2.5 py-1 rounded-lg flex items-center gap-1 cursor-pointer transition-colors ${
-                  !isMobileFrame ? 'bg-amber-950 text-amber-200 font-medium' : 'text-stone-400 hover:text-stone-200'
-                }`}
+                className={'p-1.5 rounded-lg transition-colors cursor-pointer ' + (!isMobileFrame ? 'bg-amber-950/80 text-amber-200 shadow' : 'text-stone-400 hover:text-stone-200')}
                 title="Desktop View"
               >
-                <Monitor size={13} />
-                <span className="hidden md:inline">Full</span>
+                <Monitor size={15} />
               </button>
               <button
                 onClick={() => setIsMobileFrame(true)}
-                className={`px-2.5 py-1 rounded-lg flex items-center gap-1 cursor-pointer transition-colors ${
-                  isMobileFrame ? 'bg-amber-950 text-amber-200 font-medium' : 'text-stone-400 hover:text-stone-200'
-                }`}
-                title="Mobile Preview Frame"
+                className={'p-1.5 rounded-lg transition-colors cursor-pointer ' + (isMobileFrame ? 'bg-amber-950/80 text-amber-200 shadow' : 'text-stone-400 hover:text-stone-200')}
+                title="Mobile Phone View"
               >
-                <Smartphone size={13} />
-                <span className="hidden md:inline">Mobile</span>
+                <Smartphone size={15} />
               </button>
             </div>
+          )}
+
+          {user && viewMode !== 'dashboard' && (
+            <button
+              onClick={() => setViewMode('dashboard')}
+              className="px-3.5 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <LayoutDashboard size={14} className="text-amber-400" />
+              <span>Creator Studio</span>
+            </button>
           )}
 
           {user ? (
@@ -542,14 +632,14 @@ export function App() {
             onOpenGuestDemo={() => setViewMode('guest')}
             onOpenAuth={handleOpenAuth}
             onOpenCheckout={handleOpenCheckout}
-            onSelectTheme={(themeId) => setWedding({ ...wedding, themeId })}
+            onSelectTheme={(themeId) => handleUpdateWedding({ ...wedding, themeId })}
           />
         )}
 
         {viewMode === 'dashboard' && user && (
           <MainDashboard
             wedding={wedding}
-            onChangeWedding={(updated) => setWedding(updated)}
+            onChangeWedding={handleUpdateWedding}
             rsvps={rsvps}
             onAddRSVP={handleAddRSVP}
             user={user}

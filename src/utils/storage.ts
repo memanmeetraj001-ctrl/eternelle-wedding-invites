@@ -222,10 +222,96 @@ export function getWeddingBySlug(slug: string): WeddingData | null {
   return null;
 }
 
+export function getWeddingForUser(userId: string): WeddingData | null {
+  initializeStorage();
+  try {
+    // 1. Direct user-scoped storage key
+    const directData = localStorage.getItem(`eternelle_wedding_user_${userId}`);
+    if (directData) {
+      return JSON.parse(directData);
+    }
+
+    // 2. Scan all weddings in registry for matching userId
+    const weddings = getAllWeddings();
+    for (const key in weddings) {
+      if (weddings[key].userId === userId) {
+        return weddings[key];
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveWeddingForUser(userId: string, wedding: WeddingData): void {
+  initializeStorage();
+  const weddingWithUser: WeddingData = { ...wedding, userId };
+  try {
+    localStorage.setItem(`eternelle_wedding_user_${userId}`, JSON.stringify(weddingWithUser));
+  } catch {}
+  saveWedding(weddingWithUser);
+}
+
+export function createNewWeddingForUser(user: UserAccount): WeddingData {
+  const cleanName = (user.name || '').trim();
+  let c1 = 'Partner 1';
+  let c2 = 'Partner 2';
+
+  if (cleanName.includes('&')) {
+    const parts = cleanName.split('&');
+    c1 = parts[0].trim() || 'Partner 1';
+    c2 = parts[1].trim() || 'Partner 2';
+  } else if (cleanName.includes(' and ')) {
+    const parts = cleanName.split(' and ');
+    c1 = parts[0].trim() || 'Partner 1';
+    c2 = parts[1].trim() || 'Partner 2';
+  } else if (cleanName && cleanName !== 'User') {
+    c1 = cleanName;
+    c2 = 'Partner';
+  } else {
+    const emailPrefix = user.email ? user.email.split('@')[0] : 'couple';
+    c1 = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+    c2 = 'Partner';
+  }
+
+  const rawSlug = `${c1}-${c2}`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const slug = `${rawSlug || 'wedding'}-${user.id.slice(-4)}`;
+  const initials = `${c1.charAt(0) || 'A'}&${c2.charAt(0) || 'B'}`.toUpperCase();
+
+  const newWedding: WeddingData = {
+    ...INITIAL_WEDDING_DATA,
+    id: 'wed_' + user.id,
+    userId: user.id,
+    slug,
+    coupleName1: c1,
+    coupleName2: c2,
+    coupleInitials: initials,
+    headline: 'PLEASE JOIN US FOR THE WEDDING OF',
+    weddingDate: '2027-06-18',
+    weddingTime: '4:00 PM',
+    venueName: 'The Glasshouse Estate',
+    venueAddress: '100 Sunset Boulevard',
+    cityState: 'Santa Barbara, California',
+    mapsUrl: 'https://maps.google.com',
+    rsvpDeadline: 'May 01, 2027',
+    themeId: 'olive-burgundy',
+    photos: [],
+    giftRegistryUrl: '',
+    transportInfo: 'Valet parking will be provided at the entrance.',
+  };
+
+  saveWeddingForUser(user.id, newWedding);
+  return newWedding;
+}
+
 export function saveWedding(wedding: WeddingData): void {
   const weddings = getAllWeddings();
   const slug = (wedding.slug || 'my-wedding').toLowerCase().trim();
   weddings[slug] = { ...wedding, slug };
+  if (wedding.id) {
+    weddings[wedding.id] = { ...wedding, slug };
+  }
   localStorage.setItem(STORAGE_KEYS.WEDDINGS, JSON.stringify(weddings));
 }
 

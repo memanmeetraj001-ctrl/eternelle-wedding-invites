@@ -108,6 +108,15 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    let userWeddingSlug = undefined;
+    if (isPostgresAvailable) {
+      const wRes = await query('SELECT slug FROM weddings WHERE user_id = $1 LIMIT 1', [userRecord.id]);
+      if (wRes.rows.length > 0) userWeddingSlug = wRes.rows[0].slug;
+    } else {
+      const w = Object.values(memoryDB.weddings).find(wed => wed.userId === userRecord.id);
+      if (w) userWeddingSlug = w.slug;
+    }
+
     const userObj = {
       id: userRecord.id,
       name: userRecord.name,
@@ -115,6 +124,7 @@ router.post('/login', async (req, res) => {
       role: userRecord.role || 'user',
       plan: userRecord.plan || 'free',
       licenseKey: userRecord.license_key,
+      weddingSlug: userWeddingSlug,
     };
 
     const token = generateToken(userObj);
@@ -129,13 +139,19 @@ router.post('/login', async (req, res) => {
 router.get('/me', requireAuth, async (req, res) => {
   try {
     let userRecord = null;
+    let userWeddingSlug = undefined;
+
     if (isPostgresAvailable) {
       const result = await query('SELECT id, name, email, role, plan, license_key FROM users WHERE id = $1', [req.user.id]);
       if (result.rows.length > 0) {
         userRecord = result.rows[0];
       }
+      const wRes = await query('SELECT slug FROM weddings WHERE user_id = $1 LIMIT 1', [req.user.id]);
+      if (wRes.rows.length > 0) userWeddingSlug = wRes.rows[0].slug;
     } else {
       userRecord = memoryDB.users.find(u => u.id === req.user.id);
+      const w = Object.values(memoryDB.weddings).find(wed => wed.userId === req.user.id);
+      if (w) userWeddingSlug = w.slug;
     }
 
     if (!userRecord) {
@@ -150,6 +166,7 @@ router.get('/me', requireAuth, async (req, res) => {
         role: userRecord.role,
         plan: userRecord.plan,
         licenseKey: userRecord.license_key,
+        weddingSlug: userWeddingSlug,
       }
     });
   } catch (err) {

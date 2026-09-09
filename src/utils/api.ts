@@ -142,6 +142,11 @@ export async function apiGetMe(): Promise<UserAccount | null> {
 }
 
 // 2. Wedding API
+export async function apiGetMyWedding(): Promise<WeddingData | null> {
+  const res = await request<{ wedding: WeddingData }>('/weddings/mine');
+  return res.data ? res.data.wedding : null;
+}
+
 export async function apiGetWeddingBySlug(slug: string): Promise<WeddingData | null> {
   const res = await request<{ wedding: WeddingData }>(`/weddings/${encodeURIComponent(slug)}`);
   return res.data ? res.data.wedding : null;

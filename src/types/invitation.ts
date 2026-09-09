@@ -1,4 +1,4 @@
-﻿export type ThemeId = 'olive-burgundy' | 'champagne-noir' | 'tuscan-terracotta' | 'dusty-rose' | 'botanical-emerald';
+export type ThemeId = 'olive-burgundy' | 'champagne-noir' | 'tuscan-terracotta' | 'dusty-rose' | 'botanical-emerald';
 
 export interface ColorSwatch {
   name: string;
@@ -62,6 +62,7 @@ export interface PhotoMoment {
 
 export interface WeddingData {
   id: string;
+  userId?: string;
   slug: string;
   coupleName1: string;
   coupleName2: string;
