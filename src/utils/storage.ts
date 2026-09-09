@@ -235,9 +235,9 @@ export function getRSVPsForWedding(weddingId: string): RSVPRecord[] {
   try {
     const data = localStorage.getItem(STORAGE_KEYS.RSVPS);
     const rsvps = data ? JSON.parse(data) : {};
-    return rsvps[weddingId] || INITIAL_RSVPS;
+    return rsvps[weddingId] || [];
   } catch {
-    return INITIAL_RSVPS;
+    return [];
   }
 }
 

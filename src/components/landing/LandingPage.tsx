@@ -91,7 +91,7 @@ export function LandingPage({
   ];
 
   return (
-    <div className="w-full flex flex-col items-center bg-[#FAF7F2] text-stone-900 font-sans selection:bg-rose-200 selection:text-rose-900 min-h-screen">
+    <div className="w-full flex flex-col items-center bg-[#FAF7F2] text-stone-900 font-sans min-h-screen">
       
       {/* 1. TOP ANNOUNCEMENT BANNER */}
       <div className="w-full bg-gradient-to-r from-rose-100 via-amber-50 to-rose-100 border-b border-rose-200/80 py-2.5 px-4 text-center text-xs text-rose-950 flex items-center justify-center gap-2">

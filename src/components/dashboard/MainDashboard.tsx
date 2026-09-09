@@ -73,7 +73,7 @@ export function MainDashboard({
   };
 
   return (
-    <div className="w-full min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans selection:bg-rose-900 selection:text-rose-100">
+    <div className="w-full min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans">
       
       {/* 1. TOP CREATOR STATUS & EVENT BAR */}
       <div className="bg-stone-900/90 border-b border-stone-800 px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">

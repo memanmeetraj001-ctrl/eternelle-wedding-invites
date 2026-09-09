@@ -90,7 +90,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
   // 1. SECRET PASSKEY CHALLENGE SCREEN
   if (!isAuthenticated) {
     return (
-      <div className="w-full min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center p-4 font-sans selection:bg-rose-900 selection:text-rose-100">
+      <div className="w-full min-h-screen bg-stone-950 text-stone-100 flex flex-col items-center justify-center p-4 font-sans">
         <div className="w-full max-w-md bg-stone-900 border border-stone-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden text-center">
           
           <div className="w-12 h-12 rounded-2xl bg-purple-950/80 border border-purple-800/80 flex items-center justify-center text-purple-400 mx-auto mb-4 shadow-lg">
@@ -163,7 +163,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
 
   // 2. AUTHENTICATED MASTER ADMIN DASHBOARD
   return (
-    <div className="w-full min-h-screen bg-stone-950 text-stone-100 p-4 sm:p-8 font-sans selection:bg-rose-900 selection:text-rose-100">
+    <div className="w-full min-h-screen bg-stone-950 text-stone-100 p-4 sm:p-8 font-sans">
       
       {/* Toast Notification */}
       {toastMessage && (

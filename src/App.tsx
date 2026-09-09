@@ -98,11 +98,10 @@ export function App() {
   });
 
   const [rsvps, setRsvps] = useState<RSVPRecord[]>(() => {
-    if (wedding.id) {
+    if (wedding?.id) {
       return getRSVPsForWedding(wedding.id);
     }
-    const saved = localStorage.getItem('eternelle_rsvps');
-    return saved ? JSON.parse(saved) : INITIAL_RSVPS;
+    return [];
   });
 
   const [viewMode, setViewMode] = useState<AppViewMode>(() => {
@@ -148,10 +147,12 @@ export function App() {
   useEffect(() => {
     if (wedding?.id) {
       apiGetRSVPs(wedding.id).then((remoteRSVPs) => {
-        if (remoteRSVPs && remoteRSVPs.length > 0) {
-          setRsvps(remoteRSVPs);
-        }
-      }).catch(() => {});
+        setRsvps(remoteRSVPs || []);
+      }).catch(() => {
+        setRsvps(getRSVPsForWedding(wedding.id) || []);
+      });
+    } else {
+      setRsvps([]);
     }
   }, [wedding?.id]);
 
@@ -264,13 +265,18 @@ export function App() {
 
     if (userAccount.weddingSlug) {
       const w = await apiGetWeddingBySlug(userAccount.weddingSlug);
-      if (w) setWedding(w);
+      if (w) {
+        setWedding(w);
+        const remoteRSVPs = await apiGetRSVPs(w.id);
+        setRsvps(remoteRSVPs || []);
+      }
     }
   };
 
   const handleOnboardingComplete = async (newWedding: WeddingData, userAccount: UserAccount) => {
     setWedding(newWedding);
     saveWedding(newWedding);
+    setRsvps([]); // Brand new wedding starts with 0 RSVPs
     await apiSaveWedding(newWedding);
 
     setUser(userAccount);
@@ -355,7 +361,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans selection:bg-rose-900 selection:text-rose-100">
+    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans">
       
       {/* Gumroad Purchase Activation Banner */}
       {purchaseNotification && (
