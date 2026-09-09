@@ -447,18 +447,20 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans">
+    <div className={`min-h-screen flex flex-col font-sans selection:bg-amber-200 selection:text-stone-900 ${
+      viewMode === 'guest' ? 'bg-stone-950 text-stone-100' : 'bg-[#FAF7F2] text-stone-900'
+    }`}>
       
       {/* Gumroad Purchase Activation Banner */}
       {purchaseNotification && (
-        <div className="w-full bg-emerald-950 border-b border-emerald-800 py-2.5 px-4 text-center text-xs text-emerald-200 flex items-center justify-between z-50">
+        <div className="w-full bg-emerald-700 py-2.5 px-4 text-center text-xs text-white flex items-center justify-between z-50 shadow-md">
           <div className="flex items-center gap-2 mx-auto font-medium">
-            <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+            <CheckCircle2 size={16} className="text-emerald-200 shrink-0" />
             <span>{purchaseNotification}</span>
           </div>
           <button 
             onClick={() => setPurchaseNotification(null)}
-            className="text-emerald-400 hover:text-white text-xs px-2 cursor-pointer"
+            className="text-emerald-200 hover:text-white text-xs px-2 cursor-pointer"
           >
             ✕
           </button>
@@ -467,9 +469,9 @@ export function App() {
 
       {/* TOP HEADER */}
       <header className={`sticky top-0 z-50 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 transition-colors ${
-        viewMode === 'landing'
-          ? 'bg-[#FAF7F2]/90 border-stone-200/80 text-stone-900 shadow-sm'
-          : 'bg-stone-950/90 border-stone-800/80 text-stone-100 shadow-2xl'
+        viewMode === 'guest'
+          ? 'bg-stone-950/90 border-stone-800/80 text-stone-100 shadow-2xl'
+          : 'bg-white/95 border-amber-200/70 text-stone-900 shadow-xs'
       }`}>
         
         {/* Brand Logo */}
@@ -481,22 +483,22 @@ export function App() {
           <div>
             <div className="flex items-center gap-2">
               <span className={`font-serif text-lg tracking-widest font-semibold ${
-                viewMode === 'landing' ? 'text-stone-900' : 'text-amber-100'
+                viewMode === 'guest' ? 'text-amber-100' : 'text-stone-900'
               }`}>
                 ÉTERNELLE
               </span>
               {user?.plan && (
-                <span className={'px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase ' + (
-                  user.plan === 'lifetime' ? 'bg-rose-950 text-rose-300 border border-rose-800' :
-                  user.plan === 'pro' ? 'bg-amber-950 text-amber-300 border border-amber-800' :
-                  'bg-stone-900 text-stone-400 border border-stone-800'
+                <span className={'px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider ' + (
+                  user.plan === 'lifetime' ? 'bg-rose-100 text-rose-900 border border-rose-300' :
+                  user.plan === 'pro' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
+                  'bg-stone-100 text-stone-700 border border-stone-300'
                 )}>
                   {user.plan === 'lifetime' ? 'Lifetime Creator' : user.plan === 'pro' ? 'Pro Pass' : 'Free Tier'}
                 </span>
               )}
             </div>
             <p className={`text-[10px] -mt-0.5 hidden sm:block ${
-              viewMode === 'landing' ? 'text-stone-500' : 'text-stone-400'
+              viewMode === 'guest' ? 'text-stone-400' : 'text-stone-500'
             }`}>
               Interactive Luxury Wedding Invitations & Micro-Sites
             </p>
@@ -505,25 +507,27 @@ export function App() {
 
         {/* Center Navigation - ONLY DISPLAYED WHEN LOGGED IN */}
         {user ? (
-          <div className="flex items-center gap-1 bg-stone-900/80 p-1 rounded-2xl border border-stone-800 text-xs font-sans overflow-x-auto">
+          <div className={`flex items-center gap-1 p-1 rounded-2xl border text-xs font-sans overflow-x-auto ${
+            viewMode === 'guest' ? 'bg-stone-900/80 border-stone-800' : 'bg-[#FAF7F2] border-stone-200'
+          }`}>
             <button
               onClick={() => setViewMode('dashboard')}
-              className={'px-3.5 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-all cursor-pointer ' + (
+              className={'px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer ' + (
                 viewMode === 'dashboard'
-                  ? 'bg-amber-950/80 text-amber-200 border border-amber-600/40 shadow-sm'
-                  : 'text-stone-400 hover:text-stone-200'
+                  ? 'bg-white text-stone-900 shadow-xs border border-stone-200'
+                  : 'text-stone-600 hover:text-stone-900'
               )}
             >
-              <LayoutDashboard size={13} className={viewMode === 'dashboard' ? 'text-amber-300' : ''} />
+              <LayoutDashboard size={13} className={viewMode === 'dashboard' ? 'text-amber-700' : ''} />
               <span>Creator Studio</span>
             </button>
 
             <button
               onClick={() => setViewMode('guest')}
-              className={'px-3.5 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-all cursor-pointer ' + (
+              className={'px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer ' + (
                 viewMode === 'guest'
-                  ? 'bg-amber-950/80 text-amber-200 border border-amber-600/40 shadow-sm'
-                  : 'text-stone-400 hover:text-stone-200'
+                  ? 'bg-amber-950 text-amber-200 border border-amber-600/40 shadow-sm'
+                  : 'text-stone-600 hover:text-stone-900'
               )}
             >
               <Eye size={13} className={viewMode === 'guest' ? 'text-amber-300' : ''} />
@@ -533,7 +537,7 @@ export function App() {
             {user.role === 'admin' && (
               <button
                 onClick={() => setViewMode('admin')}
-                className="px-3.5 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-all cursor-pointer text-purple-400 hover:text-purple-300 bg-purple-950/40 border border-purple-800/40"
+                className="px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer text-purple-700 hover:text-purple-900 bg-purple-50 border border-purple-200"
               >
                 <ShieldAlert size={13} />
                 <span>Admin Panel</span>
@@ -575,9 +579,9 @@ export function App() {
           {user && viewMode !== 'dashboard' && (
             <button
               onClick={() => setViewMode('dashboard')}
-              className="px-3.5 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
             >
-              <LayoutDashboard size={14} className="text-amber-400" />
+              <LayoutDashboard size={14} className="text-amber-700" />
               <span>Creator Studio</span>
             </button>
           )}
@@ -585,12 +589,16 @@ export function App() {
           {user ? (
             <div className="flex items-center gap-2">
               <div className="hidden sm:flex flex-col text-right">
-                <span className="text-xs font-semibold text-stone-200">{user.name}</span>
-                <span className="text-[10px] text-stone-500 font-mono">{user.email}</span>
+                <span className={`text-xs font-semibold ${viewMode === 'guest' ? 'text-stone-200' : 'text-stone-900'}`}>{user.name}</span>
+                <span className={`text-[10px] font-mono ${viewMode === 'guest' ? 'text-stone-500' : 'text-stone-500'}`}>{user.email}</span>
               </div>
               <button
                 onClick={handleSignOut}
-                className="p-2 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-800 text-stone-400 hover:text-rose-400 transition-colors cursor-pointer"
+                className={`p-2 rounded-xl border transition-colors cursor-pointer ${
+                  viewMode === 'guest' 
+                    ? 'bg-stone-900 hover:bg-stone-800 border-stone-800 text-stone-400 hover:text-rose-400' 
+                    : 'bg-white hover:bg-stone-50 border-stone-200 text-stone-500 hover:text-rose-600 shadow-xs'
+                }`}
                 title="Sign Out"
               >
                 <LogOut size={14} />

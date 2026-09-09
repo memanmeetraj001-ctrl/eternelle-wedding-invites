@@ -296,7 +296,11 @@ export function createNewWeddingForUser(user: UserAccount): WeddingData {
     mapsUrl: 'https://maps.google.com',
     rsvpDeadline: 'May 01, 2027',
     themeId: 'olive-burgundy',
-    photos: [],
+    photos: INITIAL_WEDDING_DATA.photos,
+    menu: INITIAL_WEDDING_DATA.menu,
+    faqs: INITIAL_WEDDING_DATA.faqs,
+    storyTitle: 'Our Love Story',
+    storyText: INITIAL_WEDDING_DATA.storyText,
     giftRegistryUrl: '',
     transportInfo: 'Valet parking will be provided at the entrance.',
   };

@@ -60,6 +60,20 @@ export interface PhotoMoment {
   dateTag: string;
 }
 
+export interface MenuItem {
+  id: string;
+  course: 'Canapés & Starters' | 'Main Entrée' | 'Dessert & Cake' | 'Signature Cocktails' | 'Late Night Bites';
+  title: string;
+  description: string;
+  dietaryTags?: string[]; // e.g. ['Gluten-Free', 'Vegetarian', 'Vegan', 'Dairy-Free', 'Nut-Free']
+}
+
+export interface WeddingFAQ {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 export interface WeddingData {
   id: string;
   userId?: string;
@@ -79,9 +93,13 @@ export interface WeddingData {
   themeId: ThemeId;
   themeCustomizations?: Partial<ThemeConfig>;
   timeline: TimelineEvent[];
+  menu?: MenuItem[];
+  photos: PhotoMoment[];
   hotels: HotelLodging[];
   dressCode: DressCode;
-  photos: PhotoMoment[];
+  storyTitle?: string;
+  storyText?: string;
+  faqs?: WeddingFAQ[];
   transportInfo: string;
   giftRegistryUrl?: string;
   musicEnabled: boolean;

@@ -73,59 +73,59 @@ export function MainDashboard({
   };
 
   return (
-    <div className="w-full min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans">
+    <div className="w-full min-h-screen bg-[#FAF7F2] text-stone-900 flex flex-col font-sans selection:bg-amber-200 selection:text-stone-900">
       
       {/* 1. TOP CREATOR STATUS & EVENT BAR */}
-      <div className="bg-stone-900/90 border-b border-stone-800 px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white/95 backdrop-blur-md border-b border-amber-200/70 px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm">
         
         {/* Left: Event info */}
         <div className="flex items-center gap-3">
           <div 
-            className="w-10 h-10 rounded-2xl flex items-center justify-center text-stone-900 font-serif font-bold text-lg shadow-md border border-amber-500/30"
+            className="w-10 h-10 rounded-2xl flex items-center justify-center text-stone-900 font-serif font-bold text-lg shadow-sm border border-amber-300"
             style={{ backgroundColor: activeTheme.waxSealBg }}
           >
             {wedding.coupleInitials || 'É'}
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-serif text-lg font-bold text-stone-100">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="font-serif text-lg font-bold text-stone-900">
                 {wedding.coupleName1} & {wedding.coupleName2}
               </h1>
-              <span className={'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ' + (
-                plan === 'lifetime' ? 'bg-rose-950 text-rose-300 border border-rose-800' :
-                plan === 'pro' ? 'bg-amber-950 text-amber-300 border border-amber-800' :
-                'bg-stone-800 text-stone-300 border border-stone-700'
+              <span className={'px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ' + (
+                plan === 'lifetime' ? 'bg-rose-100 text-rose-900 border border-rose-300' :
+                plan === 'pro' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
+                'bg-stone-100 text-stone-700 border border-stone-300'
               )}>
                 {plan === 'lifetime' ? 'Lifetime Creator' : plan === 'pro' ? 'Pro Pass Active' : 'Free Tier (1 Event)'}
               </span>
             </div>
-            <p className="text-xs text-stone-400">
+            <p className="text-xs text-stone-500">
               {wedding.weddingDate} • {wedding.venueName} ({wedding.cityState})
             </p>
           </div>
         </div>
 
         {/* Right: Quick actions & Link */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 flex-wrap">
           <button
             onClick={onOpenGuestPreview}
-            className="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+            className="px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-stone-900 border border-amber-300 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
           >
-            <Eye size={14} className="text-amber-400" />
+            <Eye size={14} className="text-amber-700" />
             <span>Preview Guest View</span>
           </button>
 
           <button
             onClick={handleCopyLink}
-            className="px-3.5 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 text-xs font-medium flex items-center gap-1.5 transition-colors"
+            className="px-3.5 py-2 rounded-xl bg-white hover:bg-stone-50 text-stone-800 border border-stone-300 text-xs font-medium flex items-center gap-1.5 transition-colors shadow-sm"
           >
-            {copiedLink ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+            {copiedLink ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
             <span>{copiedLink ? 'Link Copied!' : 'Copy Invite Link'}</span>
           </button>
 
           <button
             onClick={handleShareWhatsApp}
-            className="px-3.5 py-2 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 text-xs font-medium flex items-center gap-1.5 transition-colors hidden sm:flex"
+            className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-medium flex items-center gap-1.5 transition-colors hidden sm:flex shadow-sm"
           >
             <MessageSquare size={14} />
             <span>Send WhatsApp</span>
@@ -134,7 +134,7 @@ export function MainDashboard({
           {plan === 'free' && (
             <GumroadOverlayButton
               plan="pro"
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 text-xs font-bold shadow-md flex items-center gap-1.5 transition-all no-underline cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:opacity-95 text-white text-xs font-bold shadow-md flex items-center gap-1.5 transition-all no-underline cursor-pointer"
             >
               <Sparkles size={14} />
               <span>Upgrade to Pro ($19)</span>
@@ -144,67 +144,67 @@ export function MainDashboard({
       </div>
 
       {/* 2. SUB-NAVIGATION DASHBOARD TABS */}
-      <div className="bg-stone-950 border-b border-stone-800/80 px-4 sm:px-8 py-2 flex items-center gap-1 overflow-x-auto">
+      <div className="bg-white border-b border-amber-200/60 px-4 sm:px-8 py-2.5 flex items-center gap-1.5 overflow-x-auto shadow-xs">
         <button
           onClick={() => setActiveTab('overview')}
-          className={'px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all ' + (
+          className={'px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all whitespace-nowrap ' + (
             activeTab === 'overview'
-              ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm'
-              : 'text-stone-400 hover:text-stone-200'
+              ? 'bg-stone-900 text-white shadow-sm'
+              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
           )}
         >
-          <BarChart3 size={14} className={activeTab === 'overview' ? 'text-amber-300' : ''} />
+          <BarChart3 size={14} className={activeTab === 'overview' ? 'text-amber-300' : 'text-stone-500'} />
           <span>Overview</span>
         </button>
 
         <button
           onClick={() => setActiveTab('editor')}
-          className={'px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all ' + (
+          className={'px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all whitespace-nowrap ' + (
             activeTab === 'editor'
-              ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm'
-              : 'text-stone-400 hover:text-stone-200'
+              ? 'bg-stone-900 text-white shadow-sm'
+              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
           )}
         >
-          <Palette size={14} className={activeTab === 'editor' ? 'text-amber-300' : ''} />
+          <Palette size={14} className={activeTab === 'editor' ? 'text-amber-300' : 'text-stone-500'} />
           <span>Studio Customizer</span>
         </button>
 
         <button
           onClick={() => setActiveTab('rsvps')}
-          className={'px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all ' + (
+          className={'px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all whitespace-nowrap ' + (
             activeTab === 'rsvps'
-              ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm'
-              : 'text-stone-400 hover:text-stone-200'
+              ? 'bg-stone-900 text-white shadow-sm'
+              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
           )}
         >
-          <Users size={14} className={activeTab === 'rsvps' ? 'text-amber-300' : ''} />
+          <Users size={14} className={activeTab === 'rsvps' ? 'text-amber-300' : 'text-stone-500'} />
           <span>RSVP & Catering Command</span>
-          <span className="px-1.5 py-0.2 rounded-full bg-emerald-950 text-emerald-300 text-[10px] font-mono font-bold">
+          <span className="px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold border border-emerald-300">
             {attendingCount}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('share')}
-          className={'px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all ' + (
+          className={'px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all whitespace-nowrap ' + (
             activeTab === 'share'
-              ? 'bg-rose-950/80 text-rose-200 border border-rose-500/40 shadow-sm'
-              : 'text-stone-400 hover:text-stone-200'
+              ? 'bg-stone-900 text-white shadow-sm'
+              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
           )}
         >
-          <Share2 size={14} className={activeTab === 'share' ? 'text-rose-300' : ''} />
-          <span>Pinterest & Social Studio</span>
+          <Share2 size={14} className={activeTab === 'share' ? 'text-rose-300' : 'text-stone-500'} />
+          <span>Social & Share Studio</span>
         </button>
 
         <button
           onClick={() => setActiveTab('billing')}
-          className={'px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all ' + (
+          className={'px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all whitespace-nowrap ' + (
             activeTab === 'billing'
-              ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm'
-              : 'text-stone-400 hover:text-stone-200'
+              ? 'bg-stone-900 text-white shadow-sm'
+              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
           )}
         >
-          <ShieldCheck size={14} className={activeTab === 'billing' ? 'text-amber-300' : ''} />
+          <ShieldCheck size={14} className={activeTab === 'billing' ? 'text-amber-300' : 'text-stone-500'} />
           <span>Plans & Pricing</span>
         </button>
       </div>
@@ -218,23 +218,23 @@ export function MainDashboard({
             
             {/* Free tier notification alert if applicable */}
             {plan === 'free' && (
-              <div className="bg-gradient-to-r from-amber-950/60 via-stone-900 to-rose-950/60 border border-amber-500/30 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="bg-gradient-to-r from-amber-50 via-white to-rose-50 border border-amber-300/80 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 shrink-0 shadow-xs">
                     <Sparkles size={20} />
                   </div>
                   <div>
-                    <h3 className="font-serif text-base font-bold text-amber-200">
+                    <h3 className="font-serif text-base font-bold text-stone-900">
                       You are on the Free Starter Plan (1 Event Included)
                     </h3>
-                    <p className="text-xs text-stone-300 mt-0.5">
+                    <p className="text-xs text-stone-600 mt-0.5">
                       Your invitation is live and accepting up to 20 RSVPs. Upgrade to the Pro Pass ($19 one-time) for unlimited guests, custom audio & CSV catering export.
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => onOpenCheckout('pro')}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-stone-950 text-xs font-bold shadow-md hover:brightness-110 whitespace-nowrap"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white text-xs font-bold shadow-md hover:opacity-95 whitespace-nowrap transition-all"
                 >
                   Unlock Pro Pass ($19)
                 </button>
@@ -243,90 +243,90 @@ export function MainDashboard({
 
             {/* Quick Metrics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-stone-900/60 border border-stone-800 p-5 rounded-2xl">
-                <div className="flex items-center justify-between text-xs text-stone-400 mb-2">
-                  <span>Confirmed Guests</span>
-                  <Users size={16} className="text-emerald-400" />
+              <div className="bg-white border border-amber-200/80 p-5 rounded-2xl shadow-sm">
+                <div className="flex items-center justify-between text-xs text-stone-500 mb-2">
+                  <span className="font-medium">Confirmed Guests</span>
+                  <Users size={16} className="text-emerald-600" />
                 </div>
-                <div className="font-serif text-3xl font-bold text-stone-100">{totalGuests}</div>
-                <div className="text-[11px] text-emerald-400 font-mono mt-1">
+                <div className="font-serif text-3xl font-bold text-stone-900">{totalGuests}</div>
+                <div className="text-[11px] text-emerald-700 font-mono mt-1 font-semibold">
                   {attendingCount} party submissions
                 </div>
               </div>
 
-              <div className="bg-stone-900/60 border border-stone-800 p-5 rounded-2xl">
-                <div className="flex items-center justify-between text-xs text-stone-400 mb-2">
-                  <span>Declined With Regrets</span>
-                  <CheckCircle2 size={16} className="text-stone-500" />
+              <div className="bg-white border border-amber-200/80 p-5 rounded-2xl shadow-sm">
+                <div className="flex items-center justify-between text-xs text-stone-500 mb-2">
+                  <span className="font-medium">Declined With Regrets</span>
+                  <CheckCircle2 size={16} className="text-stone-400" />
                 </div>
-                <div className="font-serif text-3xl font-bold text-stone-100">{declinedCount}</div>
+                <div className="font-serif text-3xl font-bold text-stone-900">{declinedCount}</div>
                 <div className="text-[11px] text-stone-500 font-mono mt-1">
                   Polite declines received
                 </div>
               </div>
 
-              <div className="bg-stone-900/60 border border-stone-800 p-5 rounded-2xl">
-                <div className="flex items-center justify-between text-xs text-stone-400 mb-2">
-                  <span>RSVP Capacity Limit</span>
-                  <ShieldCheck size={16} className="text-amber-400" />
+              <div className="bg-white border border-amber-200/80 p-5 rounded-2xl shadow-sm">
+                <div className="flex items-center justify-between text-xs text-stone-500 mb-2">
+                  <span className="font-medium">RSVP Capacity Limit</span>
+                  <ShieldCheck size={16} className="text-amber-600" />
                 </div>
-                <div className="font-serif text-3xl font-bold text-amber-200">
-                  {rsvps.length} / {rsvpLimit}
+                <div className="font-serif text-3xl font-bold text-stone-900">
+                  {rsvps.length} <span className="text-lg font-sans font-normal text-stone-500">/ {rsvpLimit}</span>
                 </div>
-                <div className="text-[11px] text-amber-400/80 font-mono mt-1">
+                <div className="text-[11px] text-amber-700 font-mono mt-1 font-semibold">
                   {plan === 'free' ? 'Free tier limit (20)' : 'Unlimited Capacity'}
                 </div>
               </div>
 
-              <div className="bg-stone-900/60 border border-stone-800 p-5 rounded-2xl">
-                <div className="flex items-center justify-between text-xs text-stone-400 mb-2">
-                  <span>Current Suite Theme</span>
-                  <Palette size={16} className="text-rose-400" />
+              <div className="bg-white border border-amber-200/80 p-5 rounded-2xl shadow-sm">
+                <div className="flex items-center justify-between text-xs text-stone-500 mb-2">
+                  <span className="font-medium">Current Suite Theme</span>
+                  <Palette size={16} className="text-rose-600" />
                 </div>
-                <div className="font-serif text-xl font-bold text-stone-100 truncate">
+                <div className="font-serif text-xl font-bold text-stone-900 truncate">
                   {activeTheme.name}
                 </div>
-                <div className="text-[11px] text-rose-400 font-mono mt-1">
+                <div className="text-[11px] text-rose-700 font-mono mt-1 font-semibold truncate">
                   {activeTheme.subtitle || 'Editorial Suite'}
                 </div>
               </div>
             </div>
 
             {/* Quick Share Hub Box */}
-            <div className="bg-stone-900/40 border border-stone-800 rounded-2xl p-6">
+            <div className="bg-white border border-amber-200/80 rounded-2xl p-6 shadow-sm">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h3 className="font-serif text-xl font-bold text-stone-100">
+                  <h3 className="font-serif text-xl font-bold text-stone-900">
                     Share Your Wedding Invitation & Drive Traffic
                   </h3>
-                  <p className="text-xs text-stone-400 mt-0.5">
+                  <p className="text-xs text-stone-600 mt-0.5">
                     Generate viral Pinterest pins, Instagram stories, or send direct WhatsApp messages.
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <button
                     onClick={handleCopyLink}
-                    className="px-4 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                    className="px-4 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold flex items-center gap-1.5 transition-colors border border-stone-200"
                   >
-                    {copiedLink ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+                    {copiedLink ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
                     <span>{copiedLink ? 'Copied!' : 'Copy URL'}</span>
                   </button>
                   <button
                     onClick={handleCopyWhatsAppInvite}
-                    className="px-4 py-2 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                    className="px-4 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-semibold flex items-center gap-1.5 transition-colors"
                   >
-                    {copiedText ? <Check size={14} className="text-emerald-400" /> : <MessageSquare size={14} />}
+                    {copiedText ? <Check size={14} className="text-emerald-600" /> : <MessageSquare size={14} />}
                     <span>{copiedText ? 'Text Copied!' : 'Copy Full WhatsApp Message'}</span>
                   </button>
                 </div>
               </div>
 
               {/* URL Display */}
-              <div className="bg-stone-950 p-3.5 rounded-xl border border-stone-800 font-mono text-xs text-amber-200 flex items-center justify-between">
+              <div className="bg-[#FAF7F2] p-3.5 rounded-xl border border-amber-200 font-mono text-xs text-stone-800 flex items-center justify-between">
                 <span className="truncate">{inviteUrl}</span>
                 <button 
                   onClick={onOpenGuestPreview}
-                  className="text-stone-400 hover:text-amber-300 text-xs font-sans font-medium flex items-center gap-1 shrink-0 ml-2"
+                  className="text-stone-600 hover:text-stone-950 text-xs font-sans font-medium flex items-center gap-1 shrink-0 ml-2"
                 >
                   <span>Test Experience</span>
                   <ExternalLink size={12} />
@@ -337,75 +337,81 @@ export function MainDashboard({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
                 <button
                   onClick={() => setActiveTab('share')}
-                  className="p-3 rounded-xl bg-stone-900 border border-stone-800 hover:border-red-500/40 text-stone-300 hover:text-red-300 text-xs flex items-center justify-center gap-2 transition-all"
+                  className="p-3 rounded-xl bg-[#FAF7F2] border border-stone-200 hover:border-red-400 text-stone-700 hover:text-red-700 text-xs font-medium flex items-center justify-center gap-2 transition-all shadow-xs"
                 >
-                  <Share2 size={15} className="text-red-400" />
+                  <Share2 size={15} className="text-red-500" />
                   <span>Pinterest 2:3 Pin</span>
                 </button>
 
                 <button
                   onClick={handleShareWhatsApp}
-                  className="p-3 rounded-xl bg-stone-900 border border-stone-800 hover:border-emerald-500/40 text-stone-300 hover:text-emerald-300 text-xs flex items-center justify-center gap-2 transition-all"
+                  className="p-3 rounded-xl bg-[#FAF7F2] border border-stone-200 hover:border-emerald-400 text-stone-700 hover:text-emerald-700 text-xs font-medium flex items-center justify-center gap-2 transition-all shadow-xs"
                 >
-                  <MessageSquare size={15} className="text-emerald-400" />
+                  <MessageSquare size={15} className="text-emerald-600" />
                   <span>WhatsApp Share</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('share')}
-                  className="p-3 rounded-xl bg-stone-900 border border-stone-800 hover:border-rose-500/40 text-stone-300 hover:text-rose-300 text-xs flex items-center justify-center gap-2 transition-all"
+                  className="p-3 rounded-xl bg-[#FAF7F2] border border-stone-200 hover:border-rose-400 text-stone-700 hover:text-rose-700 text-xs font-medium flex items-center justify-center gap-2 transition-all shadow-xs"
                 >
-                  <Instagram size={15} className="text-rose-400" />
+                  <Instagram size={15} className="text-rose-500" />
                   <span>9:16 Story Creator</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('rsvps')}
-                  className="p-3 rounded-xl bg-stone-900 border border-stone-800 hover:border-amber-500/40 text-stone-300 hover:text-amber-300 text-xs flex items-center justify-center gap-2 transition-all"
+                  className="p-3 rounded-xl bg-[#FAF7F2] border border-stone-200 hover:border-amber-400 text-stone-700 hover:text-amber-800 text-xs font-medium flex items-center justify-center gap-2 transition-all shadow-xs"
                 >
-                  <Download size={15} className="text-amber-400" />
+                  <Download size={15} className="text-amber-600" />
                   <span>Catering CSV Export</span>
                 </button>
               </div>
             </div>
 
             {/* Live RSVP Snapshot preview */}
-            <div className="bg-stone-900/40 border border-stone-800 rounded-2xl p-6">
+            <div className="bg-white border border-amber-200/80 rounded-2xl p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-serif text-lg font-bold text-stone-100">
+                <h3 className="font-serif text-lg font-bold text-stone-900">
                   Recent RSVP Responses
                 </h3>
                 <button
                   onClick={() => setActiveTab('rsvps')}
-                  className="text-xs text-amber-300 hover:underline flex items-center gap-1"
+                  className="text-xs text-amber-700 font-semibold hover:underline flex items-center gap-1"
                 >
                   <span>View All in RSVP Command</span>
                   <ArrowUpRight size={13} />
                 </button>
               </div>
 
-              <div className="divide-y divide-stone-800">
-                {rsvps.slice(0, 4).map((record) => (
-                  <div key={record.id} className="py-3 flex items-center justify-between text-xs">
-                    <div>
-                      <span className="font-medium text-stone-200">{record.guestName}</span>
-                      <span className="text-stone-500 ml-2">({record.guestEmail})</span>
-                      {record.mealChoice && (
-                        <span className="ml-2 px-2 py-0.5 rounded-full bg-stone-900 text-amber-300 text-[10px]">
-                          🍽️ {record.mealChoice}
-                        </span>
-                      )}
+              {rsvps.length === 0 ? (
+                <div className="text-center py-8 text-stone-500 text-xs">
+                  No RSVP responses received yet. Share your invitation link to start collecting guest responses!
+                </div>
+              ) : (
+                <div className="divide-y divide-stone-100">
+                  {rsvps.slice(0, 5).map((record) => (
+                    <div key={record.id} className="py-3.5 flex items-center justify-between text-xs flex-wrap gap-2">
+                      <div>
+                        <span className="font-semibold text-stone-900">{record.guestName}</span>
+                        <span className="text-stone-500 ml-2">({record.guestEmail})</span>
+                        {record.mealChoice && (
+                          <span className="ml-2 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-medium">
+                            🍽️ {record.mealChoice}
+                          </span>
+                        )}
+                      </div>
+                      <span className={'px-3 py-1 rounded-full text-[10px] font-mono font-bold ' + (
+                        record.attendance === 'attending' 
+                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
+                          : 'bg-stone-100 text-stone-600 border border-stone-200'
+                      )}>
+                        {record.attendance === 'attending' ? `Attending (${record.partySize})` : 'Declined'}
+                      </span>
                     </div>
-                    <span className={'px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold ' + (
-                      record.attendance === 'attending' 
-                        ? 'bg-emerald-950 text-emerald-300 border border-emerald-800/40' 
-                        : 'bg-stone-800 text-stone-400'
-                    )}>
-                      {record.attendance === 'attending' ? `Attending (${record.partySize})` : 'Declined'}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
           </div>
@@ -440,10 +446,10 @@ export function MainDashboard({
         {activeTab === 'billing' && (
           <div className="space-y-8 max-w-5xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="font-serif text-3xl font-bold text-stone-100">
+              <h2 className="font-serif text-3xl font-bold text-stone-900">
                 Transparent Plans & Creator Licensing
               </h2>
-              <p className="text-xs sm:text-sm text-stone-400 mt-1">
+              <p className="text-xs sm:text-sm text-stone-600 mt-1">
                 Instant activation with zero recurring subscription fees.
               </p>
             </div>
@@ -451,46 +457,46 @@ export function MainDashboard({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               {/* Free Plan */}
-              <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-6 flex flex-col justify-between">
+              <div className="bg-white border border-stone-200 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
                 <div>
-                  <div className="text-xs font-mono text-stone-400 uppercase tracking-wider mb-2">Free Starter</div>
-                  <div className="font-serif text-3xl font-bold text-stone-100 mb-2">$0</div>
-                  <p className="text-xs text-stone-400 mb-6">Free for 1 event up to 20 RSVPs.</p>
+                  <div className="text-xs font-mono text-stone-500 uppercase tracking-wider mb-2 font-bold">Free Starter</div>
+                  <div className="font-serif text-3xl font-bold text-stone-900 mb-2">$0</div>
+                  <p className="text-xs text-stone-500 mb-6">Free for 1 event up to 20 RSVPs.</p>
                   
-                  <div className="space-y-2.5 text-xs text-stone-300 mb-8">
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-emerald-400" /><span>1 Wedding Event</span></div>
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-emerald-400" /><span>Up to 20 RSVPs</span></div>
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-emerald-400" /><span>3D Wax Seal Animation</span></div>
+                  <div className="space-y-2.5 text-xs text-stone-700 mb-8">
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-emerald-600" /><span>1 Wedding Event</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-emerald-600" /><span>Up to 20 RSVPs</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-emerald-600" /><span>3D Wax Seal Animation</span></div>
                   </div>
                 </div>
 
-                <button disabled className="w-full py-2.5 rounded-xl bg-stone-800 text-stone-500 text-xs font-semibold cursor-default">
+                <button disabled className="w-full py-2.5 rounded-xl bg-stone-100 text-stone-500 text-xs font-semibold cursor-default border border-stone-200">
                   {plan === 'free' ? 'Current Active Plan' : 'Free Included'}
                 </button>
               </div>
 
               {/* Pro Pass ($19) */}
-              <div className="bg-gradient-to-b from-stone-900 to-stone-950 border-2 border-amber-500/60 rounded-3xl p-6 flex flex-col justify-between relative shadow-xl">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-rose-500 text-stone-950 text-[10px] font-bold uppercase tracking-wider">
+              <div className="bg-white border-2 border-amber-500 rounded-3xl p-6 flex flex-col justify-between relative shadow-lg ring-4 ring-amber-500/10">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3.5 py-0.5 rounded-full bg-gradient-to-r from-rose-500 to-amber-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
                   Couples Favorite
                 </div>
 
                 <div>
-                  <div className="text-xs font-mono text-amber-400 uppercase tracking-wider mb-2 mt-1">Pro Wedding Pass</div>
-                  <div className="font-serif text-3xl font-bold text-amber-200 mb-2">$19 <span className="text-xs font-sans font-normal text-stone-400">one-time</span></div>
-                  <p className="text-xs text-stone-400 mb-6">Unlimited RSVPs and full luxury features.</p>
+                  <div className="text-xs font-mono text-amber-700 uppercase tracking-wider mb-2 mt-1 font-bold">Pro Wedding Pass</div>
+                  <div className="font-serif text-3xl font-bold text-stone-900 mb-2">$19 <span className="text-xs font-sans font-normal text-stone-500">one-time</span></div>
+                  <p className="text-xs text-stone-600 mb-6">Unlimited RSVPs and full luxury features.</p>
                   
-                  <div className="space-y-2.5 text-xs text-stone-300 mb-8">
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-amber-400" /><span>Unlimited Guest RSVPs</span></div>
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-amber-400" /><span>Custom Harp / Piano Audio</span></div>
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-amber-400" /><span>1-Click Catering CSV Export</span></div>
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-amber-400" /><span>Pinterest Pin & Social Studio</span></div>
+                  <div className="space-y-2.5 text-xs text-stone-700 mb-8">
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-amber-600" /><span>Unlimited Guest RSVPs</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-amber-600" /><span>Custom Harp / Piano Audio</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-amber-600" /><span>1-Click Catering CSV Export</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-amber-600" /><span>Pinterest Pin & Social Studio</span></div>
                   </div>
                 </div>
 
                 <GumroadOverlayButton 
                   plan="pro"
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-stone-950 text-xs font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-1.5 no-underline cursor-pointer"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white text-xs font-bold shadow-md hover:opacity-95 transition-all flex items-center justify-center gap-1.5 no-underline cursor-pointer"
                 >
                   <Sparkles size={14} />
                   <span>{plan === 'pro' ? 'Renew / Extend ($19)' : 'Upgrade to Pro ($19)'}</span>
@@ -498,22 +504,22 @@ export function MainDashboard({
               </div>
 
               {/* Lifetime Creator ($79) */}
-              <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-6 flex flex-col justify-between">
+              <div className="bg-white border border-stone-200 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
                 <div>
-                  <div className="text-xs font-mono text-rose-400 uppercase tracking-wider mb-2">Lifetime Creator</div>
-                  <div className="font-serif text-3xl font-bold text-stone-100 mb-2">$79 <span className="text-xs font-sans font-normal text-stone-400">one-time</span></div>
-                  <p className="text-xs text-stone-400 mb-6">For wedding planners & multi-event studios.</p>
+                  <div className="text-xs font-mono text-rose-700 uppercase tracking-wider mb-2 font-bold">Lifetime Creator</div>
+                  <div className="font-serif text-3xl font-bold text-stone-900 mb-2">$79 <span className="text-xs font-sans font-normal text-stone-500">one-time</span></div>
+                  <p className="text-xs text-stone-500 mb-6">For wedding planners & multi-event studios.</p>
                   
-                  <div className="space-y-2.5 text-xs text-stone-300 mb-8">
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-rose-400" /><span>Unlimited Events & Clients</span></div>
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-rose-400" /><span>White-label Commercial Rights</span></div>
-                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-rose-400" /><span>Priority Concierge Support</span></div>
+                  <div className="space-y-2.5 text-xs text-stone-700 mb-8">
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-rose-600" /><span>Unlimited Events & Clients</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-rose-600" /><span>White-label Commercial Rights</span></div>
+                    <div className="flex items-center gap-2"><CheckCircle2 size={13} className="text-rose-600" /><span>Priority Concierge Support</span></div>
                   </div>
                 </div>
 
                 <GumroadOverlayButton 
                   plan="lifetime"
-                  className="w-full py-2.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition-colors flex items-center justify-center no-underline cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold transition-colors flex items-center justify-center no-underline cursor-pointer shadow-sm"
                 >
                   <span>{plan === 'lifetime' ? 'Lifetime Active' : 'Get Lifetime ($79)'}</span>
                 </GumroadOverlayButton>

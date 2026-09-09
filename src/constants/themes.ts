@@ -209,6 +209,74 @@ export const INITIAL_WEDDING_DATA: WeddingData = {
       { name: 'Black Tie Noir', hex: '#1c1c1c' },
     ],
   },
+  menu: [
+    {
+      id: 'm-1',
+      course: 'Canapés & Starters',
+      title: 'Seared King Salmon & Caviar',
+      description: 'Pan-seared Ora King Salmon, dill emulsion, crisp capers & Oscietra caviar.',
+      dietaryTags: ['Gluten-Free']
+    },
+    {
+      id: 'm-2',
+      course: 'Canapés & Starters',
+      title: 'Truffle & Wild Porcini Arancini',
+      description: 'Crispy carnaroli risotto pearls, aged Parmesan fonduta & black summer truffle.',
+      dietaryTags: ['Vegetarian']
+    },
+    {
+      id: 'm-3',
+      course: 'Main Entrée',
+      title: 'Prime Angus Beef Tenderloin',
+      description: 'Charred broccolini, confit garlic potato purée, and 48-hour bone marrow jus.',
+      dietaryTags: ['Gluten-Free']
+    },
+    {
+      id: 'm-4',
+      course: 'Main Entrée',
+      title: 'Heirloom Roasted Butternut Risotto',
+      description: 'Acquerello rice, crispy sage, toasted pine nuts, and vegan Parmesan crisp.',
+      dietaryTags: ['Vegan', 'Gluten-Free']
+    },
+    {
+      id: 'm-5',
+      course: 'Dessert & Cake',
+      title: 'Madagascan Vanilla & Gold Leaf Cake',
+      description: 'Layered chiffon sponge, passionfruit curd, and champagne buttercream.',
+      dietaryTags: ['Vegetarian']
+    },
+    {
+      id: 'm-6',
+      course: 'Signature Cocktails',
+      title: 'The Golden Vow (French 75)',
+      description: 'Botanical artisanal gin, lemon essence, raw sugar, topped with vintage champagne.',
+      dietaryTags: []
+    }
+  ],
+  storyTitle: 'From Paris to Forever',
+  storyText: 'We met on a rainy autumn evening in Montmartre, Paris. Five years, countless adventures across 14 countries, and a sunset proposal on the Amalfi cliffs later — we are beyond ecstatic to begin this next chapter with our dearest family and friends.',
+  faqs: [
+    {
+      id: 'f-1',
+      question: 'What is the dress code?',
+      answer: 'Our dress code is Black Tie Optional / Formal Vineyard Elegance. Dark suits, tuxedos, and floor-length or elevated midi gowns are welcome.'
+    },
+    {
+      id: 'f-2',
+      question: 'Are children invited?',
+      answer: 'While we adore your little ones, our ceremony and reception are strictly an adult-only celebration.'
+    },
+    {
+      id: 'f-3',
+      question: 'Is there parking available?',
+      answer: 'Yes, complimentary valet parking is provided upon arrival at the venue gates.'
+    },
+    {
+      id: 'f-4',
+      question: 'Can I bring a guest / Plus One?',
+      answer: 'Due to venue intimacy, seats are reserved exclusively for the guests named on your invitation.'
+    }
+  ],
   photos: [
     {
       id: 'p-1',

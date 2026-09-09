@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Helper to map DB row to wedding object
 function mapRowToWedding(row) {
+  const custom = typeof row.theme_customizations === 'string' ? JSON.parse(row.theme_customizations || '{}') : (row.theme_customizations || {});
   return {
     id: row.id,
     userId: row.user_id,
@@ -23,8 +24,12 @@ function mapRowToWedding(row) {
     mapsUrl: row.maps_url,
     rsvpDeadline: row.rsvp_deadline,
     themeId: row.theme_id,
-    themeCustomizations: typeof row.theme_customizations === 'string' ? JSON.parse(row.theme_customizations || '{}') : (row.theme_customizations || {}),
+    themeCustomizations: custom,
     timeline: typeof row.timeline === 'string' ? JSON.parse(row.timeline || '[]') : (row.timeline || []),
+    menu: custom.menu || [],
+    storyTitle: custom.storyTitle || 'Our Love Story',
+    storyText: custom.storyText || '',
+    faqs: custom.faqs || [],
     hotels: typeof row.hotels === 'string' ? JSON.parse(row.hotels || '[]') : (row.hotels || []),
     dressCode: typeof row.dress_code === 'string' ? JSON.parse(row.dress_code || '{}') : (row.dress_code || {}),
     photos: typeof row.photos === 'string' ? JSON.parse(row.photos || '[]') : (row.photos || []),
@@ -128,13 +133,21 @@ router.post('/', requireAuth, async (req, res) => {
         RETURNING *;
       `;
 
+      const fullCustom = {
+        ...(data.themeCustomizations || {}),
+        menu: data.menu || [],
+        storyTitle: data.storyTitle || 'Our Love Story',
+        storyText: data.storyText || '',
+        faqs: data.faqs || [],
+      };
+
       const values = [
         weddingId, userId, slug, data.coupleName1 || 'Bride', data.coupleName2 || 'Groom',
         data.coupleInitials || 'B&G', data.subtitleIntro || '', data.headline || '',
         data.weddingDate || '2027-06-18', data.weddingTime || '', data.venueName || '',
         data.venueAddress || '', data.cityState || '', data.mapsUrl || '',
         data.rsvpDeadline || '', data.themeId || 'olive-burgundy',
-        JSON.stringify(data.themeCustomizations || {}),
+        JSON.stringify(fullCustom),
         JSON.stringify(data.timeline || []),
         JSON.stringify(data.hotels || []),
         JSON.stringify(data.dressCode || {}),

@@ -20,7 +20,38 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 }) => {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [activeTab, setActiveTab] = useState<'invite' | 'schedule' | 'stay' | 'story'>('invite');
+  const [activeTab, setActiveTab] = useState<'invite' | 'menu' | 'story' | 'stay' | 'faqs'>('invite');
+  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (wedding.musicEnabled && wedding.backgroundMusicUrl) {
+      const audio = new Audio(wedding.backgroundMusicUrl);
+      audio.loop = true;
+      setAudioElement(audio);
+      return () => {
+        audio.pause();
+      };
+    }
+  }, [wedding.musicEnabled, wedding.backgroundMusicUrl]);
+
+  const toggleMusic = () => {
+    if (!audioElement) return;
+    if (isPlayingMusic) {
+      audioElement.pause();
+      setIsPlayingMusic(false);
+    } else {
+      audioElement.play().then(() => setIsPlayingMusic(true)).catch(() => {});
+    }
+  };
+
+  // Group menu by course
+  const menuByCourse = (wedding.menu || []).reduce<Record<string, typeof wedding.menu>>((acc, item) => {
+    const course = item.course || 'Main Entrée';
+    if (!acc[course]) acc[course] = [];
+    acc[course].push(item);
+    return acc;
+  }, {});
 
   // Countdown timer logic
   useEffect(() => {
@@ -226,31 +257,47 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               </div>
             </div>
 
-            {/* Navigation Tabs */}
-            <div className="flex rounded-xl bg-black/50 p-1 border border-stone-800 text-xs font-sans">
+            {/* Navigation Tabs - 5 Interactive Wedding Card Sections */}
+            <div className="flex rounded-xl bg-black/60 p-1 border border-stone-800 text-[11px] font-sans overflow-x-auto scrollbar-none gap-1">
               <button
                 onClick={() => setActiveTab('invite')}
-                className={`flex-1 py-2 rounded-lg font-medium transition-all ${
-                  activeTab === 'invite' ? 'bg-amber-950/60 text-amber-200 shadow' : 'text-stone-400 hover:text-white'
+                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
+                  activeTab === 'invite' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
                 }`}
               >
                 Schedule
               </button>
               <button
+                onClick={() => setActiveTab('menu')}
+                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
+                  activeTab === 'menu' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
+                }`}
+              >
+                Food & Drinks
+              </button>
+              <button
+                onClick={() => setActiveTab('story')}
+                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
+                  activeTab === 'story' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
+                }`}
+              >
+                Love Gallery
+              </button>
+              <button
                 onClick={() => setActiveTab('stay')}
-                className={`flex-1 py-2 rounded-lg font-medium transition-all ${
-                  activeTab === 'stay' ? 'bg-amber-950/60 text-amber-200 shadow' : 'text-stone-400 hover:text-white'
+                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
+                  activeTab === 'stay' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
                 }`}
               >
                 Travel & Stay
               </button>
               <button
-                onClick={() => setActiveTab('story')}
-                className={`flex-1 py-2 rounded-lg font-medium transition-all ${
-                  activeTab === 'story' ? 'bg-amber-950/60 text-amber-200 shadow' : 'text-stone-400 hover:text-white'
+                onClick={() => setActiveTab('faqs')}
+                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
+                  activeTab === 'faqs' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
                 }`}
               >
-                Love Story
+                Q&A FAQs
               </button>
             </div>
 
@@ -322,13 +369,115 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               </div>
             )}
 
-            {/* Tab 2: Travel & Lodging */}
+            {/* Tab 2: Cuisine & Cocktails Menu */}
+            {activeTab === 'menu' && (
+              <div className="space-y-4 pt-2 animate-fadeIn">
+                <div className="rounded-2xl p-6 bg-stone-900/80 border border-stone-800 shadow-xl">
+                  <div className="text-center mb-6">
+                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans">
+                      Culinary Experience
+                    </span>
+                    <h3 className="font-serif text-2xl text-amber-50 mt-1">Cuisine & Cocktails</h3>
+                    <p className="text-xs text-stone-400 mt-1">
+                      Specially curated farm-to-table dining and artisan wine pairing
+                    </p>
+                  </div>
+
+                  <div className="space-y-6">
+                    {Object.keys(menuByCourse).length === 0 ? (
+                      <p className="text-xs text-stone-400 text-center italic">Menu details will be announced soon.</p>
+                    ) : (
+                      Object.entries(menuByCourse).map(([courseName, items]) => (
+                        <div key={courseName} className="space-y-3">
+                          <div className="flex items-center gap-3">
+                            <span className="px-3 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-700/40 text-[11px] font-serif tracking-wider uppercase">
+                              {courseName}
+                            </span>
+                            <div className="flex-1 h-[1px] bg-stone-800" />
+                          </div>
+
+                          <div className="space-y-3 pl-2">
+                            {items?.map((item) => (
+                              <div key={item.id} className="bg-stone-950/60 p-3.5 rounded-xl border border-stone-800/80 space-y-1">
+                                <div className="flex items-start justify-between gap-2">
+                                  <h4 className="font-serif text-base text-stone-100">{item.title}</h4>
+                                  <div className="flex items-center gap-1 flex-wrap justify-end">
+                                    {item.dietaryTags?.map((tag, tIdx) => (
+                                      <span key={tIdx} className="px-2 py-0.5 rounded-full bg-stone-800 text-emerald-300 text-[9px] font-mono">
+                                        {tag}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                                <p className="text-xs text-stone-400 leading-relaxed">{item.description}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab 3: Love Story Photo Gallery */}
+            {activeTab === 'story' && (
+              <div className="space-y-4 pt-2 animate-fadeIn">
+                <div className="rounded-2xl p-6 bg-stone-900/80 border border-stone-800 shadow-xl space-y-3 text-center">
+                  <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans">
+                    Our Journey
+                  </span>
+                  <h3 className="font-serif text-2xl text-amber-50">{wedding.storyTitle || 'Our Love Story'}</h3>
+                  {wedding.storyText && (
+                    <p className="text-xs text-stone-300 leading-relaxed font-serif italic max-w-sm mx-auto">
+                      "{wedding.storyText}"
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                  {wedding.photos && wedding.photos.length > 0 ? (
+                    wedding.photos.map((photo) => (
+                      <div
+                        key={photo.id}
+                        className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-xl space-y-3"
+                      >
+                        <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-stone-950">
+                          <img
+                            src={photo.url}
+                            alt={photo.caption}
+                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                          />
+                          {photo.dateTag && (
+                            <span className="absolute bottom-2 right-2 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] text-amber-200 font-sans border border-white/10">
+                              {photo.dateTag}
+                            </span>
+                          )}
+                        </div>
+                        {photo.caption && (
+                          <p className="font-serif italic text-stone-200 text-sm text-center px-2">
+                            "{photo.caption}"
+                          </p>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-8 text-center text-xs text-stone-500 italic bg-stone-900/50 rounded-2xl border border-stone-800">
+                      No photos added yet. Add photo moments in the Studio Customizer!
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Tab 4: Travel & Lodging */}
             {activeTab === 'stay' && (
-              <div className="space-y-4 pt-2">
+              <div className="space-y-4 pt-2 animate-fadeIn">
                 {/* Transport Note */}
                 <div className="rounded-2xl p-5 bg-stone-900/80 border border-stone-800 shadow-xl space-y-2 text-center">
                   <Navigation size={20} className="mx-auto text-amber-400 mb-1" />
-                  <h4 className="font-serif text-xl text-amber-100">Transport & Ferry</h4>
+                  <h4 className="font-serif text-xl text-amber-100">Transport & Location</h4>
                   <p className="text-xs text-stone-300 leading-relaxed">
                     {wedding.transportInfo}
                   </p>
@@ -383,37 +532,49 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               </div>
             )}
 
-            {/* Tab 3: Love Story Photo Gallery */}
-            {activeTab === 'story' && (
-              <div className="space-y-4 pt-2">
-                <div className="text-center mb-2">
-                  <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans">
-                    Our Journey
-                  </span>
-                  <h3 className="font-serif text-2xl text-amber-50 mt-1">Our Love Story</h3>
-                </div>
+            {/* Tab 5: Guest Q&A FAQs */}
+            {activeTab === 'faqs' && (
+              <div className="space-y-4 pt-2 animate-fadeIn">
+                <div className="rounded-2xl p-6 bg-stone-900/80 border border-stone-800 shadow-xl space-y-4">
+                  <div className="text-center mb-2">
+                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans">
+                      Guest Information
+                    </span>
+                    <h3 className="font-serif text-2xl text-amber-50 mt-1">Frequently Asked Questions</h3>
+                  </div>
 
-                <div className="grid grid-cols-1 gap-4">
-                  {wedding.photos.map((photo) => (
-                    <div
-                      key={photo.id}
-                      className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-xl space-y-3"
-                    >
-                      <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
-                        <img
-                          src={photo.url}
-                          alt={photo.caption}
-                          className="w-full h-full object-cover"
-                        />
-                        <span className="absolute bottom-2 right-2 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] text-amber-200 font-sans border border-white/10">
-                          {photo.dateTag}
-                        </span>
-                      </div>
-                      <p className="font-serif italic text-stone-200 text-sm text-center px-2">
-                        "{photo.caption}"
-                      </p>
+                  <div className="space-y-3">
+                    {wedding.faqs && wedding.faqs.length > 0 ? (
+                      wedding.faqs.map((faq) => (
+                        <div key={faq.id} className="p-4 rounded-xl bg-stone-950/70 border border-stone-800 space-y-1.5 text-left">
+                          <h4 className="font-serif text-base text-amber-200 font-medium">
+                            {faq.question}
+                          </h4>
+                          <p className="text-xs text-stone-300 leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-stone-400 text-center italic">No FAQs added yet.</p>
+                    )}
+                  </div>
+
+                  {wedding.giftRegistryUrl && (
+                    <div className="mt-4 pt-4 border-t border-stone-800 text-center space-y-2">
+                      <span className="text-xs text-stone-400 block">Wishing Well & Gift Registry</span>
+                      <a
+                        href={wedding.giftRegistryUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-amber-200 text-xs font-serif transition-colors"
+                      >
+                        <Sparkles size={13} />
+                        <span>Visit Couple's Registry</span>
+                        <ExternalLink size={12} />
+                      </a>
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             )}
