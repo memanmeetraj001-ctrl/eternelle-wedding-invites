@@ -260,6 +260,32 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 className="w-full px-3.5 py-2 rounded-xl bg-stone-800 border border-stone-700 text-stone-100 text-sm focus:outline-none focus:border-amber-400"
               />
             </div>
+
+            {/* Custom URL Slug Box */}
+            <div className="sm:col-span-2 pt-3 border-t border-stone-800">
+              <label className="block text-xs font-medium text-amber-300 mb-1 flex items-center justify-between">
+                <span>Personalized Guest Invite Link (Custom URL Slug)</span>
+                <span className="text-[10px] font-mono text-stone-400">Share with guests</span>
+              </label>
+              <div className="flex items-center rounded-xl bg-stone-950 border border-amber-500/40 overflow-hidden focus-within:border-amber-400 shadow-inner">
+                <span className="px-3.5 py-2.5 text-xs font-mono text-stone-400 bg-stone-900 border-r border-stone-800 select-none hidden sm:inline">
+                  eternelleweddinginvites.online/invite/
+                </span>
+                <input
+                  type="text"
+                  value={wedding.slug || ''}
+                  onChange={(e) => {
+                    const clean = e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, '-');
+                    handleFieldChange('slug', clean);
+                  }}
+                  placeholder="e.g. sophia-liam"
+                  className="flex-1 px-3.5 py-2.5 bg-transparent text-amber-200 font-mono text-xs focus:outline-none placeholder-stone-600"
+                />
+              </div>
+              <p className="text-[11px] text-stone-400 mt-1.5">
+                Guests opening <strong className="text-amber-300 font-mono">/invite/{wedding.slug || 'your-slug'}</strong> will experience your full-screen 3D wax seal and submit RSVPs directly to your live dashboard.
+              </p>
+            </div>
           </div>
         </div>
       )}
