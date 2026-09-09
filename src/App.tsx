@@ -180,11 +180,8 @@ export function App() {
 
   const handleStartDesigning = () => {
     if (!user) {
-      setUser({
-        name: 'Sarah & Alex',
-        email: 'sarah.alex@example.com',
-        plan: 'free',
-      });
+      handleOpenAuth('signup');
+      return;
     }
     setViewMode('dashboard');
   };
@@ -238,53 +235,59 @@ export function App() {
           </div>
         </div>
 
-        {/* Center Navigation Tabs */}
-        <div className="flex items-center gap-1 bg-stone-900/80 p-1 rounded-2xl border border-stone-800 text-xs font-sans overflow-x-auto">
-          <button
-            onClick={() => setViewMode('landing')}
-            className={'px-3.5 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-all ' + (
-              viewMode === 'landing'
-                ? 'bg-amber-950/80 text-amber-200 border border-amber-600/40 shadow-sm'
-                : 'text-stone-400 hover:text-stone-200'
-            )}
-          >
-            <Home size={13} />
-            <span>Landing Page</span>
-          </button>
+        {/* Center Navigation Tabs - ONLY displayed when logged in */}
+        {user ? (
+          <div className="flex items-center gap-1 bg-stone-900/80 p-1 rounded-2xl border border-stone-800 text-xs font-sans overflow-x-auto">
+            <button
+              onClick={() => setViewMode('landing')}
+              className={'px-3.5 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-all ' + (
+                viewMode === 'landing'
+                  ? 'bg-amber-950/80 text-amber-200 border border-amber-600/40 shadow-sm'
+                  : 'text-stone-400 hover:text-stone-200'
+              )}
+            >
+              <Home size={13} />
+              <span>Landing Page</span>
+            </button>
 
-          <button
-            onClick={() => {
-              if (!user) {
-                setUser({ name: 'Sarah & Alex', email: 'sarah.alex@example.com', plan: 'free' });
-              }
-              setViewMode('dashboard');
-            }}
-            className={'px-3.5 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-all ' + (
-              viewMode === 'dashboard'
-                ? 'bg-amber-950/80 text-amber-200 border border-amber-600/40 shadow-sm'
-                : 'text-stone-400 hover:text-stone-200'
-            )}
-          >
-            <LayoutDashboard size={13} className={viewMode === 'dashboard' ? 'text-amber-300' : ''} />
-            <span>Creator Dashboard</span>
-          </button>
+            <button
+              onClick={() => setViewMode('dashboard')}
+              className={'px-3.5 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-all ' + (
+                viewMode === 'dashboard'
+                  ? 'bg-amber-950/80 text-amber-200 border border-amber-600/40 shadow-sm'
+                  : 'text-stone-400 hover:text-stone-200'
+              )}
+            >
+              <LayoutDashboard size={13} className={viewMode === 'dashboard' ? 'text-amber-300' : ''} />
+              <span>Creator Dashboard</span>
+            </button>
 
-          <button
-            onClick={() => setViewMode('guest')}
-            className={'px-3.5 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-all ' + (
-              viewMode === 'guest'
-                ? 'bg-amber-950/80 text-amber-200 border border-amber-600/40 shadow-sm'
-                : 'text-stone-400 hover:text-stone-200'
-            )}
-          >
-            <Sparkles size={13} className={viewMode === 'guest' ? 'text-amber-300' : ''} />
-            <span>Guest Experience</span>
-          </button>
-        </div>
+            <button
+              onClick={() => setViewMode('guest')}
+              className={'px-3.5 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-all ' + (
+                viewMode === 'guest'
+                  ? 'bg-amber-950/80 text-amber-200 border border-amber-600/40 shadow-sm'
+                  : 'text-stone-400 hover:text-stone-200'
+              )}
+            >
+              <Sparkles size={13} className={viewMode === 'guest' ? 'text-amber-300' : ''} />
+              <span>Guest Experience</span>
+            </button>
+          </div>
+        ) : (
+          /* Public Visitor Editorial Navigation Links */
+          <div className="hidden md:flex items-center gap-6 text-xs text-stone-400 font-medium">
+            <a href="#features" className="hover:text-amber-300 transition-colors">Features</a>
+            <a href="#demo" className="hover:text-amber-300 transition-colors">3D Demo</a>
+            <a href="#suites" className="hover:text-amber-300 transition-colors">Designer Suites</a>
+            <a href="#pricing" className="hover:text-amber-300 transition-colors">Pricing</a>
+            <a href="#faqs" className="hover:text-amber-300 transition-colors">FAQs</a>
+          </div>
+        )}
 
         {/* Right CTA / User Session Control */}
         <div className="flex items-center gap-2.5">
-          {viewMode === 'guest' && (
+          {viewMode === 'guest' && user && (
             <div className="hidden sm:flex items-center bg-stone-900 p-1 rounded-xl border border-stone-800 text-xs">
               <button
                 onClick={() => setIsMobileFrame(true)}
@@ -301,16 +304,6 @@ export function App() {
                 <Monitor size={14} />
               </button>
             </div>
-          )}
-
-          {(!user || user.plan === 'free') && (
-            <button
-              onClick={() => handleOpenCheckout('pro')}
-              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 font-bold text-xs shadow-lg flex items-center gap-1.5 transition-all"
-            >
-              <Sparkles size={13} />
-              <span>Get Pro ($19)</span>
-            </button>
           )}
 
           {user ? (
@@ -334,12 +327,19 @@ export function App() {
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => handleOpenAuth('signin')}
-                className="px-3.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 text-xs font-medium transition-colors"
+                className="px-3.5 py-1.5 rounded-xl bg-transparent hover:bg-stone-800 text-stone-300 text-xs font-medium transition-colors"
               >
                 Log In
+              </button>
+              <button
+                onClick={() => handleOpenAuth('signup')}
+                className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 font-bold text-xs shadow-md transition-all flex items-center gap-1.5"
+              >
+                <Sparkles size={13} />
+                <span>Start Free (1 Event)</span>
               </button>
             </div>
           )}
