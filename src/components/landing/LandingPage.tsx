@@ -21,6 +21,7 @@ interface LandingPageProps {
   onOpenAuth: (tab?: 'signin' | 'signup') => void;
   onOpenCheckout: (plan: 'pro' | 'lifetime') => void;
   onSelectTheme: (themeId: ThemeId) => void;
+  onOpenAdmin?: () => void;
 }
 
 export function LandingPage({
@@ -31,6 +32,7 @@ export function LandingPage({
   onOpenAuth,
   onOpenCheckout,
   onSelectTheme,
+  onOpenAdmin,
 }: LandingPageProps) {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [selectedPresetId, setSelectedPresetId] = useState<ThemeId>(wedding.themeId || 'olive-burgundy');
@@ -900,6 +902,11 @@ export function LandingPage({
             <button onClick={() => scrollToSection('demo')} className="hover:text-rose-700 transition-colors cursor-pointer">Live Demo</button>
             <button onClick={() => scrollToSection('pricing')} className="hover:text-rose-700 transition-colors cursor-pointer">Pricing</button>
             <button onClick={() => onOpenCheckout('lifetime')} className="hover:text-rose-700 transition-colors cursor-pointer">Creator Licensing</button>
+            {onOpenAdmin && (
+              <button onClick={onOpenAdmin} className="text-purple-800 hover:text-purple-950 font-bold transition-colors cursor-pointer">
+                ⚙️ Master Admin
+              </button>
+            )}
           </div>
 
           <p className="text-[11px] text-stone-700 font-medium">

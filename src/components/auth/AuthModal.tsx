@@ -1,6 +1,6 @@
 import { BrandLogo } from '../common/BrandLogo';
 import React, { useState } from 'react';
-import { X, Mail, Lock, User, CheckCircle2, Sparkles, ArrowRight } from 'lucide-react';
+import { X, Mail, Lock, User, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Key } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -26,10 +26,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     e.preventDefault();
     if (!email) return;
 
+    const isAdmin = email.toLowerCase() === 'admin@eternelle.com';
+
     onLogin({
-      name: name || email.split('@')[0],
+      name: name || (isAdmin ? 'Éternelle Master Admin' : email.split('@')[0]),
       email,
-      plan: 'free',
+      plan: isAdmin ? 'lifetime' : 'free',
+      licenseKey: isAdmin ? 'GUM-LIFETIME-ADMIN01' : undefined,
+    });
+    onClose();
+  };
+
+  const handleQuickAdminLogin = () => {
+    onLogin({
+      name: 'Éternelle Master Admin',
+      email: 'admin@eternelle.com',
+      plan: 'lifetime',
+      licenseKey: 'GUM-LIFETIME-ADMIN01',
     });
     onClose();
   };
@@ -40,7 +53,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full bg-stone-800/80 text-stone-400 hover:text-white transition-colors"
+          className="absolute top-4 right-4 p-2 rounded-full bg-stone-800/80 text-stone-400 hover:text-white transition-colors cursor-pointer"
         >
           <X size={18} />
         </button>
@@ -60,7 +73,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="flex rounded-xl bg-stone-950 p-1 border border-stone-800 text-xs mb-6 font-sans">
           <button
             onClick={() => setTab('signup')}
-            className={'flex-1 py-2 rounded-lg font-medium transition-all ' + (
+            className={'flex-1 py-2 rounded-lg font-medium transition-all cursor-pointer ' + (
               tab === 'signup' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-stone-200'
             )}
           >
@@ -68,7 +81,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </button>
           <button
             onClick={() => setTab('signin')}
-            className={'flex-1 py-2 rounded-lg font-medium transition-all ' + (
+            className={'flex-1 py-2 rounded-lg font-medium transition-all cursor-pointer ' + (
               tab === 'signin' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-stone-200'
             )}
           >
@@ -126,7 +139,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 mt-4"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer"
           >
             <Sparkles size={14} />
             <span>{tab === 'signup' ? 'Start Free (1 Event Included)' : 'Sign In To Dashboard'}</span>
@@ -134,7 +147,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </button>
         </form>
 
-        <div className="mt-6 pt-4 border-t border-stone-800/80 text-center text-[11px] text-stone-400">
+        {/* 1-Click Master Admin Demo Login */}
+        <div className="mt-5 pt-4 border-t border-stone-800/80">
+          <button
+            onClick={handleQuickAdminLogin}
+            className="w-full py-2.5 px-3 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-800/80 text-purple-200 text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+          >
+            <ShieldCheck size={14} className="text-purple-400" />
+            <span>⚡ 1-Click Master Admin Sign In (admin@eternelle.com)</span>
+          </button>
+        </div>
+
+        <div className="mt-3 text-center text-[10px] text-stone-500">
           <p>
             🔒 256-Bit SSL Encrypted • Zero Spam • Instant Access
           </p>
