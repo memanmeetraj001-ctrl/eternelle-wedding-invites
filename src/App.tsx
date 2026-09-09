@@ -206,7 +206,11 @@ export function App() {
       )}
 
       {/* Top Luxury Platform Navigation Bar */}
-      <header className="sticky top-0 z-50 bg-stone-950/90 backdrop-blur-md border-b border-stone-800/80 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 shadow-2xl">
+      <header className={`sticky top-0 z-50 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 transition-colors ${
+        viewMode === 'landing'
+          ? 'bg-[#FAF7F2]/90 border-stone-200/80 text-stone-900 shadow-sm'
+          : 'bg-stone-950/90 border-stone-800/80 text-stone-100 shadow-2xl'
+      }`}>
         
         {/* Brand Logo & Home Trigger */}
         <div 
@@ -216,7 +220,9 @@ export function App() {
           <BrandLogo size="md" showText={false} />
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-serif text-lg tracking-widest text-amber-100 font-medium">
+              <span className={`font-serif text-lg tracking-widest font-semibold ${
+                viewMode === 'landing' ? 'text-stone-900' : 'text-amber-100'
+              }`}>
                 ÉTERNELLE
               </span>
               {user?.plan && (
@@ -229,7 +235,9 @@ export function App() {
                 </span>
               )}
             </div>
-            <p className="text-[10px] text-stone-400 -mt-0.5 hidden sm:block">
+            <p className={`text-[10px] -mt-0.5 hidden sm:block ${
+              viewMode === 'landing' ? 'text-stone-500' : 'text-stone-400'
+            }`}>
               Interactive Luxury Wedding Invitations & Micro-Sites
             </p>
           </div>
@@ -276,12 +284,12 @@ export function App() {
           </div>
         ) : (
           /* Public Visitor Editorial Navigation Links */
-          <div className="hidden md:flex items-center gap-6 text-xs text-stone-400 font-medium">
-            <a href="#features" className="hover:text-amber-300 transition-colors">Features</a>
-            <a href="#demo" className="hover:text-amber-300 transition-colors">3D Demo</a>
-            <a href="#suites" className="hover:text-amber-300 transition-colors">Designer Suites</a>
-            <a href="#pricing" className="hover:text-amber-300 transition-colors">Pricing</a>
-            <a href="#faqs" className="hover:text-amber-300 transition-colors">FAQs</a>
+          <div className="hidden md:flex items-center gap-6 text-xs text-stone-600 font-medium">
+            <a href="#features" className="hover:text-rose-600 transition-colors">Features</a>
+            <a href="#demo" className="hover:text-rose-600 transition-colors">3D Demo</a>
+            <a href="#suites" className="hover:text-rose-600 transition-colors">Designer Suites</a>
+            <a href="#pricing" className="hover:text-rose-600 transition-colors">Pricing</a>
+            <a href="#faqs" className="hover:text-rose-600 transition-colors">FAQs</a>
           </div>
         )}
 
@@ -330,13 +338,17 @@ export function App() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleOpenAuth('signin')}
-                className="px-3.5 py-1.5 rounded-xl bg-transparent hover:bg-stone-800 text-stone-300 text-xs font-medium transition-colors"
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                  viewMode === 'landing'
+                    ? 'text-stone-700 hover:bg-stone-200/70 border border-stone-300/80'
+                    : 'text-stone-300 hover:bg-stone-800 bg-transparent'
+                }`}
               >
                 Log In
               </button>
               <button
                 onClick={() => handleOpenAuth('signup')}
-                className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 font-bold text-xs shadow-md transition-all flex items-center gap-1.5"
+                className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white font-bold text-xs shadow-md shadow-rose-500/20 transition-all flex items-center gap-1.5"
               >
                 <Sparkles size={13} />
                 <span>Start Free (1 Event)</span>
