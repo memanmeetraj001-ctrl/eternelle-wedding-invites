@@ -38,9 +38,8 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
 
   const handleVerifyPasskey = (e: React.FormEvent) => {
     e.preventDefault();
-    // Valid secret admin passkeys
-    const validKeys = ['admin123', 'eternelle2026', 'admin@eternelle.com', 'superadmin'];
-    if (validKeys.includes(passkey.trim().toLowerCase())) {
+    // Valid secret master passkey
+    if (passkey.trim() === 'Fox@967777') {
       setIsAuthenticated(true);
       sessionStorage.setItem('eternelle_admin_authenticated', 'true');
       setPasskeyError(false);
