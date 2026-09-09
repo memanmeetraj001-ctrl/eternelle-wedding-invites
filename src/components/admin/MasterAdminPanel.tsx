@@ -12,6 +12,7 @@ import {
   UserAccount, 
   PlatformAnalytics 
 } from '../../utils/storage';
+import { apiGetAdminStats, apiUpdateUserPlan } from '../../utils/api';
 import { BrandLogo } from '../common/BrandLogo';
 
 interface MasterAdminPanelProps {
@@ -36,6 +37,27 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
   const [planFilter, setPlanFilter] = useState<'all' | 'free' | 'pro' | 'lifetime'>('all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  const refreshData = async () => {
+    try {
+      const serverData = await apiGetAdminStats('Fox@967777');
+      if (serverData?.analytics && serverData?.users) {
+        setAnalytics(serverData.analytics);
+        setUsers(serverData.users);
+        return;
+      }
+    } catch (e) {
+      // fallback to local
+    }
+    setAnalytics(getPlatformAnalytics());
+    setUsers(getAllUsers());
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refreshData();
+    }
+  }, [isAuthenticated]);
+
   const handleVerifyPasskey = (e: React.FormEvent) => {
     e.preventDefault();
     // Valid secret master passkey
@@ -43,19 +65,16 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
       setIsAuthenticated(true);
       sessionStorage.setItem('eternelle_admin_authenticated', 'true');
       setPasskeyError(false);
+      refreshData();
     } else {
       setPasskeyError(true);
     }
   };
 
-  const refreshData = () => {
-    setAnalytics(getPlatformAnalytics());
-    setUsers(getAllUsers());
-  };
-
-  const handlePlanChange = (userId: string, newPlan: 'free' | 'pro' | 'lifetime') => {
+  const handlePlanChange = async (userId: string, newPlan: 'free' | 'pro' | 'lifetime') => {
     updateUserPlan(userId, newPlan);
-    refreshData();
+    await apiUpdateUserPlan(userId, newPlan, 'Fox@967777');
+    await refreshData();
     setToastMessage(`Updated user plan to ${newPlan.toUpperCase()} successfully.`);
     setTimeout(() => setToastMessage(null), 3000);
   };

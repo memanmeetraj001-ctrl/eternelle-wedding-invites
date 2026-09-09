@@ -29,6 +29,14 @@ import {
   getAllUsers, 
   UserAccount 
 } from './utils/storage';
+import {
+  apiGetMe,
+  apiLogout,
+  apiGetWeddingBySlug,
+  apiSaveWedding,
+  apiGetRSVPs,
+  apiSubmitRSVP
+} from './utils/api';
 
 export type AppViewMode = 'landing' | 'dashboard' | 'guest' | 'admin';
 
@@ -113,13 +121,50 @@ export function App() {
   const [checkoutSelectedPlan, setCheckoutSelectedPlan] = useState<'pro' | 'lifetime'>('pro');
   const [purchaseNotification, setPurchaseNotification] = useState<string | null>(null);
 
-  // Sync wedding data changes to storage
+  // 1. Initial backend synchronization (session verification & wedding data)
+  useEffect(() => {
+    async function syncBackendData() {
+      try {
+        const remoteUser = await apiGetMe();
+        if (remoteUser) {
+          setUser(remoteUser);
+          saveUser(remoteUser);
+        }
+
+        if (initialRoute.slug) {
+          const remoteWedding = await apiGetWeddingBySlug(initialRoute.slug);
+          if (remoteWedding) {
+            setWedding(remoteWedding);
+          }
+        }
+      } catch (e) {
+        console.warn('Backend sync failed, using offline cache:', e);
+      }
+    }
+    syncBackendData();
+  }, []);
+
+  // 2. Fetch latest RSVPs when wedding ID is available
+  useEffect(() => {
+    if (wedding?.id) {
+      apiGetRSVPs(wedding.id).then((remoteRSVPs) => {
+        if (remoteRSVPs && remoteRSVPs.length > 0) {
+          setRsvps(remoteRSVPs);
+        }
+      }).catch(() => {});
+    }
+  }, [wedding?.id]);
+
+  // 3. Sync wedding data changes to storage and backend
   useEffect(() => {
     localStorage.setItem('eternelle_wedding_data', JSON.stringify(wedding));
     saveWedding(wedding);
-  }, [wedding]);
+    if (user) {
+      apiSaveWedding(wedding).catch(() => {});
+    }
+  }, [wedding, user]);
 
-  // Sync user session
+  // 4. Sync user session
   useEffect(() => {
     if (user) {
       localStorage.setItem('eternelle_user_session', JSON.stringify(user));
@@ -129,7 +174,7 @@ export function App() {
     }
   }, [user]);
 
-  // 2. Detect Gumroad Purchase Redirect
+  // 5. Detect Gumroad Purchase Redirect
   useEffect(() => {
     const redirectInfo = detectGumroadRedirect();
     if (redirectInfo.isPurchaseRedirect && redirectInfo.plan) {
@@ -165,7 +210,7 @@ export function App() {
     }
   }, []);
 
-  // 3. Listen to Gumroad JS Overlay PostMessage
+  // 6. Listen to Gumroad JS Overlay PostMessage
   useEffect(() => {
     const handleGumroadMessage = (event: MessageEvent) => {
       if (!event.data) return;
@@ -197,9 +242,10 @@ export function App() {
     return () => window.removeEventListener('message', handleGumroadMessage);
   }, [checkoutSelectedPlan, user]);
 
-  const handleAddRSVP = (record: Omit<RSVPRecord, 'id' | 'submittedAt'>) => {
+  const handleAddRSVP = async (record: Omit<RSVPRecord, 'id' | 'submittedAt'>) => {
     const savedRecord = saveRSVPForWedding(wedding.id, record);
     setRsvps((prev) => [savedRecord, ...prev]);
+    await apiSubmitRSVP(wedding.id, record);
   };
 
   const handleOpenAuth = (tab: 'signin' | 'signup' = 'signup') => {
@@ -211,43 +257,29 @@ export function App() {
     setIsAuthModalOpen(true);
   };
 
-  const handleUserLogin = (userData: { name: string; email: string; plan: 'free' | 'pro' | 'lifetime'; licenseKey?: string }) => {
-    const isAdmin = userData.email.toLowerCase() === 'admin@eternelle.com';
-    const userAccount: UserAccount = {
-      id: `usr_${Date.now()}`,
-      name: userData.name,
-      email: userData.email,
-      role: isAdmin ? 'admin' : 'user',
-      plan: isAdmin ? 'lifetime' : userData.plan,
-      licenseKey: userData.licenseKey,
-      createdAt: new Date().toISOString(),
-      weddingSlug: wedding.slug,
-    };
+  const handleUserLogin = async (userAccount: UserAccount) => {
     setUser(userAccount);
     saveUser(userAccount);
     setViewMode('dashboard');
+
+    if (userAccount.weddingSlug) {
+      const w = await apiGetWeddingBySlug(userAccount.weddingSlug);
+      if (w) setWedding(w);
+    }
   };
 
-  const handleOnboardingComplete = (newWedding: WeddingData, newAccount: { name: string; email: string }) => {
+  const handleOnboardingComplete = async (newWedding: WeddingData, userAccount: UserAccount) => {
     setWedding(newWedding);
     saveWedding(newWedding);
-
-    const userAccount: UserAccount = {
-      id: `usr_${Date.now()}`,
-      name: newAccount.name,
-      email: newAccount.email,
-      role: 'user',
-      plan: 'free',
-      createdAt: new Date().toISOString(),
-      weddingSlug: newWedding.slug,
-    };
+    await apiSaveWedding(newWedding);
 
     setUser(userAccount);
     saveUser(userAccount);
     setViewMode('dashboard');
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    await apiLogout();
     setUser(null);
     setViewMode('landing');
   };

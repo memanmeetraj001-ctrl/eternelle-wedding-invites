@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import { 
   X, Sparkles, Heart, ArrowRight, ArrowLeft, Check, 
   Palette, Calendar, MapPin, Link2, ShieldCheck, Star, 
-  Eye, Lock, Mail, User, CheckCircle2
+  Eye, Lock, Mail, User, CheckCircle2, Loader2, AlertCircle
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { WeddingData, ThemeId, ThemeConfig } from '../../types/invitation';
 import { THEME_PRESETS, INITIAL_WEDDING_DATA } from '../../constants/themes';
 import { BrandLogo } from '../common/BrandLogo';
+import { apiRegister, apiSaveWedding } from '../../utils/api';
+import { UserAccount } from '../../utils/storage';
 
 interface OnboardingWizardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onComplete: (weddingData: WeddingData, userAccount: { name: string; email: string }) => void;
+  onComplete: (weddingData: WeddingData, userAccount: UserAccount) => void;
   onSwitchToSignIn: () => void;
 }
 
@@ -37,6 +39,8 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   // Final account fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -72,36 +76,61 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
     setStep(4);
   };
 
-  const handleFinishWizard = (e: React.FormEvent) => {
+  const handleFinishWizard = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !password) return;
 
-    const finalWedding: WeddingData = {
-      ...INITIAL_WEDDING_DATA,
-      id: 'wed_' + Date.now(),
-      slug: customSlug.toLowerCase().trim() || autoGenerateSlug(partner1, partner2),
-      coupleName1: partner1.trim() || 'Genevieve',
-      coupleName2: partner2.trim() || 'Marcus',
-      coupleInitials: initials.trim() || autoGenerateInitials(partner1, partner2),
-      weddingDate: weddingDate || '2027-06-18',
-      venueName: venueName.trim() || 'Grand Estate Venue',
-      cityState: cityState.trim() || 'Tuscany, Italy',
-      themeId,
-    };
+    setIsSubmitting(true);
+    setErrorMessage(null);
 
-    confetti({
-      particleCount: 140,
-      spread: 90,
-      origin: { y: 0.5 },
-      colors: ['#f43f5e', '#d97706', '#ec4899', '#ffffff']
-    });
+    const coupleSlug = customSlug.toLowerCase().trim() || autoGenerateSlug(partner1, partner2);
+    const coupleName = `${partner1} & ${partner2}`;
 
-    onComplete(finalWedding, {
-      name: `${partner1} & ${partner2}`,
-      email: email.trim(),
-    });
+    try {
+      // 1. Register user
+      const authRes = await apiRegister(coupleName, email, password, 'free');
+      
+      if (!authRes.success || !authRes.user) {
+        setErrorMessage(authRes.error || 'Failed to create account. Please try a different email.');
+        setIsSubmitting(false);
+        return;
+      }
 
-    onClose();
+      const finalWedding: WeddingData = {
+        ...INITIAL_WEDDING_DATA,
+        id: 'wed_' + Date.now(),
+        slug: coupleSlug,
+        coupleName1: partner1.trim() || 'Genevieve',
+        coupleName2: partner2.trim() || 'Marcus',
+        coupleInitials: initials.trim() || autoGenerateInitials(partner1, partner2),
+        weddingDate: weddingDate || '2027-06-18',
+        venueName: venueName.trim() || 'Grand Estate Venue',
+        cityState: cityState.trim() || 'Tuscany, Italy',
+        themeId,
+      };
+
+      // 2. Persist to PostgreSQL backend
+      await apiSaveWedding(finalWedding);
+
+      confetti({
+        particleCount: 140,
+        spread: 90,
+        origin: { y: 0.5 },
+        colors: ['#f43f5e', '#d97706', '#ec4899', '#ffffff']
+      });
+
+      const userAccount: UserAccount = {
+        ...authRes.user,
+        weddingSlug: coupleSlug,
+      };
+
+      onComplete(finalWedding, userAccount);
+      onClose();
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Error initializing your suite. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -364,6 +393,13 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                   </p>
                 </div>
 
+                {errorMessage && (
+                  <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-xs flex items-center gap-2">
+                    <AlertCircle size={15} className="shrink-0 text-rose-400" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
                 <form onSubmit={handleFinishWizard} className="space-y-3.5 text-xs font-sans">
                   
                   {/* Custom URL Slug Claim Box */}
@@ -417,11 +453,21 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white font-bold text-xs shadow-xl shadow-rose-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                      disabled={isSubmitting}
+                      className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 disabled:opacity-50 text-white font-bold text-xs shadow-xl shadow-rose-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <Sparkles size={15} />
-                      <span>Launch My Free Wedding Suite</span>
-                      <ArrowRight size={14} />
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 size={15} className="animate-spin" />
+                          <span>Creating Your Suite...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles size={15} />
+                          <span>Launch My Free Wedding Suite</span>
+                          <ArrowRight size={14} />
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>

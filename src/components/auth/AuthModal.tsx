@@ -1,11 +1,13 @@
-import { BrandLogo } from '../common/BrandLogo';
 import React, { useState } from 'react';
-import { X, Mail, Lock, User, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Key } from 'lucide-react';
+import { X, Mail, Lock, User, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Key, AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { BrandLogo } from '../common/BrandLogo';
+import { apiLogin, apiRegister } from '../../utils/api';
+import { UserAccount } from '../../utils/storage';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogin: (userData: { name: string; email: string; plan: 'free' | 'pro' | 'lifetime'; licenseKey?: string }) => void;
+  onLogin: (userData: UserAccount) => void;
   initialTab?: 'signin' | 'signup';
 }
 
@@ -19,32 +21,55 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleAuthSubmit = (e: React.FormEvent) => {
+  const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !password) return;
 
-    const isAdmin = email.toLowerCase() === 'admin@eternelle.com';
+    setLoading(true);
+    setErrorMessage(null);
 
-    onLogin({
-      name: name || (isAdmin ? 'Éternelle Master Admin' : email.split('@')[0]),
-      email,
-      plan: isAdmin ? 'lifetime' : 'free',
-      licenseKey: isAdmin ? 'GUM-LIFETIME-ADMIN01' : undefined,
-    });
-    onClose();
+    try {
+      if (tab === 'signup') {
+        const res = await apiRegister(name, email, password, 'free');
+        if (res.success && res.user) {
+          onLogin(res.user);
+          onClose();
+        } else {
+          setErrorMessage(res.error || 'Failed to create account. Please try again.');
+        }
+      } else {
+        const res = await apiLogin(email, password);
+        if (res.success && res.user) {
+          onLogin(res.user);
+          onClose();
+        } else {
+          setErrorMessage(res.error || 'Invalid email or password.');
+        }
+      }
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Authentication error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleQuickAdminLogin = () => {
-    onLogin({
-      name: 'Éternelle Master Admin',
-      email: 'admin@eternelle.com',
-      plan: 'lifetime',
-      licenseKey: 'GUM-LIFETIME-ADMIN01',
-    });
-    onClose();
+  const handleQuickDemo = async () => {
+    setLoading(true);
+    setErrorMessage(null);
+    const demoEmail = 'partner@example.com';
+    const demoPass = 'eternelle2026';
+    const res = await apiLogin(demoEmail, demoPass);
+    if (res.success && res.user) {
+      onLogin(res.user);
+      onClose();
+    }
+    setLoading(false);
   };
 
   return (
@@ -70,9 +95,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </p>
         </div>
 
+        {/* Tab switch */}
         <div className="flex rounded-xl bg-stone-950 p-1 border border-stone-800 text-xs mb-6 font-sans">
           <button
-            onClick={() => setTab('signup')}
+            type="button"
+            onClick={() => {
+              setTab('signup');
+              setErrorMessage(null);
+            }}
             className={'flex-1 py-2 rounded-lg font-medium transition-all cursor-pointer ' + (
               tab === 'signup' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-stone-200'
             )}
@@ -80,7 +110,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             Create Free Account
           </button>
           <button
-            onClick={() => setTab('signin')}
+            type="button"
+            onClick={() => {
+              setTab('signin');
+              setErrorMessage(null);
+            }}
             className={'flex-1 py-2 rounded-lg font-medium transition-all cursor-pointer ' + (
               tab === 'signin' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-stone-200'
             )}
@@ -88,6 +122,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             Sign In
           </button>
         </div>
+
+        {/* Error alert */}
+        {errorMessage && (
+          <div className="mb-4 p-3 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-xs flex items-center gap-2">
+            <AlertCircle size={15} className="shrink-0 text-rose-400" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
         <form onSubmit={handleAuthSubmit} className="space-y-4 text-xs font-sans">
           {tab === 'signup' && (
@@ -127,30 +169,52 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <div className="relative">
               <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-stone-800 border border-stone-700 text-stone-100 text-xs focus:outline-none focus:border-amber-400"
+                className="w-full pl-9 pr-10 py-2.5 rounded-xl bg-stone-800 border border-stone-700 text-stone-100 text-xs focus:outline-none focus:border-amber-400 font-mono"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-200 cursor-pointer"
+              >
+                {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer"
+            disabled={loading}
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 disabled:opacity-50 text-stone-950 font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer"
           >
-            <Sparkles size={14} />
-            <span>{tab === 'signup' ? 'Start Free (1 Event Included)' : 'Sign In To Dashboard'}</span>
-            <ArrowRight size={14} />
+            {loading ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>{tab === 'signup' ? 'Creating Account...' : 'Signing In...'}</span>
+              </>
+            ) : (
+              <>
+                <Sparkles size={14} />
+                <span>{tab === 'signup' ? 'Start Free (1 Event Included)' : 'Sign In To Dashboard'}</span>
+                <ArrowRight size={14} />
+              </>
+            )}
           </button>
         </form>
 
-        <div className="mt-6 pt-4 border-t border-stone-800/80 text-center text-[10px] text-stone-500">
-          <p>
-            🔒 256-Bit SSL Encrypted • Zero Spam • Instant Access
-          </p>
+        <div className="mt-4 pt-3 border-t border-stone-800/80 flex items-center justify-between text-[11px] text-stone-500">
+          <span>🔒 256-Bit SSL Encrypted</span>
+          <button
+            type="button"
+            onClick={handleQuickDemo}
+            className="text-amber-400 hover:underline cursor-pointer font-medium"
+          >
+            ⚡ Instant Demo Access
+          </button>
         </div>
 
       </div>
