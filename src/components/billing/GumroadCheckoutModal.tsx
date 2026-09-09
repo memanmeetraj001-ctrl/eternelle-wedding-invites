@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Check, ShieldCheck, Sparkles, CreditCard, Lock, ArrowRight, Star, ExternalLink } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { GUMROAD_CONFIG, openGumroadProduct } from '../../constants/gumroad';
+import { GumroadOverlayButton } from '../common/GumroadOverlayButton';
 
 interface GumroadCheckoutModalProps {
   isOpen: boolean;
@@ -123,15 +124,14 @@ export const GumroadCheckoutModal: React.FC<GumroadCheckoutModalProps> = ({
 
         {/* Action Buttons */}
         <div className="space-y-3">
-          <button
-            type="button"
-            onClick={handleOpenCheckout}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2"
+          <GumroadOverlayButton
+            plan={plan}
+            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 no-underline text-center"
           >
             <Sparkles size={14} />
             <span>Proceed to Secure Checkout ({price})</span>
             <ExternalLink size={14} />
-          </button>
+          </GumroadOverlayButton>
 
           <div className="relative flex py-1 items-center">
             <div className="flex-grow border-t border-stone-800"></div>
