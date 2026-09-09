@@ -64,11 +64,11 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
 
       {/* Top Heading */}
       <div className={`text-center mb-6 transition-all duration-700 ${isOpening || isOpen ? 'opacity-0 -translate-y-4' : 'opacity-100'}`}>
-        <span className="text-xs font-sans tracking-[0.35em] text-amber-100/75 uppercase block">
-          {wedding.subtitleIntro}
+        <span className="text-xs font-mono font-bold tracking-[0.35em] text-amber-300 uppercase block drop-shadow-md">
+          {wedding.subtitleIntro || 'YOU ARE CORDIALLY INVITED'}
         </span>
-        <h1 className="font-script text-4xl sm:text-5xl text-amber-50 mt-1 font-normal drop-shadow-sm">
-          the {wedding.coupleName2} & {wedding.coupleName1}
+        <h1 className="font-serif text-3xl sm:text-4xl text-stone-100 font-bold mt-1 drop-shadow-lg">
+          {wedding.coupleName1} & {wedding.coupleName2}
         </h1>
       </div>
 
@@ -95,25 +95,25 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
 
         {/* Sliding Card Inside */}
         <div
-          className={`absolute inset-x-5 bottom-4 h-48 rounded-xl shadow-xl transition-all duration-1000 ease-out flex flex-col items-center justify-start p-4 text-center ${
+          className={`absolute inset-x-5 bottom-4 h-48 rounded-xl shadow-2xl transition-all duration-1000 ease-out flex flex-col items-center justify-start p-4 text-center ${
             isOpening || isOpen
               ? '-translate-y-24 scale-105 opacity-100 z-30'
               : 'translate-y-2 scale-95 opacity-80 z-10'
           }`}
           style={{
             backgroundColor: theme.cardBg,
-            border: `1px solid ${theme.cardBorder}`,
+            border: `2px solid ${theme.cardBorder || '#d4af37'}`,
             color: theme.cardTextPrimary,
           }}
         >
-          <div className="w-full h-full border border-dashed rounded-lg p-2 flex flex-col items-center justify-center" style={{ borderColor: theme.cardBorder || '#d4af37' }}>
-            <span className="text-[10px] tracking-[0.25em] font-sans uppercase font-bold" style={{ color: theme.cardAccentColor || theme.cardTextPrimary }}>
+          <div className="w-full h-full border border-dashed rounded-lg p-2.5 flex flex-col items-center justify-center shadow-inner" style={{ borderColor: theme.cardBorder || '#d4af37' }}>
+            <span className="text-[10px] tracking-[0.25em] font-mono uppercase font-bold" style={{ color: theme.cardAccentColor || theme.cardTextPrimary }}>
               {wedding.headline || 'YOU ARE CORDIALLY INVITED'}
             </span>
-            <p className="font-script text-3xl font-bold mt-1" style={{ color: theme.cardTextPrimary }}>
+            <p className="font-serif text-2xl font-bold mt-1 tracking-tight" style={{ color: theme.cardTextPrimary }}>
               {wedding.coupleName1} & {wedding.coupleName2}
             </p>
-            <div className="mt-1 text-xs font-serif font-medium tracking-wider" style={{ color: theme.cardTextSecondary || theme.cardTextPrimary }}>
+            <div className="mt-1 text-xs font-sans font-semibold tracking-wide" style={{ color: theme.cardTextSecondary || theme.cardTextPrimary }}>
               {wedding.weddingDate} · {wedding.cityState}
             </div>
           </div>
@@ -183,17 +183,17 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
 
       {/* Bottom Action Prompt */}
       <div
-        className={`text-center mt-8 cursor-pointer transition-all duration-500 ${
+        className={`text-center mt-6 cursor-pointer transition-all duration-500 ${
           isOpening || isOpen ? 'opacity-0 translate-y-4' : 'opacity-100 hover:scale-105'
         }`}
         onClick={handleEnvelopeClick}
       >
-        <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-amber-100 text-xs font-sans tracking-widest uppercase shadow-lg hover:bg-white/20 transition-all">
-          <Sparkles size={13} className="text-amber-300" />
-          <span>Click to Open The Magic</span>
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-400/50 text-amber-200 text-xs font-sans font-bold tracking-widest uppercase shadow-lg hover:bg-amber-500/30 transition-all">
+          <Sparkles size={14} className="text-amber-400 animate-spin" />
+          <span>Click Wax Seal to Open</span>
         </div>
-        <p className="font-script text-2xl text-amber-200/80 mt-2">
-          Touch the seal to reveal your invitation
+        <p className="font-serif italic text-sm text-stone-300 font-medium mt-2 drop-shadow">
+          Touch the monogram seal to reveal the stationery
         </p>
       </div>
     </div>

@@ -201,24 +201,28 @@ export function LandingPage({
 
       {/* 4. LIVE INTERACTIVE EMBEDDED DEMO SECTION */}
       <section id="demo" className="w-full max-w-5xl px-4 sm:px-6 py-14 flex flex-col items-center">
-        <div className="w-full bg-white border border-rose-200/90 rounded-3xl p-6 sm:p-10 shadow-xl shadow-rose-100/60 relative overflow-hidden">
+        <div className="w-full bg-stone-950 border border-stone-800 text-stone-100 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
           
-          <div className="text-center mb-8">
-            <span className="px-3.5 py-1 rounded-full bg-rose-100 text-rose-900 text-[11px] font-mono uppercase tracking-widest border border-rose-300 font-bold">
+          {/* Subtle gold ambient glow */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 blur-3xl pointer-events-none rounded-full" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-rose-500/10 blur-3xl pointer-events-none rounded-full" />
+
+          <div className="text-center mb-8 relative z-10">
+            <span className="px-3.5 py-1 rounded-full bg-amber-950/80 text-amber-300 text-[11px] font-mono uppercase tracking-widest border border-amber-600/50 font-bold">
               ✦ Live Interactive Experience
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal text-stone-950 mt-3">
+            <h2 className="font-serif text-3xl sm:text-4xl font-normal text-stone-100 mt-3">
               Test The Guest Unboxing Right Now
             </h2>
-            <p className="text-xs sm:text-sm text-stone-700 mt-1 max-w-md mx-auto font-medium">
+            <p className="text-xs sm:text-sm text-stone-300 mt-1 max-w-md mx-auto font-normal">
               Tap the wax seal below to experience the tactile 3D envelope reveal and submit a test RSVP.
             </p>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 relative z-10">
             
             {/* Interactive Envelope Preview */}
-            <div className="w-full max-w-md">
+            <div className="w-full max-w-md bg-stone-900/60 border border-stone-800 rounded-2xl p-2 sm:p-4 shadow-inner">
               <EnvelopeExperience
                 wedding={wedding}
                 theme={selectedPreset}
@@ -228,59 +232,59 @@ export function LandingPage({
             </div>
 
             {/* Live RSVP Demo Form */}
-            <div className="w-full max-w-sm bg-rose-50/70 border border-rose-200 p-6 rounded-2xl flex flex-col justify-between shadow-sm">
+            <div className="w-full max-w-sm bg-gradient-to-b from-stone-900 to-stone-950 border border-amber-500/30 p-6 sm:p-7 rounded-2xl flex flex-col justify-between shadow-xl">
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-mono text-rose-900 uppercase tracking-wider font-bold">
+                  <span className="text-xs font-mono text-amber-300 uppercase tracking-wider font-bold">
                     Instant RSVP Sync
                   </span>
-                  <span className="px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-900 text-[10px] font-mono font-bold border border-emerald-300">
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-700 text-emerald-300 text-[10px] font-mono font-bold">
                     Real-time
                   </span>
                 </div>
                 
-                <h4 className="font-serif text-lg font-bold text-stone-950 mb-1">
+                <h4 className="font-serif text-xl font-bold text-stone-100 mb-1">
                   1-Tap Guest Response
                 </h4>
-                <p className="text-xs text-stone-700 mb-4 font-medium">
+                <p className="text-xs text-stone-300 mb-4 font-normal">
                   Guests select meal course & submit without creating an account.
                 </p>
 
                 {demoRsvpSubmitted ? (
-                  <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
-                    <CheckCircle2 size={24} className="text-emerald-600 mx-auto" />
-                    <p className="font-serif text-emerald-950 text-sm font-semibold">
+                  <div className="p-4 rounded-xl bg-emerald-950/90 border border-emerald-700 text-center space-y-2">
+                    <CheckCircle2 size={26} className="text-emerald-400 mx-auto" />
+                    <p className="font-serif text-emerald-100 text-sm font-bold">
                       RSVP Received for {demoGuestName}!
                     </p>
-                    <p className="text-[11px] text-emerald-900">
-                      Meal choice: <strong className="text-emerald-950 font-bold">{demoMeal}</strong> has been synced to the RSVP Command Dashboard.
+                    <p className="text-[11px] text-emerald-300">
+                      Meal choice: <strong className="text-white font-bold">{demoMeal}</strong> has been synced to the database.
                     </p>
                     <button
                       onClick={() => { setDemoRsvpSubmitted(false); setDemoGuestName(''); }}
-                      className="text-[11px] text-rose-800 font-bold hover:underline pt-1 cursor-pointer block mx-auto"
+                      className="text-xs text-amber-300 font-bold hover:underline pt-2 cursor-pointer block mx-auto"
                     >
-                      Submit Another Test Response
+                      Submit Another Test Response →
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleDemoRSVP} className="space-y-3">
+                  <form onSubmit={handleDemoRSVP} className="space-y-3.5">
                     <div>
-                      <label className="block text-[11px] font-bold text-stone-800 mb-1">Guest Name</label>
+                      <label className="block text-xs font-semibold text-stone-300 mb-1">Guest Full Name</label>
                       <input
                         type="text"
                         placeholder="e.g. Lady Genevieve"
                         value={demoGuestName}
                         onChange={(e) => setDemoGuestName(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-rose-300 text-xs text-stone-950 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-rose-400 shadow-sm font-medium"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-stone-950 border border-stone-700 text-xs text-stone-100 placeholder-stone-500 focus:outline-none focus:border-amber-400 shadow-inner"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold text-stone-800 mb-1">Course Selection</label>
+                      <label className="block text-xs font-semibold text-stone-300 mb-1">Course Selection</label>
                       <select
                         value={demoMeal}
                         onChange={(e) => setDemoMeal(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-rose-300 text-xs text-stone-950 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-rose-400 shadow-sm font-medium"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-stone-950 border border-stone-700 text-xs text-stone-100 focus:outline-none focus:border-amber-400 shadow-inner font-medium"
                       >
                         <option value="Filet Mignon & Truffle Jus">🥩 Filet Mignon & Truffle Jus</option>
                         <option value="Chilean Sea Bass">🐟 Chilean Sea Bass with Lemon Beurre</option>
@@ -291,7 +295,7 @@ export function LandingPage({
                     <button
                       type="submit"
                       onClick={() => handleDemoRSVP()}
-                      className="w-full py-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white text-xs font-bold shadow-md shadow-rose-500/20 hover:brightness-105 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white text-xs font-bold shadow-lg shadow-rose-500/25 hover:brightness-105 transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-2"
                     >
                       <Check size={14} />
                       <span>Submit Test RSVP</span>
@@ -300,9 +304,9 @@ export function LandingPage({
                 )}
               </div>
 
-              <div className="mt-4 pt-3 border-t border-rose-200 text-[11px] text-stone-700 font-medium flex items-center justify-between">
+              <div className="mt-5 pt-3 border-t border-stone-800 text-[11px] text-stone-400 font-medium flex items-center justify-between">
                 <span>Free Tier: Up to 20 RSVPs</span>
-                <button onClick={onOpenStudio} className="text-rose-800 font-bold hover:underline cursor-pointer">
+                <button onClick={onOpenStudio} className="text-amber-400 font-bold hover:underline cursor-pointer">
                   Customize Suite →
                 </button>
               </div>
