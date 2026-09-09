@@ -10,6 +10,7 @@ import { WeddingData, ThemeConfig, ThemeId, RSVPRecord } from '../../types/invit
 import { THEME_PRESETS } from '../../constants/themes';
 import { BrandLogo } from '../common/BrandLogo';
 import { EnvelopeExperience } from '../guest/EnvelopeExperience';
+import { GumroadOverlayButton } from '../common/GumroadOverlayButton';
 
 interface LandingPageProps {
   wedding: WeddingData;
@@ -671,13 +672,13 @@ export function LandingPage({
               </div>
             </div>
 
-            <button
-              onClick={() => onOpenCheckout('pro')}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 text-xs font-bold shadow-lg transition-all flex items-center justify-center gap-1.5"
+            <GumroadOverlayButton
+              plan="pro"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 text-xs font-bold shadow-lg transition-all flex items-center justify-center gap-1.5 no-underline cursor-pointer"
             >
               <Sparkles size={14} />
               <span>Get Pro Pass ($19)</span>
-            </button>
+            </GumroadOverlayButton>
           </div>
 
           {/* Plan 3: Lifetime Creator ($79) */}
@@ -717,12 +718,12 @@ export function LandingPage({
               </div>
             </div>
 
-            <button
-              onClick={() => onOpenCheckout('lifetime')}
-              className="w-full py-3 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 hover:border-rose-500/50 text-stone-200 text-xs font-semibold transition-all"
+            <GumroadOverlayButton
+              plan="lifetime"
+              className="w-full py-3 rounded-xl bg-stone-900 hover:bg-stone-800 border border-stone-700 hover:border-rose-500/50 text-stone-200 text-xs font-semibold transition-all flex items-center justify-center gap-1.5 no-underline cursor-pointer"
             >
-              Get Lifetime Creator ($79)
-            </button>
+              <span>Get Lifetime Creator ($79)</span>
+            </GumroadOverlayButton>
           </div>
 
         </div>

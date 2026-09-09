@@ -11,6 +11,7 @@ import { BrandLogo } from '../common/BrandLogo';
 import { InvitationEditor } from '../editor/InvitationEditor';
 import { RSVPDashboard } from './RSVPDashboard';
 import { SaveTheDateStudio } from '../marketing/SaveTheDateStudio';
+import { GumroadOverlayButton } from '../common/GumroadOverlayButton';
 
 interface MainDashboardProps {
   wedding: WeddingData;
@@ -131,13 +132,13 @@ export function MainDashboard({
           </button>
 
           {plan === 'free' && (
-            <button
-              onClick={() => onOpenCheckout('pro')}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 text-xs font-bold shadow-md flex items-center gap-1.5 transition-all"
+            <GumroadOverlayButton
+              plan="pro"
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-110 text-stone-950 text-xs font-bold shadow-md flex items-center gap-1.5 transition-all no-underline cursor-pointer"
             >
               <Sparkles size={14} />
               <span>Upgrade to Pro ($19)</span>
-            </button>
+            </GumroadOverlayButton>
           )}
         </div>
       </div>
@@ -487,13 +488,13 @@ export function MainDashboard({
                   </div>
                 </div>
 
-                <button 
-                  onClick={() => onOpenCheckout('pro')}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-stone-950 text-xs font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-1.5"
+                <GumroadOverlayButton 
+                  plan="pro"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-stone-950 text-xs font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-1.5 no-underline cursor-pointer"
                 >
                   <Sparkles size={14} />
                   <span>{plan === 'pro' ? 'Renew / Extend ($19)' : 'Upgrade to Pro ($19)'}</span>
-                </button>
+                </GumroadOverlayButton>
               </div>
 
               {/* Lifetime Creator ($79) */}
@@ -510,12 +511,12 @@ export function MainDashboard({
                   </div>
                 </div>
 
-                <button 
-                  onClick={() => onOpenCheckout('lifetime')}
-                  className="w-full py-2.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition-colors"
+                <GumroadOverlayButton 
+                  plan="lifetime"
+                  className="w-full py-2.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition-colors flex items-center justify-center no-underline cursor-pointer"
                 >
-                  {plan === 'lifetime' ? 'Lifetime Active' : 'Get Lifetime ($79)'}
-                </button>
+                  <span>{plan === 'lifetime' ? 'Lifetime Active' : 'Get Lifetime ($79)'}</span>
+                </GumroadOverlayButton>
               </div>
 
             </div>
