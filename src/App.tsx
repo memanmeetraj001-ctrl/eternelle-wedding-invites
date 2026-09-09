@@ -16,6 +16,7 @@ import { MainDashboard } from './components/dashboard/MainDashboard';
 import { GuestInvitationView } from './components/guest/GuestInvitationView';
 import { RSVPModal } from './components/guest/RSVPModal';
 import { AuthModal } from './components/auth/AuthModal';
+import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
 import { GumroadCheckoutModal } from './components/billing/GumroadCheckoutModal';
 import { MasterAdminPanel } from './components/admin/MasterAdminPanel';
 import { 
@@ -104,6 +105,7 @@ export function App() {
   });
 
   const [isMobileFrame, setIsMobileFrame] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState<'signin' | 'signup'>('signup');
@@ -201,6 +203,10 @@ export function App() {
   };
 
   const handleOpenAuth = (tab: 'signin' | 'signup' = 'signup') => {
+    if (tab === 'signup') {
+      setIsOnboardingOpen(true);
+      return;
+    }
     setAuthInitialTab(tab);
     setIsAuthModalOpen(true);
   };
@@ -217,6 +223,25 @@ export function App() {
       createdAt: new Date().toISOString(),
       weddingSlug: wedding.slug,
     };
+    setUser(userAccount);
+    saveUser(userAccount);
+    setViewMode('dashboard');
+  };
+
+  const handleOnboardingComplete = (newWedding: WeddingData, newAccount: { name: string; email: string }) => {
+    setWedding(newWedding);
+    saveWedding(newWedding);
+
+    const userAccount: UserAccount = {
+      id: `usr_${Date.now()}`,
+      name: newAccount.name,
+      email: newAccount.email,
+      role: 'user',
+      plan: 'free',
+      createdAt: new Date().toISOString(),
+      weddingSlug: newWedding.slug,
+    };
+
     setUser(userAccount);
     saveUser(userAccount);
     setViewMode('dashboard');
@@ -452,7 +477,7 @@ export function App() {
                 Sign In
               </button>
               <button
-                onClick={() => handleOpenAuth('signup')}
+                onClick={() => setIsOnboardingOpen(true)}
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white text-xs font-bold shadow-md shadow-rose-500/20 transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <Sparkles size={13} />
@@ -473,7 +498,7 @@ export function App() {
               if (user) {
                 setViewMode('dashboard');
               } else {
-                handleOpenAuth('signup');
+                setIsOnboardingOpen(true);
               }
             }}
             onOpenGuestDemo={() => setViewMode('guest')}
@@ -519,6 +544,14 @@ export function App() {
           </div>
         )}
       </main>
+
+      {/* Interactive Free Onboarding Wizard Modal */}
+      <OnboardingWizardModal
+        isOpen={isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
+        onComplete={handleOnboardingComplete}
+        onSwitchToSignIn={() => handleOpenAuth('signin')}
+      />
 
       {/* RSVP Modal */}
       <RSVPModal
