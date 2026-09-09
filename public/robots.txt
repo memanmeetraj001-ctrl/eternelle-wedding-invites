@@ -1,0 +1,6 @@
+# Robots.txt for Éternelle — https://eternelleweddinginvites.online
+User-agent: *
+Allow: /
+
+# Direct Google & Pinterest Search Crawlers to XML Sitemap
+Sitemap: https://eternelleweddinginvites.online/sitemap.xml
