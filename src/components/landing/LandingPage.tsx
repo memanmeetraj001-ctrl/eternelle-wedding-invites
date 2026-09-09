@@ -7,6 +7,7 @@ import {
   Lock, Share2, Layers, Sliders
 } from 'lucide-react';
 import { WeddingData, ThemeConfig, ThemeId, RSVPRecord } from '../../types/invitation';
+import confetti from 'canvas-confetti';
 import { THEME_PRESETS } from '../../constants/themes';
 import { BrandLogo } from '../common/BrandLogo';
 import { EnvelopeExperience } from '../guest/EnvelopeExperience';
@@ -49,10 +50,18 @@ export function LandingPage({
     }
   };
 
-  const handleDemoRSVP = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!demoGuestName) return;
+  const handleDemoRSVP = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const finalName = demoGuestName.trim() || 'Lady Genevieve';
+    setDemoGuestName(finalName);
     setDemoRsvpSubmitted(true);
+
+    confetti({
+      particleCount: 90,
+      spread: 75,
+      origin: { y: 0.6 },
+      colors: ['#d4af37', '#e11d48', '#ffffff', '#e2d5c3']
+    });
   };
 
   const faqs = [
@@ -259,7 +268,6 @@ export function LandingPage({
                       <label className="block text-[11px] text-stone-400 mb-1">Guest Name</label>
                       <input
                         type="text"
-                        required
                         placeholder="e.g. Lady Genevieve"
                         value={demoGuestName}
                         onChange={(e) => setDemoGuestName(e.target.value)}
@@ -282,7 +290,8 @@ export function LandingPage({
 
                     <button
                       type="submit"
-                      className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-stone-950 text-xs font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-1.5"
+                      onClick={() => handleDemoRSVP()}
+                      className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-stone-950 text-xs font-bold shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Check size={14} />
                       <span>Submit Test RSVP</span>
