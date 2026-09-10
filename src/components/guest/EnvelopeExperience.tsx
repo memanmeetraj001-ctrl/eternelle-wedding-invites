@@ -18,7 +18,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   onOpen,
   onReset,
 }) => {
-  const [stage, setStage] = useState<'sealed' | 'opening' | 'revealed'>('sealed');
+  const [stage, setStage] = useState<'sealed' | 'untying' | 'opening' | 'revealed'>('sealed');
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
   
@@ -61,32 +61,39 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     setTilt({ x: 0, y: 0 });
   };
 
-  // Unboxing Sequence
+  // Design 4: Silk Ribbon Untie & Slide Choreography
   const handleOpenEnvelope = () => {
     if (stage !== 'sealed') return;
     setTilt({ x: 0, y: 0 });
-    setStage('opening');
+    
+    // Step 1: Untie ribbon band & pop wax seal
+    setStage('untying');
 
-    // Play music if enabled
+    // Play romance music if enabled
     if (wedding.musicEnabled && audioElement && !isMusicPlaying) {
       audioElement.play().then(() => setIsMusicPlaying(true)).catch(() => {});
     }
 
-    // Confetti burst
+    // Sparkle Gold & Burgundy Confetti Burst
     try {
       confetti({
-        particleCount: 50,
-        spread: 60,
+        particleCount: 55,
+        spread: 65,
         origin: { y: 0.6 },
         colors: [theme.waxSealBg, '#d4af37', '#fdf2f4', '#535e3b', '#ffffff'],
         disableForReducedMotion: true,
       });
     } catch {}
 
-    // Slide card up after flap opens
+    // Step 2: Open top envelope flap
+    setTimeout(() => {
+      setStage('opening');
+    }, 280);
+
+    // Step 3: Glide stationery card gracefully into full view
     setTimeout(() => {
       setStage('revealed');
-    }, 450);
+    }, 620);
   };
 
   const handleReplay = (e: React.MouseEvent) => {
@@ -99,6 +106,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     if (onReset) onReset();
   };
 
+  const isRibbonUntied = stage !== 'sealed';
   const isFlapOpen = stage === 'opening' || stage === 'revealed';
   const isCardUp = stage === 'revealed';
 
@@ -170,7 +178,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         </p>
       </div>
 
-      {/* 4. THE LUXURY ENVELOPE STAGE (Fixed Stable Geometry) */}
+      {/* 4. DESIGN 4 ENVELOPE STAGE (Silk Ribbon Untie & Slide) */}
       <div
         ref={containerRef}
         onMouseMove={handleMouseMove}
@@ -214,11 +222,11 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           {/* ==================== 2. SLIDING STATIONERY CARD ==================== */}
           <div
             onClick={isCardUp ? onOpen : undefined}
-            className={`absolute inset-x-3 sm:inset-x-4 top-2 rounded-2xl transition-all duration-700 ease-out will-change-transform ${
+            className={`absolute inset-x-3 sm:inset-x-4 top-2 rounded-2xl transition-all duration-700 cubic-bezier(0.2, 0.8, 0.2, 1) will-change-transform ${
               isCardUp
                 ? '-translate-y-[48%] opacity-100 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.85)] cursor-pointer hover:scale-[1.01]'
                 : isFlapOpen
-                ? '-translate-y-[12%] opacity-95'
+                ? '-translate-y-[10%] opacity-90'
                 : 'translate-y-0 opacity-0 pointer-events-none'
             }`}
             style={{
@@ -303,7 +311,6 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           </div>
 
           {/* ==================== 3. FRONT ENVELOPE POCKET ==================== */}
-          {/* SVG based crisp pocket shapes to avoid any polygon clip glitching */}
           <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none" style={{ zIndex: 20 }}>
             <svg
               className="w-full h-full"
@@ -404,29 +411,48 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             </div>
           </div>
 
-          {/* ==================== 5. SILK BELLY BAND ==================== */}
-          <div
-            className={`absolute inset-x-0 top-[52%] h-10 -translate-y-1/2 pointer-events-none transition-all duration-400 ease-in-out flex items-center justify-center ${
-              isFlapOpen ? 'opacity-0 scale-x-125' : 'opacity-95'
-            }`}
-            style={{
-              backgroundColor: theme.waxSealBg,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-              borderTop: '1px solid rgba(212, 175, 55, 0.45)',
-              borderBottom: '1px solid rgba(212, 175, 55, 0.45)',
-              zIndex: 32,
-            }}
-          >
-            <span className="text-[9px] tracking-[0.4em] uppercase font-mono text-amber-200 font-bold drop-shadow">
-              ÉTERNELLE SUITE
-            </span>
+          {/* ==================== 5. SILK RIBBON UNTIE (Design 4 Left & Right Parting) ==================== */}
+          <div className="absolute inset-x-0 top-[52%] h-10 -translate-y-1/2 pointer-events-none overflow-hidden" style={{ zIndex: 32 }}>
+            {/* Left Ribbon Wing */}
+            <div
+              className={`absolute inset-y-0 left-0 w-1/2 transition-all duration-500 ease-in-out flex items-center justify-end pr-2 ${
+                isRibbonUntied ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-95'
+              }`}
+              style={{
+                backgroundColor: theme.waxSealBg,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                borderTop: '1px solid rgba(212, 175, 55, 0.45)',
+                borderBottom: '1px solid rgba(212, 175, 55, 0.45)',
+              }}
+            >
+              <span className="text-[8px] tracking-[0.4em] uppercase font-mono text-amber-200 font-bold drop-shadow pr-4">
+                ÉTERNELLE
+              </span>
+            </div>
+
+            {/* Right Ribbon Wing */}
+            <div
+              className={`absolute inset-y-0 right-0 w-1/2 transition-all duration-500 ease-in-out flex items-center justify-start pl-2 ${
+                isRibbonUntied ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-95'
+              }`}
+              style={{
+                backgroundColor: theme.waxSealBg,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                borderTop: '1px solid rgba(212, 175, 55, 0.45)',
+                borderBottom: '1px solid rgba(212, 175, 55, 0.45)',
+              }}
+            >
+              <span className="text-[8px] tracking-[0.4em] uppercase font-mono text-amber-200 font-bold drop-shadow pl-4">
+                SUITE
+              </span>
+            </div>
           </div>
 
           {/* ==================== 6. MONOGRAM WAX SEAL ==================== */}
           <div
             onClick={stage === 'sealed' ? handleOpenEnvelope : undefined}
             className={`absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-400 ease-out flex items-center justify-center cursor-pointer ${
-              isFlapOpen ? 'opacity-0 scale-125 pointer-events-none' : 'group-hover:scale-105 active:scale-95'
+              isRibbonUntied ? 'opacity-0 scale-135 pointer-events-none' : 'group-hover:scale-105 active:scale-95'
             }`}
             style={{
               zIndex: 35,
