@@ -175,8 +175,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
         </span>
         <h1 
-          className="font-script text-2xl sm:text-4xl text-amber-100 font-normal mt-0.5 drop-shadow-lg leading-tight"
-          style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : {}}
+          className="font-script text-3xl sm:text-5xl text-amber-100 font-bold mt-0.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight tracking-wide"
         >
           {wedding.coupleName1} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
         </h1>
@@ -266,19 +265,19 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                   </span>
 
                   {/* Honoree or Couple Names Calligraphy with Metallic Foil */}
-                  <div className="my-0.5 space-y-0">
+                  <div className="my-1 space-y-0.5">
                     <h2 
-                      className="font-script text-lg sm:text-3xl text-stone-900 leading-none"
-                      style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : {}}
+                      className="font-script text-2xl sm:text-4xl font-bold leading-tight drop-shadow-xs"
+                      style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : { color: '#1c1917' }}
                     >
                       {wedding.coupleName1}
                     </h2>
                     {wedding.coupleName2 && (
                       <>
-                        <span className="font-serif italic text-[10px] sm:text-xs text-amber-800 font-bold block my-0.5">&</span>
+                        <span className="font-serif italic text-xs sm:text-sm text-amber-900 font-bold block my-0.5">&</span>
                         <h2 
-                          className="font-script text-lg sm:text-3xl text-stone-900 leading-none"
-                          style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : {}}
+                          className="font-script text-2xl sm:text-4xl font-bold leading-tight drop-shadow-xs"
+                          style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : { color: '#1c1917' }}
                         >
                           {wedding.coupleName2}
                         </h2>

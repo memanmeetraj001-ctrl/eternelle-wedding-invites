@@ -151,7 +151,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               <span className="font-sans">Keepsake</span>
             </button>
 
-            <span className="font-script text-base sm:text-xl text-amber-200 tracking-wide truncate text-center px-1">
+            <span className="font-script text-lg sm:text-2xl text-amber-200 font-bold tracking-wide truncate text-center px-1 drop-shadow-sm">
               {wedding.coupleName1} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
             </span>
 
@@ -242,19 +242,23 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                 </span>
 
                 {/* Romantic Calligraphy Script */}
-                <div className="my-1.5 space-y-0">
+                <div className="my-2 space-y-0.5">
                   <h2 
-                    className="font-script text-2xl sm:text-4xl text-stone-900 leading-none"
-                    style={(wedding.stationery || theme.stationery)?.foilFinish !== 'none' ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle : {}}
+                    className="font-script text-3xl sm:text-5xl font-bold leading-tight drop-shadow-xs"
+                    style={(wedding.stationery || theme.stationery)?.foilFinish !== 'none' 
+                      ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle 
+                      : { color: '#1c1917' }}
                   >
                     {wedding.coupleName1}
                   </h2>
                   {wedding.coupleName2 && (
                     <>
-                      <span className="font-serif italic text-xs sm:text-base text-amber-800 font-bold block my-0.5">&</span>
+                      <span className="font-serif italic text-sm sm:text-lg text-amber-900 font-bold block my-0.5">&</span>
                       <h2 
-                        className="font-script text-2xl sm:text-4xl text-stone-900 leading-none"
-                        style={(wedding.stationery || theme.stationery)?.foilFinish !== 'none' ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle : {}}
+                        className="font-script text-3xl sm:text-5xl font-bold leading-tight drop-shadow-xs"
+                        style={(wedding.stationery || theme.stationery)?.foilFinish !== 'none' 
+                          ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle 
+                          : { color: '#1c1917' }}
                       >
                         {wedding.coupleName2}
                       </h2>

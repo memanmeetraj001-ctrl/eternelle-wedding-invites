@@ -230,7 +230,7 @@ export const RSVPModal: React.FC<RSVPModalProps> = ({
               <h2 className="font-serif text-2xl sm:text-3xl text-amber-50 mt-0.5 font-normal">
                 Kindly RSVP
               </h2>
-              <p className="font-script text-lg sm:text-2xl text-amber-200/90 mt-0.5">
+              <p className="font-script text-xl sm:text-3xl text-amber-200 font-bold mt-0.5 drop-shadow-sm">
                 for {eventHeadline}
               </p>
             </div>
