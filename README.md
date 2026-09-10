@@ -1,13 +1,19 @@
 <div align="center">
 
-# 🏰 Éternelle — Luxury Digital Wedding Invitations & Micro-Sites SaaS
+# 🏰 Éternelle — Luxury Interactive Digital Wedding Invitations & Micro-Sites SaaS
 
 <p align="center">
   <strong>The Digital Wedding Invitation That Feels Like Fine Paper Stationery.</strong><br>
-  Interactive 3D wax seal reveals, live countdowns, Google Maps itineraries, and real-time RSVP & dietary headcount sync.
+  Interactive 3D wax seal reveals, botanical floral watercolor liners, multi-course culinary menus, love galleries, real-time RSVP & dietary catering command.
 </p>
 
 <p align="center">
+  <a href="https://eternelleweddinginvites.online"><strong>🌐 Live Website: eternelleweddinginvites.online</strong></a> •
+  <a href="https://eternelleweddinginvites.online/invite/alex-sarah"><strong>💌 Live 3D Guest Invite Demo</strong></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Live_Site-eternelleweddinginvites.online-d4af37?style=for-the-badge&logo=googlechrome&logoColor=black" alt="Live Site" />
   <img src="https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 18" />
   <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
@@ -18,160 +24,161 @@
 
 ---
 
-![Éternelle Hero Preview](docs/hero-preview.jpg)
+![Éternelle 3D Luxury Botanical Wedding Stationery Suite](docs/guest-3d-unboxing-preview.jpg)
 
 </div>
 
 ## ✨ Why Éternelle?
 
-Traditional paper stationery costs **\$800+**, takes weeks to print, and gets lost in the mail. Static PDF links and Canva templates feel clunky and lack real-time guest tracking.
+Traditional luxury paper wedding stationery costs **$800–$2,500+**, takes weeks to print, and gets lost in the mail. Static PDF links and basic Canva templates feel clunky and lack interactive unboxing or live headcount sync.
 
-**Éternelle** bridges tactile old-money luxury with modern web technology:
-- **Guests** crack open a realistic 3D wax seal with sound effects and soothing harp music, view the schedule with 1-tap Google Maps directions, and submit RSVPs with meal choices in under 45 seconds.
-- **Couples** manage their headcount, dietary alerts, and accommodations in real-time, exporting a 1-click catering spreadsheet for their venue.
-- **Planners & Studios** commercialize custom bespoke suites for multiple clients.
+**Éternelle** bridges tactile old-money editorial stationery with modern 3D web technology:
+- **Guests** experience a photorealistic 3D envelope with dynamic mouse/gyro parallax, crack open the engraved monogram wax seal with gold sparkle effects, listen to curated acoustic harp/piano melodies, explore multi-course menus and photo galleries, and confirm RSVPs in under 45 seconds.
+- **Couples & Planners** customize their entire wedding micro-site in the luxury warm-ivory creator studio, manage guest headcounts in real-time, and download 1-click catering spreadsheets for venues and caterers.
 
 ---
 
-## 🚀 Key Features
+## 📸 Platform Previews
 
-### 💌 1. Interactive 3D Guest Unboxing (`/invite/:slug`)
-- **Realistic Wax Seal Crack**: Physics-based wax seal cracking animation, sound effects, and floating confetti.
-- **Background Audio**: Built-in ambient harp and classical piano synthesizer tracks.
-- **Logistics Cards**: Day-of timeline with icons (Ceremony, Cocktail Hour, Dinner, Dance) and 1-tap Google Maps directions.
-- **Hotel & Accommodations**: Room blocks, group promo codes, and direct booking links.
-- **Love Story Gallery**: Photo albums with captions and relationship milestones.
-
-### 📊 2. Real-Time RSVP & Catering Command
-- **1-Tap Guest Submissions**: Guests submit attendance (*Joyfully Accepts* / *Regretfully Declines*), meal choices, plus-ones, and dietary restrictions.
-- **Live Database Sync**: Submissions automatically store in PostgreSQL and reflect in the couple's dashboard instantly.
-- **1-Click CSV / Excel Export**: Generate a formatted catering report with exact meal counts (e.g. *42 Prime Beef Tenderloin, 28 King Salmon, 14 Truffle Risotto*) and allergy warnings.
-
+### 💌 1. Interactive 3D Guest Unboxing Experience (`/invite/:slug`)
 <div align="center">
-  <img src="docs/rsvp-dashboard-preview.jpg" alt="Éternelle RSVP Dashboard Preview" width="90%" />
+  <img src="docs/hero-preview.jpg" alt="3D Digital Wedding Envelope Preview" width="100%" />
 </div>
 
-### 🧙‍♂️ 3. 4-Step Free Onboarding Wizard
-- **Step 1**: Couple Names & automated monogram seal generator (*Scarlett & Julian* $\rightarrow$ *S&J*).
-- **Step 2**: Aesthetic palette selection with dynamic live card preview.
-- **Step 3**: Event date, venue address, and city location.
-- **Step 4**: Custom link claiming (`.../invite/scarlett-julian`) + instant free account registration and database persistence.
-
-### 🎨 4. Curated Designer Suites
-Six bespoke Kinfolk and Vogue-inspired aesthetic colorways:
-- 🌿 **Olive & Burgundy Romance**: Classic vineyard botanical with deep burgundy wax seal.
-- 🥂 **Champagne & Noir Luxury**: Old-money editorial chic with obsidian cards and champagne foil.
-- 🏛️ **Tuscan Sun Terracotta**: Warm Italian countryside villa with burnt sienna and olive tones.
-- 🌹 **Dusty Rose & French Mauve**: Chateau garden romance with delicate calligraphy.
-- 🍃 **Imperial Emerald & Gold**: Conservatory greenery with gold leaf typography.
-- 🌸 **Rose Gold Blush**: Contemporary minimalism with soft blush and shimmering rose gold.
-
-### 📸 5. Save-the-Date & Social Media Studio
-- **Pinterest Pins**: Auto-generated 2:3 vertical pins with rich aesthetic tags.
-- **Instagram Stories**: Auto-generated 9:16 vertical stories with countdowns and couple photography.
-- **WhatsApp Luxury Formatted Text**: 1-click copyable message for texting guests directly.
-
-### 👑 6. Secret Master Admin Portal (`Fox@967777`)
-- **Hidden Security Route**: Accessible only via `/admin` (hidden from all public menus).
-- **Protected by Master Key**: `Fox@967777`.
-- **Live Metrics**: Gross Revenue ($), Paid Conversion Rate (%), Total Registered Couples, and Total RSVPs.
-- **License Authority**: 1-click button to grant **Lifetime Creator** or **Pro Pass** to any user.
+- **Dynamic 3D Parallax & Specular Sheen**: The envelope tilts realistically with cursor/touch movement.
+- **Physical Wax Seal Rupture**: Tap the tactile monogram crest (`L & S`) to trigger a gold & burgundy sparkle shower.
+- **3D Flap & Liner Reveal**: The envelope flap folds backward (`rotateX(-180deg)`), revealing a full-bleed botanical olive and burgundy floral watercolor liner.
+- **Stationery Bundle Slide-Out**: The deckled cotton card slides upwards in 3D displaying French script calligraphy and formal details.
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+### 🎨 2. Warm Ivory Studio Customizer & Creator Dashboard
+<div align="center">
+  <img src="docs/dashboard-customizer-preview.jpg" alt="Éternelle Creator Dashboard Preview" width="100%" />
+</div>
+
+- **Unified Luxury Aesthetic**: Soft ivory `#FAF7F2` background, crisp white cards, gold borders, and high-contrast typography across both mobile and desktop.
+- **Food & Drinks Menu Editor**: Add and organize dishes across Starters, Mains, Desserts, and Late-Night Cocktails with dietary badges (`Vegetarian`, `Gluten-Free`, `Vegan`, `Halal`, `Signature Cocktail`).
+- **Love Gallery & Couple Narrative**: Upload photo memories directly from device or URL with captions and date tags.
+- **Order of Events Timeline**: Add and reorder timeline moments with custom event icons and dress code color swatches.
+- **Hotels & Accommodations**: Provide room blocks, distance from venue, and discount promo codes.
+- **Guest Q&A / FAQs**: Custom questions, answers, and online wishing well / registry links.
+
+---
+
+### 📊 3. Real-Time RSVP & Catering Command Center
+<div align="center">
+  <img src="docs/rsvp-dashboard-preview.jpg" alt="Éternelle RSVP Dashboard Preview" width="100%" />
+</div>
+
+- **Live Database Sync**: PostgreSQL-backed guestlist updating attendance (*Joyfully Attending* / *Regretfully Declined*), party sizes, meal choices, and dietary notes.
+- **1-Click Catering CSV Export**: Download instant venue headcount spreadsheets with entrée totals (e.g. *42 Prime Beef, 28 King Salmon, 14 Truffle Risotto*).
+
+---
+
+## 🎵 Curated Royalty-Free Wedding Music Suite
+
+Couples can preview and select from 5 high-speed CDN-hosted wedding tracks or enter their own custom MP3 stream URL:
+1. **Cinematic Piano Romance** — Emotional solo piano ballad with timeless warmth (`2:45`).
+2. **Acoustic Sunset Guitar** — Intimate fingerpicked acoustic guitar for rustic and outdoor celebrations (`3:12`).
+3. **Celestial Wedding Harp** — Ethereal cathedral harp arpeggios delivering fairy-tale luxury (`2:15`).
+4. **Bridgerton String Quartet** — Opulent classical violin & cello arrangement for grand ballrooms (`3:30`).
+5. **Twilight Lo-Fi Vows** — Modern, chic ambient chillhop with soft Rhodes keys (`2:50`).
+
+---
+
+## 🌿 5 Curated Designer Themes
+
+Bespoke Kinfolk and Vogue-inspired aesthetic colorways:
+- 🌿 **Olive & Burgundy Romance**: Classic vineyard botanical with deep burgundy wax seal and watercolor florals.
+- 🥂 **Champagne & Noir Luxury**: Old-money editorial chic with obsidian cards and shimmering champagne foil.
+- 🏛️ **Tuscan Sun Terracotta**: Warm Italian countryside villa with burnt sienna, olive oil, and travertine.
+- 🌹 **Dusty Rose & French Mauve**: Chateau garden romance with heirloom roses and delicate calligraphy.
+- 🍃 **Imperial Emerald & Gold**: Conservatory greenery with gold leaf typography and crisp linen cards.
+
+---
+
+## 📱 Marketing & Social Share Studio
+
+- **Pinterest 2:3 Pins**: Auto-generated vertical pins formatted with high-intent wedding tags.
+- **Instagram 9:16 Stories**: Vertical story cards with countdown timers and unboxing previews.
+- **WhatsApp & SMS 1-Click Messages**: Pre-formatted guest text messages with direct invitation links.
+- **Paper Save-the-Date QR Codes**: High-resolution QR code generator for printing on physical stationery cards.
+
+---
+
+## 🛠️ Architecture & Tech Stack
 
 ```
-├── client/ (React + TypeScript + Vite)
+wedding-invite-saas/
+├── client/ (React 18 + TypeScript + Vite + Tailwind CSS)
 │   ├── src/components/
-│   │   ├── admin/         # Master Admin Command Panel
-│   │   ├── auth/          # Login & Registration Modals
-│   │   ├── billing/       # Gumroad Checkout Integration
-│   │   ├── dashboard/     # Couple's Creator Studio & RSVP Manager
-│   │   ├── guest/         # 3D Envelope Experience & RSVP Modal
-│   │   ├── landing/       # High-Contrast Editorial Landing Page
-│   │   ├── onboarding/    # 4-Step Free Onboarding Wizard
-│   │   └── studio/        # Pinterest & Instagram Social Studio
-│   └── src/utils/api.ts   # REST API client with offline fallback
+│   │   ├── admin/         # SuperAdmin Metrics & License Management
+│   │   ├── auth/          # User Authentication & Registration Modals
+│   │   ├── billing/       # Gumroad Checkout & Licensing
+│   │   ├── dashboard/     # Creator Studio, Overview & RSVP Command
+│   │   ├── editor/        # 9-Section Suite Customizer (Menu, Gallery, Music)
+│   │   ├── guest/         # 3D Envelope Experience & 5-Tab Micro-Site
+│   │   ├── landing/       # High-Contrast Luxury Landing Page
+│   │   ├── marketing/     # Save-the-Date, Pinterest & WhatsApp Studio
+│   │   └── onboarding/    # 4-Step Free Onboarding Wizard
+│   └── src/utils/api.ts   # REST API client with offline local storage cache
 │
-├── server/ (Node.js + Express 5)
+├── server/ (Node.js + Express 5 + PostgreSQL)
 │   ├── routes/
-│   │   ├── admin.js       # Secret SuperAdmin KPI routes
-│   │   ├── auth.js        # JWT token generation & bcrypt hashing
-│   │   ├── rsvps.js       # Guest RSVP submission & retrieval
-│   │   └── weddings.js    # Couple suite data sync & public slug lookup
-│   ├── db.js              # PostgreSQL connection pool with memory fallback
-│   ├── schema.sql         # Relational database schema
-│   └── index.js           # Server entry point & static SPA serving
+│   │   ├── auth.js        # JWT token generation, bcrypt password hashing
+│   │   ├── weddings.js    # Wedding CRUD with custom JSON payload bundling
+│   │   ├── rsvps.js       # Real-time RSVP submissions & CSV export
+│   │   └── admin.js       # Protected KPI routes & user tier controls
+│   └── schema.sql         # PostgreSQL schema with auto-indexing
 │
-└── render.yaml            # Render Blueprint for 1-click full-stack deployment
+└── render.yaml            # 1-Click Render Cloud Blueprint deployment
 ```
 
 ---
 
-## 🚀 Getting Started Locally
+## 🚀 Quickstart & Local Development
 
-### Prerequisites
-- Node.js 18+ installed
-- Git installed
-- (Optional) PostgreSQL installed locally, or run with automatic in-memory fallback!
-
-### 1. Clone the repository
+### 1. Clone & Install
 ```bash
 git clone https://github.com/memanmeetraj001-ctrl/eternelle-wedding-invites.git
 cd eternelle-wedding-invites
-```
-
-### 2. Install dependencies
-```bash
 npm install
 ```
 
-### 3. Start Development Server
+### 2. Environment Variables (`.env`)
+```env
+PORT=5000
+DATABASE_URL=postgres://user:password@localhost:5432/eternelle_db
+JWT_SECRET=your_super_secret_jwt_key
+ADMIN_SECRET_KEY=Fox@967777
+```
+
+### 3. Run Development Server
 ```bash
-# Frontend dev server
+# Start frontend client (Vite)
 npm run dev
 
-# Or start the full Express server
+# Start backend server (Express + PostgreSQL)
 npm start
 ```
-Open `http://localhost:5173` or `http://localhost:3000` in your browser.
+
+### 4. Build for Production
+```bash
+npm run build
+```
 
 ---
 
-## ☁️ 1-Click Deployment via Render Blueprint
+## 🌐 Deployment
 
-This repository includes a production-ready **Render Blueprint (`render.yaml`)** that automatically provisions both the Node web service and the managed PostgreSQL database:
-
-1. Open your [Render Dashboard](https://dashboard.render.com/).
-2. Click **New +** in the top right $\rightarrow$ select **Blueprint**.
-3. Connect your repository: `memanmeetraj001-ctrl/eternelle-wedding-invites`.
-4. Render will read `render.yaml` and configure:
-   - **Database**: `eternelle-db` (PostgreSQL)
-   - **Web Service**: `eternelle-wedding-saas` (Node.js / Express)
-5. Click **Apply**. Render will automatically build, link `DATABASE_URL`, and deploy your live full-stack SaaS!
+This application is ready for 1-click cloud deployment on **Render**:
+1. Connect this GitHub repository to Render.
+2. Select **Blueprint** and specify `render.yaml`.
+3. Set `JWT_SECRET` and `ADMIN_SECRET_KEY` in Render environment settings.
 
 ---
 
-## 💳 Monetization & Gumroad Tiers
+## 📜 License
 
-| Tier | Price | Highlights |
-| :--- | :--- | :--- |
-| **Free Starter** | **\$0** | 1 Event, Up to 20 guest RSVPs, Standard 3D envelope. |
-| **Pro Wedding Pass** | **\$19** *(One-time)* | Unlimited RSVPs, Custom audio tracks, 1-click CSV catering export. |
-| **Lifetime Creator** | **\$79** *(One-time)* | Unlimited events, Commercial client rights, White-labeling for planners. |
-
----
-
-## 🔒 Security & Master Admin Access
-
-- **Public Site**: Standard visitor experience with 0 visible admin links.
-- **Admin Direct URL**: Navigate to `/admin` or `?view=admin`.
-- **Passkey**: `Fox@967777`.
-
----
-
-## 📄 License & Credits
-
-Built with ❤️ by the **Éternelle Engineering Team**.  
-All rights reserved © 2026 Éternelle Luxury Technologies.
+Created with ❤️ by **Éternelle Luxury Wedding Technologies**. All rights reserved.
