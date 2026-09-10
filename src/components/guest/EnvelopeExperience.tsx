@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, Volume2, VolumeX, Heart, ArrowRight, RotateCcw, Check } from 'lucide-react';
+import { Sparkles, Volume2, VolumeX, Heart, ArrowRight, RotateCcw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { WeddingData, ThemeConfig } from '../../types/invitation';
 
@@ -18,15 +18,16 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   onOpen,
   onReset,
 }) => {
-  const [animationStage, setAnimationStage] = useState<'sealed' | 'unsealing' | 'opened'>('sealed');
+  const [isUnsealed, setIsUnsealed] = useState(false);
+  const [isCardSlidOut, setIsCardSlidOut] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
   
-  // 3D Parallax Tracking
+  // Parallax tracking
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, sheenX: 50, sheenY: 50 });
-  const envelopeContainerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Background Audio
+  // Background Audio Setup
   useEffect(() => {
     if (wedding.musicEnabled && wedding.backgroundMusicUrl) {
       const audio = new Audio(wedding.backgroundMusicUrl);
@@ -49,19 +50,18 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     }
   };
 
-  // Mouse / Touch 3D Tilt calculation
+  // Mouse Parallax for Specular Sheen (Only when sealed)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (animationStage !== 'sealed') return;
-    if (!envelopeContainerRef.current) return;
-    const rect = envelopeContainerRef.current.getBoundingClientRect();
+    if (isUnsealed) return;
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
-    // Smooth bounded tilt range (-10 to 10 deg)
-    const rotateX = Math.max(-12, Math.min(12, ((y - centerY) / centerY) * -10));
-    const rotateY = Math.max(-12, Math.min(12, ((x - centerX) / centerX) * 10));
+    const rotateX = Math.max(-10, Math.min(10, ((y - centerY) / centerY) * -8));
+    const rotateY = Math.max(-10, Math.min(10, ((x - centerX) / centerX) * 8));
     const sheenX = Math.max(0, Math.min(100, (x / rect.width) * 100));
     const sheenY = Math.max(0, Math.min(100, (y / rect.height) * 100));
     
@@ -72,10 +72,10 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     setTilt({ rotateX: 0, rotateY: 0, sheenX: 50, sheenY: 50 });
   };
 
-  // 3D Unboxing Trigger
+  // 3-Stage Cinematic Unboxing
   const handleOpenEnvelope = () => {
-    if (animationStage !== 'sealed') return;
-    setAnimationStage('unsealing');
+    if (isUnsealed) return;
+    setIsUnsealed(true);
     setTilt({ rotateX: 0, rotateY: 0, sheenX: 50, sheenY: 50 });
 
     // Start background music
@@ -83,21 +83,21 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       audioElement.play().then(() => setIsMusicPlaying(true)).catch(() => {});
     }
 
-    // Sparkle Gold & Burgundy Confetti Shower
+    // Sparkle Gold & Burgundy Confetti Burst
     try {
       confetti({
-        particleCount: 75,
-        spread: 70,
-        origin: { y: 0.6 },
+        particleCount: 65,
+        spread: 60,
+        origin: { y: 0.55 },
         colors: [theme.waxSealBg, '#d4af37', '#fdf2f4', '#535e3b', '#ffffff'],
         disableForReducedMotion: true,
       });
     } catch {}
 
-    // Transition smoothly to fully opened
+    // Slide card out after flap swings open
     setTimeout(() => {
-      setAnimationStage('opened');
-    }, 900);
+      setIsCardSlidOut(true);
+    }, 450);
   };
 
   const handleEnterMicroSite = (e?: React.MouseEvent) => {
@@ -107,28 +107,31 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
 
   const handleReplay = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setAnimationStage('sealed');
-    setTilt({ rotateX: 0, rotateY: 0, sheenX: 50, sheenY: 50 });
+    setIsCardSlidOut(false);
+    setTimeout(() => {
+      setIsUnsealed(false);
+      setTilt({ rotateX: 0, rotateY: 0, sheenX: 50, sheenY: 50 });
+    }, 300);
     if (onReset) onReset();
   };
 
   return (
-    <div className="relative w-full min-h-[660px] flex flex-col items-center justify-center p-3 sm:p-6 select-none overflow-visible font-sans">
+    <div className="relative w-full min-h-[640px] flex flex-col items-center justify-center p-3 sm:p-6 select-none font-sans overflow-visible">
       
       {/* 1. Ambient Background Lighting Glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div 
-          className="absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-25 transition-all duration-1000"
+          className="absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-20"
           style={{ backgroundColor: theme.envelopeColor }}
         />
         <div 
-          className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full blur-3xl opacity-20 transition-all duration-1000"
+          className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full blur-3xl opacity-25"
           style={{ backgroundColor: theme.waxSealBg }}
         />
       </div>
 
-      {/* 2. Top Audio & Re-seal Action Controls */}
-      <div className="w-full max-w-lg mx-auto flex items-center justify-between mb-4 sm:mb-6 z-50 px-2">
+      {/* 2. Top Action Controls (Audio & Replay) */}
+      <div className="w-full max-w-md mx-auto flex items-center justify-between mb-4 z-50 px-2">
         <div>
           {wedding.musicEnabled && wedding.backgroundMusicUrl && (
             <button
@@ -156,7 +159,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           )}
         </div>
 
-        {animationStage === 'opened' && (
+        {isCardSlidOut && (
           <button
             onClick={handleReplay}
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/15 text-stone-200 text-xs font-sans transition-all shadow-lg cursor-pointer hover:text-amber-200"
@@ -168,8 +171,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       </div>
 
       {/* 3. Formal Headline Header */}
-      <div className={`text-center mb-6 sm:mb-8 transition-all duration-700 max-w-md ${
-        animationStage === 'opened' ? 'opacity-0 -translate-y-6 pointer-events-none h-0 mb-0 overflow-hidden' : 'opacity-100'
+      <div className={`text-center mb-6 transition-all duration-700 max-w-md ${
+        isCardSlidOut ? 'opacity-0 -translate-y-4 pointer-events-none h-0 mb-0 overflow-hidden' : 'opacity-100'
       }`}>
         <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.35em] text-amber-300/90 uppercase block drop-shadow-md">
           {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
@@ -182,30 +185,30 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         </p>
       </div>
 
-      {/* 4. THE 3D MASTER ENVELOPE STAGE (Physical 3D Transform Architecture) */}
+      {/* 4. 3D ENVELOPE STAGE (Zero Layout Shift, Pure 3D Hardware Accelerated) */}
       <div
-        ref={envelopeContainerRef}
+        ref={containerRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onClick={animationStage === 'sealed' ? handleOpenEnvelope : undefined}
-        className={`relative w-full max-w-[340px] sm:max-w-[400px] aspect-[4/3] transition-all duration-500 ease-out ${
-          animationStage === 'sealed' ? 'cursor-pointer group' : ''
-        } ${animationStage === 'opened' ? 'mt-36 sm:mt-44' : ''}`}
+        onClick={!isUnsealed ? handleOpenEnvelope : undefined}
+        className={`relative w-full max-w-[340px] sm:max-w-[410px] aspect-[4/3] ${
+          !isUnsealed ? 'cursor-pointer group' : ''
+        } ${isCardSlidOut ? 'mt-28 sm:mt-32' : ''}`}
         style={{
-          perspective: '1600px',
+          perspective: '1400px',
         }}
       >
-        {/* 3D Rotator Wrapper */}
+        {/* 3D Rotator Box */}
         <div
-          className="relative w-full h-full rounded-2xl transition-transform duration-700 ease-out"
+          className="relative w-full h-full rounded-2xl transition-transform duration-500 ease-out"
           style={{
             transformStyle: 'preserve-3d',
-            transform: `rotateX(${animationStage === 'sealed' ? tilt.rotateX : 0}deg) rotateY(${animationStage === 'sealed' ? tilt.rotateY : 0}deg)`,
+            transform: `rotateX(${!isUnsealed ? tilt.rotateX : 0}deg) rotateY(${!isUnsealed ? tilt.rotateY : 0}deg)`,
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 10px 20px -5px rgba(0, 0, 0, 0.5)',
           }}
         >
 
-          {/* LAYER 0: ENVELOPE BACK PLATE & FLORAL LINER (translateZ: 0px) */}
+          {/* LAYER 0: ENVELOPE BACK PLATE & FLORAL LINER */}
           <div
             className="absolute inset-0 rounded-2xl overflow-hidden border border-white/10"
             style={{
@@ -213,7 +216,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
               transform: 'translateZ(0px)',
             }}
           >
-            {/* Full-bleed Botanical Olive & Burgundy Floral Artwork Liner */}
+            {/* Full-bleed Botanical Olive & Burgundy Floral Artwork */}
             <div className="absolute inset-2 rounded-xl overflow-hidden">
               <img
                 src={theme.illustrationUrl}
@@ -226,17 +229,17 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             <div className="absolute inset-2 rounded-xl border border-amber-300/30 pointer-events-none" />
           </div>
 
-          {/* LAYER 1: 3D TOP TRIANGULAR FLAP (translateZ: 25px when closed, folds backward rotateX(180deg) when opened) */}
+          {/* LAYER 1: 3D TOP TRIANGULAR FLAP */}
           <div
-            className="absolute inset-x-0 top-0 h-1/2 transition-transform duration-800 ease-in-out"
+            className="absolute inset-x-0 top-0 h-1/2 transition-transform duration-700 ease-in-out"
             style={{
               transformStyle: 'preserve-3d',
               transformOrigin: 'top center',
-              transform: animationStage !== 'sealed' ? 'rotateX(180deg) translateZ(1px)' : 'rotateX(0deg) translateZ(28px)',
-              zIndex: animationStage === 'sealed' ? 30 : 5,
+              transform: isUnsealed ? 'rotateX(180deg)' : 'rotateX(0deg)',
+              zIndex: isUnsealed ? 5 : 30,
             }}
           >
-            {/* Outside of Flap (Facing viewer when closed) */}
+            {/* Front of flap (Facing viewer when closed) */}
             <div
               className="absolute inset-0 shadow-lg"
               style={{
@@ -254,13 +257,13 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
               />
             </div>
 
-            {/* Inside of Flap (Facing viewer when opened) */}
+            {/* Inside of flap (Revealed when open) */}
             <div
               className="absolute inset-0 overflow-hidden shadow-md"
               style={{
                 backgroundColor: theme.envelopeFlapColor,
                 clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)',
-                transform: 'rotateY(180deg) rotateZ(180deg)',
+                transform: 'rotateX(180deg)',
                 backfaceVisibility: 'hidden',
               }}
             >
@@ -273,30 +276,30 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             </div>
           </div>
 
-          {/* LAYER 2: THE 3D SLIDING STATIONERY CARD SUITE (Emerges smoothly from pocket) */}
+          {/* LAYER 2: THE 3D SLIDING STATIONERY CARD */}
           <div
-            onClick={animationStage === 'opened' ? handleEnterMicroSite : undefined}
-            className={`absolute inset-x-3 sm:inset-x-5 top-2 rounded-2xl transition-all duration-1000 ease-out ${
-              animationStage === 'opened'
-                ? '-translate-y-[62%] scale-100 shadow-2xl cursor-pointer hover:scale-[1.02]'
-                : animationStage === 'unsealing'
-                ? '-translate-y-[20%] scale-95 opacity-90'
-                : 'translate-y-0 scale-90 opacity-0 pointer-events-none'
+            onClick={isCardSlidOut ? handleEnterMicroSite : undefined}
+            className={`absolute inset-x-3 sm:inset-x-5 top-2 rounded-2xl transition-all duration-800 ease-out ${
+              isCardSlidOut
+                ? 'opacity-100 shadow-2xl cursor-pointer hover:scale-[1.01]'
+                : isUnsealed
+                ? 'opacity-90'
+                : 'opacity-0 pointer-events-none'
             }`}
             style={{
               backgroundColor: '#FAF7F2',
               color: '#2A1810',
               border: '1px solid rgba(212, 175, 55, 0.7)',
               boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.2)',
-              transform: animationStage === 'opened' 
-                ? 'translateY(-64%) translateZ(45px)' 
-                : animationStage === 'unsealing'
-                ? 'translateY(-20%) translateZ(15px)'
-                : 'translateY(0px) translateZ(5px)',
+              transform: isCardSlidOut 
+                ? 'translateY(-55%) translateZ(40px)' 
+                : isUnsealed
+                ? 'translateY(-15%) translateZ(10px)'
+                : 'translateY(0px) translateZ(2px)',
               zIndex: 35,
             }}
           >
-            {/* Fine Cotton Linen Card Texture */}
+            {/* Cotton Linen Texture & Deckled Gold Seam */}
             <div className="relative p-5 sm:p-6 rounded-2xl overflow-hidden bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6]">
               
               {/* Botanical Floral Corner Vignettes */}
@@ -307,7 +310,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                 <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
               </div>
 
-              {/* Deckled Double Gold Frame */}
+              {/* Inner Double Gold Frame */}
               <div className="border border-amber-300/80 rounded-xl p-4 sm:p-5 text-center relative z-10 bg-white/40 backdrop-blur-xs">
                 
                 {/* Monogram Crest */}
@@ -367,18 +370,17 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             </div>
           </div>
 
-          {/* LAYER 3: ENVELOPE FRONT POCKET (Velvet Olive Body with Deckled Cut) (translateZ: 20px) */}
+          {/* LAYER 3: ENVELOPE FRONT POCKET */}
           <div
             className="absolute inset-0 rounded-2xl pointer-events-none overflow-hidden shadow-inner"
             style={{
               background: `linear-gradient(145deg, ${theme.envelopeColor} 0%, ${theme.envelopeFlapColor} 100%)`,
-              clipPath: 'polygon(0% 0%, 50% 52%, 100% 0%, 100% 100%, 0% 100%)',
-              transform: 'translateZ(20px)',
+              clipPath: 'polygon(0% 0%, 50% 50%, 100% 0%, 100% 100%, 0% 100%)',
+              transform: 'translateZ(18px)',
               zIndex: 20,
             }}
           >
             <div className="absolute inset-0 border border-white/10 rounded-2xl" />
-            {/* Dynamic specular sheen on pocket */}
             <div 
               className="absolute inset-0 opacity-15"
               style={{
@@ -387,17 +389,17 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             />
           </div>
 
-          {/* LAYER 4: BURGUNDY SILK BELLY BAND / RIBBON (translateZ: 26px) */}
+          {/* LAYER 4: SILK BELLY BAND / RIBBON */}
           <div
-            className={`absolute inset-x-0 top-[48%] h-11 -translate-y-1/2 pointer-events-none transition-all duration-700 ease-in-out flex items-center justify-center ${
-              animationStage !== 'sealed' ? 'opacity-0 scale-x-125' : 'opacity-95'
+            className={`absolute inset-x-0 top-[48%] h-11 -translate-y-1/2 pointer-events-none transition-all duration-500 ease-in-out flex items-center justify-center ${
+              isUnsealed ? 'opacity-0 scale-x-125' : 'opacity-95'
             }`}
             style={{
               backgroundColor: theme.waxSealBg,
               boxShadow: '0 4px 10px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.3)',
               borderTop: '1px solid rgba(212, 175, 55, 0.4)',
               borderBottom: '1px solid rgba(212, 175, 55, 0.4)',
-              transform: 'translateZ(26px)',
+              transform: 'translateZ(24px)',
               zIndex: 25,
             }}
           >
@@ -406,19 +408,15 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             </span>
           </div>
 
-          {/* LAYER 5: 3D MONOGRAM WAX SEAL (translateZ: 36px) */}
+          {/* LAYER 5: 3D MONOGRAM WAX SEAL */}
           <div
-            className={`absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 flex items-center justify-center ${
-              animationStage === 'unsealing'
-                ? 'scale-150 rotate-45 opacity-0'
-                : animationStage === 'opened'
-                ? 'opacity-0 scale-50 pointer-events-none'
-                : 'group-hover:scale-105'
+            className={`absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 flex items-center justify-center ${
+              isUnsealed ? 'opacity-0 scale-125 pointer-events-none' : 'group-hover:scale-105'
             }`}
             style={{
-              transform: animationStage === 'sealed'
-                ? 'translate(-50%, -50%) translateZ(36px)'
-                : 'translate(-50%, -50%) translateZ(60px) scale(1.4) rotate(20deg)',
+              transform: isUnsealed 
+                ? 'translate(-50%, -50%) translateZ(40px) scale(1.2)' 
+                : 'translate(-50%, -50%) translateZ(32px)',
               zIndex: 40,
             }}
           >
@@ -430,10 +428,10 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                 boxShadow: `0 12px 24px -4px ${theme.waxSealBg}aa, 0 8px 10px -5px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -3px 6px rgba(0,0,0,0.6)`,
               }}
             >
-              {/* Organic Melted Wax Edges */}
+              {/* Melted Wax Rim Ripples */}
               <div className="absolute inset-1 rounded-full border border-amber-300/40 opacity-70" />
               
-              {/* Engraved Seal Center */}
+              {/* Engraved Monogram Initial Crest */}
               <div
                 className="w-13 h-13 sm:w-15 sm:h-15 rounded-full border-2 border-amber-300/60 flex flex-col items-center justify-center shadow-inner relative bg-black/10"
                 style={{ color: theme.waxSealColor }}
@@ -451,9 +449,9 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         </div>
       </div>
 
-      {/* 5. BOTTOM INTERACTIVE CALL TO ACTION PROMPTS */}
+      {/* 5. BOTTOM INTERACTIVE PROMPT */}
       <div className="mt-8 text-center z-50">
-        {animationStage === 'sealed' ? (
+        {!isUnsealed ? (
           <div
             onClick={handleOpenEnvelope}
             className="inline-flex flex-col items-center cursor-pointer group"
@@ -466,7 +464,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
               Experience the 3D wedding stationery reveal
             </p>
           </div>
-        ) : animationStage === 'opened' ? (
+        ) : isCardSlidOut ? (
           <div className="flex flex-col sm:flex-row items-center gap-3 animate-fadeIn">
             <button
               onClick={handleEnterMicroSite}
