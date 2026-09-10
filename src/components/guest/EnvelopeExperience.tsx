@@ -52,8 +52,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (stage !== 'sealed' || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -12;
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
     setTilt({ x, y });
   };
 
@@ -77,23 +77,23 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     // Sparkle Gold & Burgundy Confetti Burst
     try {
       confetti({
-        particleCount: 55,
-        spread: 65,
+        particleCount: 60,
+        spread: 70,
         origin: { y: 0.6 },
         colors: [theme.waxSealBg, '#d4af37', '#fdf2f4', '#535e3b', '#ffffff'],
         disableForReducedMotion: true,
       });
     } catch {}
 
-    // Step 2: Open top envelope flap
+    // Step 2: Open top envelope flap smoothly
     setTimeout(() => {
       setStage('opening');
-    }, 280);
+    }, 200);
 
     // Step 3: Glide stationery card gracefully into full view
     setTimeout(() => {
       setStage('revealed');
-    }, 620);
+    }, 600);
   };
 
   const handleReplay = (e: React.MouseEvent) => {
@@ -200,11 +200,12 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 10px 25px -5px rgba(0, 0, 0, 0.6)',
           }}
         >
-          {/* ==================== 1. BACK LINER & ARTWORK ==================== */}
+          {/* ==================== 1. BACK LINER & ARTWORK (Layer 1, zIndex 5) ==================== */}
           <div
             className="absolute inset-0 rounded-2xl overflow-hidden border border-white/10"
             style={{
               backgroundColor: theme.envelopeFlapColor,
+              zIndex: 5,
             }}
           >
             {/* Botanical Floral Wallpaper Artwork */}
@@ -219,20 +220,97 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             <div className="absolute inset-2 rounded-xl border border-amber-300/30 pointer-events-none" />
           </div>
 
-          {/* ==================== 2. SLIDING STATIONERY CARD ==================== */}
+          {/* ==================== 2. TOP FLAP (Layer 2, zIndex: 10 when open, 25 when closed) ==================== */}
+          <div
+            className="absolute inset-x-0 top-0 h-[52%] transition-transform duration-600 ease-in-out origin-top will-change-transform"
+            style={{
+              transform: isFlapOpen ? 'rotateX(180deg)' : 'rotateX(0deg)',
+              transformStyle: 'preserve-3d',
+              zIndex: isCardUp ? 10 : 25,
+            }}
+          >
+            {/* Front of Flap (Closed state) */}
+            <div
+              className="absolute inset-0 backface-hidden"
+              style={{
+                backfaceVisibility: 'hidden',
+              }}
+            >
+              <svg
+                className="w-full h-full"
+                viewBox="0 0 420 165"
+                preserveAspectRatio="none"
+              >
+                <defs>
+                  <linearGradient id="flapFrontGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={theme.envelopeFlapColor} />
+                    <stop offset="100%" stopColor={theme.envelopeColor} />
+                  </linearGradient>
+                  <filter id="flapShadow" x="-10%" y="-10%" width="120%" height="130%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="6" floodOpacity="0.45" />
+                  </filter>
+                </defs>
+                <polygon
+                  points="0,0 420,0 210,165"
+                  fill="url(#flapFrontGrad)"
+                  filter="url(#flapShadow)"
+                  stroke="rgba(255,255,255,0.15)"
+                  strokeWidth="1"
+                />
+                <polyline
+                  points="0,0 210,165 420,0"
+                  fill="none"
+                  stroke="rgba(212,175,55,0.35)"
+                  strokeWidth="1"
+                />
+              </svg>
+            </div>
+
+            {/* Back of Flap (Open state, shows matching floral liner in crisp SVG pattern) */}
+            <div
+              className="absolute inset-0 backface-hidden"
+              style={{
+                transform: 'rotateX(180deg)',
+                backfaceVisibility: 'hidden',
+              }}
+            >
+              <svg
+                className="w-full h-full"
+                viewBox="0 0 420 165"
+                preserveAspectRatio="none"
+              >
+                <defs>
+                  <pattern id="flapLinerPattern" patternUnits="userSpaceOnUse" width="420" height="165">
+                    <image href={theme.illustrationUrl} x="0" y="0" width="420" height="165" preserveAspectRatio="xMidYMid slice" />
+                  </pattern>
+                </defs>
+                <polygon
+                  points="0,0 420,0 210,165"
+                  fill="url(#flapLinerPattern)"
+                  stroke="rgba(212,175,55,0.4)"
+                  strokeWidth="1"
+                />
+                <polygon
+                  points="0,0 420,0 210,165"
+                  fill="rgba(0,0,0,0.15)"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* ==================== 3. SLIDING STATIONERY CARD (Layer 3, zIndex 15) ==================== */}
           <div
             onClick={isCardUp ? onOpen : undefined}
-            className={`absolute inset-x-3 sm:inset-x-4 top-2 rounded-2xl transition-all duration-700 cubic-bezier(0.2, 0.8, 0.2, 1) will-change-transform ${
+            className={`absolute inset-x-3 sm:inset-x-4 top-2 rounded-2xl transition-all duration-700 will-change-transform ${
               isCardUp
                 ? '-translate-y-[48%] opacity-100 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.85)] cursor-pointer hover:scale-[1.01]'
-                : isFlapOpen
-                ? '-translate-y-[10%] opacity-90'
                 : 'translate-y-0 opacity-0 pointer-events-none'
             }`}
             style={{
               backgroundColor: '#FAF7F2',
               color: '#2A1810',
               border: '1px solid rgba(212, 175, 55, 0.75)',
+              transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
               zIndex: 15,
             }}
           >
@@ -310,7 +388,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             </div>
           </div>
 
-          {/* ==================== 3. FRONT ENVELOPE POCKET ==================== */}
+          {/* ==================== 4. FRONT ENVELOPE POCKET (Layer 4, zIndex 20) ==================== */}
           <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none" style={{ zIndex: 20 }}>
             <svg
               className="w-full h-full"
@@ -346,73 +424,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             </svg>
           </div>
 
-          {/* ==================== 4. TOP FLAP ==================== */}
-          <div
-            className="absolute inset-x-0 top-0 h-[52%] transition-transform duration-600 ease-in-out origin-top will-change-transform"
-            style={{
-              transform: isFlapOpen ? 'rotateX(180deg)' : 'rotateX(0deg)',
-              transformStyle: 'preserve-3d',
-              zIndex: isFlapOpen ? 5 : 30,
-            }}
-          >
-            {/* Front of Flap (Closed state) */}
-            <div
-              className="absolute inset-0 backface-hidden"
-              style={{
-                backfaceVisibility: 'hidden',
-              }}
-            >
-              <svg
-                className="w-full h-full"
-                viewBox="0 0 420 165"
-                preserveAspectRatio="none"
-              >
-                <defs>
-                  <linearGradient id="flapFrontGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={theme.envelopeFlapColor} />
-                    <stop offset="100%" stopColor={theme.envelopeColor} />
-                  </linearGradient>
-                  <filter id="flapShadow" x="-10%" y="-10%" width="120%" height="130%">
-                    <feDropShadow dx="0" dy="8" stdDeviation="8" floodOpacity="0.5" />
-                  </filter>
-                </defs>
-                <polygon
-                  points="0,0 420,0 210,165"
-                  fill="url(#flapFrontGrad)"
-                  filter="url(#flapShadow)"
-                  stroke="rgba(255,255,255,0.15)"
-                  strokeWidth="1"
-                />
-                <polyline
-                  points="0,0 210,165 420,0"
-                  fill="none"
-                  stroke="rgba(212,175,55,0.35)"
-                  strokeWidth="1"
-                />
-              </svg>
-            </div>
-
-            {/* Back of Flap (Open state, shows floral liner on inner triangle) */}
-            <div
-              className="absolute inset-0 overflow-hidden"
-              style={{
-                transform: 'rotateX(180deg)',
-                backfaceVisibility: 'hidden',
-                clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)',
-                backgroundColor: theme.envelopeFlapColor,
-              }}
-            >
-              <img
-                src={theme.illustrationUrl}
-                alt="Flap Liner Artwork"
-                className="w-full h-full object-cover brightness-95"
-              />
-              <div className="absolute inset-0 bg-black/20" />
-            </div>
-          </div>
-
-          {/* ==================== 5. SILK RIBBON UNTIE (Design 4 Left & Right Parting) ==================== */}
-          <div className="absolute inset-x-0 top-[52%] h-10 -translate-y-1/2 pointer-events-none overflow-hidden" style={{ zIndex: 32 }}>
+          {/* ==================== 5. SILK RIBBON UNTIE (Layer 5, zIndex 30) ==================== */}
+          <div className="absolute inset-x-0 top-[52%] h-10 -translate-y-1/2 pointer-events-none overflow-hidden" style={{ zIndex: 30 }}>
             {/* Left Ribbon Wing */}
             <div
               className={`absolute inset-y-0 left-0 w-1/2 transition-all duration-500 ease-in-out flex items-center justify-end pr-2 ${
@@ -448,7 +461,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             </div>
           </div>
 
-          {/* ==================== 6. MONOGRAM WAX SEAL ==================== */}
+          {/* ==================== 6. MONOGRAM WAX SEAL (Layer 6, zIndex 35) ==================== */}
           <div
             onClick={stage === 'sealed' ? handleOpenEnvelope : undefined}
             className={`absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-400 ease-out flex items-center justify-center cursor-pointer ${
