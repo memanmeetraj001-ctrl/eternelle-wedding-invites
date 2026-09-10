@@ -5,14 +5,16 @@ import {
   Plus, Trash2, Eye, EyeOff, Utensils, HelpCircle, Navigation, 
   Upload, Check, Volume2, VolumeX, ExternalLink, Tag,
   Play, Pause, Radio, Disc, Layers, ArrowUp, ArrowDown,
-  ListChecks, CheckSquare
+  ListChecks, CheckSquare, Mail
 } from 'lucide-react';
 import { 
   WeddingData, ThemeConfig, ThemeId, TimelineEvent, HotelLodging, 
   MenuItem, WeddingFAQ, PhotoMoment, MusicTrack, EventType, 
-  EventBlockConfig, EventBlockId, RSVPSurveyConfig, RSVPCustomQuestion 
+  EventBlockConfig, EventBlockId, RSVPSurveyConfig, RSVPCustomQuestion,
+  EnvelopeLinerId, StampStyleId, FoilFinishId, StationeryConfig
 } from '../../types/invitation';
 import { THEME_PRESETS, CURATED_MUSIC_OPTIONS, EVENT_CATEGORY_PRESETS, DEFAULT_EVENT_BLOCKS, DEFAULT_RSVP_SURVEY } from '../../constants/themes';
+import { ENVELOPE_LINER_OPTIONS, STAMP_STYLE_OPTIONS, FOIL_FINISH_OPTIONS, DEFAULT_STATIONERY } from '../../constants/stationery';
 
 interface InvitationEditorProps {
   wedding: WeddingData;
@@ -22,6 +24,7 @@ interface InvitationEditorProps {
 
 export type EditorSection = 
   | 'theme' 
+  | 'stationery'
   | 'couple' 
   | 'blocks'
   | 'rsvp'
@@ -205,6 +208,19 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
   const handleRemoveCustomQuestion = (id: string) => {
     const questions = (currentSurvey.customQuestions || []).filter(q => q.id !== id);
     handleUpdateSurvey({ customQuestions: questions });
+  };
+
+  // Stationery Suite Handlers
+  const currentStationery: StationeryConfig = wedding.stationery || DEFAULT_STATIONERY;
+
+  const handleUpdateStationery = (updates: Partial<StationeryConfig>) => {
+    notifyChange({
+      ...wedding,
+      stationery: {
+        ...currentStationery,
+        ...updates,
+      },
+    });
   };
 
   // Timeline Handlers
@@ -444,34 +460,35 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
       <div className="flex overflow-x-auto gap-1.5 p-1.5 rounded-2xl bg-white border border-amber-200/70 shadow-sm scrollbar-none text-xs font-medium">
         {[
           { id: 'theme', label: '1. Designer Themes', icon: Palette },
+          { id: 'stationery', label: '2. Stationery & Foil Suite', icon: Mail },
           { 
             id: 'couple', 
             label: wedding.eventType === 'birthday' 
-              ? '2. Honoree & Date' 
+              ? '3. Honoree & Date' 
               : wedding.eventType === 'gala' 
-              ? '2. Gala & Host' 
+              ? '3. Gala & Host' 
               : wedding.eventType === 'baby_shower' 
-              ? '2. Parents & Date' 
-              : '2. Couple & Date', 
+              ? '3. Parents & Date' 
+              : '3. Couple & Date', 
             icon: Heart 
           },
-          { id: 'blocks', label: '3. Modular Page Blocks', icon: Layers },
-          { id: 'rsvp', label: '4. RSVP Survey Builder', icon: ListChecks },
-          { id: 'schedule', label: '5. Order of Events', icon: Clock },
-          { id: 'menu', label: '6. Food & Drinks Menu', icon: Utensils },
+          { id: 'blocks', label: '4. Modular Page Blocks', icon: Layers },
+          { id: 'rsvp', label: '5. RSVP Survey Builder', icon: ListChecks },
+          { id: 'schedule', label: '6. Order of Events', icon: Clock },
+          { id: 'menu', label: '7. Food & Drinks Menu', icon: Utensils },
           { 
             id: 'gallery', 
             label: wedding.eventType === 'birthday' 
-              ? '7. Photo Memories' 
+              ? '8. Photo Memories' 
               : wedding.eventType === 'gala' 
-              ? '7. Highlights & Mission' 
-              : '7. Love Gallery & Story', 
+              ? '8. Highlights & Mission' 
+              : '8. Love Gallery & Story', 
             icon: ImageIcon 
           },
-          { id: 'attire', label: '8. Dress Code', icon: Sparkles },
-          { id: 'stay', label: '9. Hotels & Travel', icon: Hotel },
-          { id: 'faqs', label: '10. Guest Q&A / FAQs', icon: HelpCircle },
-          { id: 'music', label: '11. Music & Audio', icon: Music },
+          { id: 'attire', label: '9. Dress Code', icon: Sparkles },
+          { id: 'stay', label: '10. Hotels & Travel', icon: Hotel },
+          { id: 'faqs', label: '11. Guest Q&A / FAQs', icon: HelpCircle },
+          { id: 'music', label: '12. Music & Audio', icon: Music },
         ].map((tab) => {
           const Icon = tab.icon;
           const isCurrent = activeSection === tab.id;
@@ -543,6 +560,179 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {/* SECTION: STATIONERY & FOIL SUITE */}
+        {activeSection === 'stationery' && (
+          <div className="space-y-8 animate-fadeIn">
+            <div>
+              <h3 className="font-serif text-2xl text-stone-900 font-normal">Stationery, Liners & Foil Finishing</h3>
+              <p className="text-xs text-stone-500 mt-0.5">
+                Customize the inner envelope lining pattern, vintage postal stamp with date postmark, and metallic foil typography finish.
+              </p>
+            </div>
+
+            {/* 1. Envelope Interior Liners */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-serif text-lg text-stone-900 font-bold">1. Envelope Interior Liner</h4>
+                  <p className="text-[11px] text-stone-500">Pattern revealed inside the envelope when the ribbon is untied.</p>
+                </div>
+                <span className="text-xs font-mono font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+                  {ENVELOPE_LINER_OPTIONS[currentStationery.linerId]?.name || 'Florentine Damask'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+                {Object.values(ENVELOPE_LINER_OPTIONS).map((liner) => {
+                  const isSelected = currentStationery.linerId === liner.id;
+                  return (
+                    <div
+                      key={liner.id}
+                      onClick={() => handleUpdateStationery({ linerId: liner.id })}
+                      className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between relative overflow-hidden group ${
+                        isSelected
+                          ? 'border-amber-600 bg-amber-50/40 shadow-md ring-2 ring-amber-500/20'
+                          : 'border-stone-200 hover:border-stone-400 bg-white'
+                      }`}
+                    >
+                      {/* Pattern Swatch Thumbnail */}
+                      <div 
+                        className="w-full h-20 rounded-xl mb-3 shadow-inner border border-black/10 relative overflow-hidden"
+                        style={{ background: liner.patternCss }}
+                      >
+                        {isSelected && (
+                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-amber-600 text-white flex items-center justify-center shadow">
+                            <Check size={12} />
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <h5 className="font-serif text-sm text-stone-900 font-bold">{liner.name}</h5>
+                        <p className="text-[10px] text-stone-500 mt-0.5 leading-relaxed">{liner.tagline}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 2. Vintage Postage Stamps & Cancellation Postmark */}
+            <div className="space-y-4 pt-4 border-t border-stone-200">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h4 className="font-serif text-lg text-stone-900 font-bold">2. Vintage Postage Stamp & Postmark</h4>
+                  <p className="text-[11px] text-stone-500">Collectible vintage airmail stamp affixed to the outer envelope cover.</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                {Object.values(STAMP_STYLE_OPTIONS).map((stamp) => {
+                  const isSelected = currentStationery.stampId === stamp.id;
+                  return (
+                    <div
+                      key={stamp.id}
+                      onClick={() => handleUpdateStationery({ stampId: stamp.id })}
+                      className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col items-center text-center relative ${
+                        isSelected
+                          ? 'border-amber-600 bg-amber-50/50 shadow-md ring-2 ring-amber-500/20'
+                          : 'border-stone-200 hover:border-stone-400 bg-white'
+                      }`}
+                    >
+                      {isSelected && (
+                        <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-amber-600 text-white flex items-center justify-center shadow">
+                          <Check size={10} />
+                        </div>
+                      )}
+
+                      {/* Mini Stamp Preview */}
+                      <div 
+                        className="w-14 h-18 bg-[#FFFDF7] p-1 shadow-md border border-stone-300 rounded-xs flex flex-col justify-between mb-2"
+                        style={{ borderColor: stamp.accentColor }}
+                      >
+                        <div className="h-9 w-full overflow-hidden rounded-xs bg-stone-900">
+                          <img src={stamp.imageUrl} alt={stamp.name} className="w-full h-full object-cover" />
+                        </div>
+                        <span className="text-[5px] font-mono font-bold text-stone-800 line-clamp-1">{stamp.denom.split('·')[0]}</span>
+                      </div>
+
+                      <h5 className="font-serif text-xs font-bold text-stone-900">{stamp.name}</h5>
+                      <span className="text-[9px] text-stone-400 font-mono mt-0.5">{stamp.badge}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Postmark Text Config */}
+              <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200 max-w-md">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
+                  Postal Cancellation City & Marking
+                </label>
+                <input
+                  type="text"
+                  value={currentStationery.postmarkCity || ''}
+                  onChange={(e) => handleUpdateStationery({ postmarkCity: e.target.value.toUpperCase() })}
+                  placeholder="e.g. PARIS · AIRMAIL or NEW YORK · POST"
+                  className="w-full px-3.5 py-2 rounded-xl border border-stone-300 bg-white text-xs font-mono text-stone-900 focus:outline-none focus:border-amber-600"
+                />
+                <p className="text-[10px] text-stone-400 mt-1 font-sans">
+                  Stamped over the postage stamp with your celebration date.
+                </p>
+              </div>
+            </div>
+
+            {/* 3. Metallic Foil Text Finishing */}
+            <div className="space-y-4 pt-4 border-t border-stone-200">
+              <div>
+                <h4 className="font-serif text-lg text-stone-900 font-bold">3. Metallic Foil Typography Finish</h4>
+                <p className="text-[11px] text-stone-500">Shimmering liquid metallic foil applied to headings, initials, and border accents.</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                {Object.values(FOIL_FINISH_OPTIONS).map((foil) => {
+                  const isSelected = currentStationery.foilFinish === foil.id;
+                  return (
+                    <div
+                      key={foil.id}
+                      onClick={() => handleUpdateStationery({ foilFinish: foil.id })}
+                      className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between relative ${
+                        isSelected
+                          ? 'border-amber-600 bg-amber-50/50 shadow-md ring-2 ring-amber-500/20'
+                          : 'border-stone-200 hover:border-stone-400 bg-white'
+                      }`}
+                    >
+                      {isSelected && (
+                        <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-amber-600 text-white flex items-center justify-center shadow">
+                          <Check size={10} />
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-2 mb-2">
+                        <div 
+                          className="w-6 h-6 rounded-full border border-stone-300 shadow-xs" 
+                          style={{ backgroundColor: foil.sampleHex }}
+                        />
+                        <span className="font-serif text-xs font-bold text-stone-900">{foil.name}</span>
+                      </div>
+
+                      {/* Live Foil Shimmer Sample */}
+                      <div className="p-2.5 rounded-xl bg-stone-900 border border-stone-700 text-center">
+                        <span 
+                          className="font-script text-lg leading-none block"
+                          style={foil.id !== 'none' ? foil.shimmerStyle : { color: '#ffffff' }}
+                        >
+                          {wedding.coupleName1 || 'Liam & Scarlett'}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
           </div>
         )}
 

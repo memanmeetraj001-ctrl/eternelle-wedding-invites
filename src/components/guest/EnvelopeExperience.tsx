@@ -1,7 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, Volume2, VolumeX, Heart, ArrowRight, RotateCcw, BookOpen } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { WeddingData, ThemeConfig } from '../../types/invitation';
+import { WeddingData, ThemeConfig, StationeryConfig } from '../../types/invitation';
+import { 
+  ENVELOPE_LINER_OPTIONS, 
+  STAMP_STYLE_OPTIONS, 
+  FOIL_FINISH_OPTIONS, 
+  DEFAULT_STATIONERY 
+} from '../../constants/stationery';
 
 interface EnvelopeExperienceProps {
   wedding: WeddingData;
@@ -25,6 +31,12 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   // Parallax tilt on mouse move (only when sealed)
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const stationery: StationeryConfig = wedding.stationery || theme.stationery || DEFAULT_STATIONERY;
+  const currentLiner = ENVELOPE_LINER_OPTIONS[stationery.linerId] || ENVELOPE_LINER_OPTIONS['botanical-gold'];
+  const currentStamp = STAMP_STYLE_OPTIONS[stationery.stampId] || STAMP_STYLE_OPTIONS['royal-crest'];
+  const currentFoil = FOIL_FINISH_OPTIONS[stationery.foilFinish] || FOIL_FINISH_OPTIONS['gold'];
+  const postmarkCity = stationery.postmarkCity || (wedding.cityState ? wedding.cityState.split(',')[0].toUpperCase() : 'PARIS') + ' · AIRMAIL';
 
   // Background Audio Setup
   useEffect(() => {
@@ -78,7 +90,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         particleCount: 75,
         spread: 80,
         origin: { y: 0.6 },
-        colors: [theme.waxSealBg, '#d4af37', '#10b981', '#fdf2f4', '#ffffff'],
+        colors: [theme.waxSealBg, currentFoil.sampleHex, '#10b981', '#fdf2f4', '#ffffff'],
         disableForReducedMotion: true,
       });
     } catch {}
@@ -162,7 +174,10 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-[0.25em] sm:tracking-[0.35em] text-amber-300/90 uppercase block drop-shadow-md">
           {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
         </span>
-        <h1 className="font-script text-2xl sm:text-4xl text-amber-100 font-normal mt-0.5 drop-shadow-lg leading-tight">
+        <h1 
+          className="font-script text-2xl sm:text-4xl text-amber-100 font-normal mt-0.5 drop-shadow-lg leading-tight"
+          style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : {}}
+        >
           {wedding.coupleName1} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
         </h1>
         <p className="text-[10px] sm:text-xs font-serif italic text-stone-300/90 tracking-wide mt-0.5">
@@ -176,7 +191,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         </p>
       </div>
 
-      {/* 4. DESIGN 3: COUTURE SILK RIBBON UNBOXING STAGE */}
+      {/* 4. DESIGN 3: COUTURE SILK RIBBON & LINER UNBOXING STAGE */}
       <div
         ref={containerRef}
         onMouseMove={handleMouseMove}
@@ -199,108 +214,160 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           }}
         >
 
-          {/* ==================== 1. INNER INVITATION CARD ==================== */}
+          {/* ==================== 1. INNER INVITATION CARD WITH LUXURY LINER BORDER ==================== */}
           <div
             onClick={isFullyOpen ? onOpen : undefined}
-            className={`absolute inset-0 rounded-2xl p-3 sm:p-6 flex flex-col justify-between text-center overflow-hidden transition-all duration-[1750ms] ease-out bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] ${
+            className={`absolute inset-0 rounded-2xl p-2.5 sm:p-4 flex flex-col justify-between text-center overflow-hidden transition-all duration-[1750ms] ease-out ${
               isFullyOpen ? 'cursor-pointer hover:scale-[1.01] shadow-2xl' : ''
             }`}
             style={{
-              border: '1px solid rgba(212, 175, 55, 0.75)',
+              background: currentLiner.patternCss,
+              border: `2px solid ${currentFoil.sampleHex}`,
               zIndex: 10,
             }}
           >
-            {/* Botanical Floral Corner Accents */}
-            <div className="absolute top-0 right-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden">
-              <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
-            </div>
-            <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
-              <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
-            </div>
+            {/* Fine Cotton Linen Card Core */}
+            <div 
+              className="rounded-xl p-3 sm:p-5 text-center relative z-10 flex flex-col justify-between h-full shadow-inner overflow-hidden"
+              style={{
+                backgroundColor: '#FAF7F0',
+                border: `1px solid ${currentFoil.sampleHex}99`,
+                color: '#2A1810',
+              }}
+            >
+              {/* Botanical Floral Corner Accents */}
+              <div className="absolute top-0 right-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden">
+                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+              </div>
+              <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
+                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+              </div>
 
-            {/* Inner Double Gold Frame */}
-            <div className="border border-amber-300/80 rounded-xl p-2.5 sm:p-5 text-center relative z-10 bg-white/40 backdrop-blur-xs h-full flex flex-col justify-between">
-              
-              {/* Monogram Crest */}
-              <div>
-                <div 
-                  className="w-6 h-6 sm:w-8 sm:h-8 mx-auto rounded-full border border-amber-400 flex items-center justify-center mb-0.5 shadow-xs"
-                  style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
-                >
-                  <span className="font-serif italic text-[10px] sm:text-xs font-bold">
-                    {wedding.coupleInitials || 'É'}
+              {/* Inner Frame */}
+              <div className="border border-amber-300/80 rounded-lg p-2 sm:p-3.5 text-center relative z-10 bg-white/50 backdrop-blur-xs h-full flex flex-col justify-between">
+                
+                {/* Monogram Crest with Foil Accent */}
+                <div>
+                  <div 
+                    className="w-6 h-6 sm:w-8 sm:h-8 mx-auto rounded-full border flex items-center justify-center mb-0.5 shadow-xs"
+                    style={{ 
+                      backgroundColor: theme.waxSealBg, 
+                      borderColor: currentFoil.sampleHex,
+                      color: theme.waxSealColor 
+                    }}
+                  >
+                    <span className="font-serif italic text-[10px] sm:text-xs font-bold">
+                      {wedding.coupleInitials || 'É'}
+                    </span>
+                  </div>
+
+                  <span className="text-[7px] sm:text-[9px] tracking-[0.2em] sm:tracking-[0.3em] font-mono uppercase font-bold text-amber-900 block">
+                    {wedding.headline || 'PLEASE JOIN US FOR THE WEDDING OF'}
                   </span>
+
+                  {/* Honoree or Couple Names Calligraphy with Metallic Foil */}
+                  <div className="my-0.5 space-y-0">
+                    <h2 
+                      className="font-script text-lg sm:text-3xl text-stone-900 leading-none"
+                      style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : {}}
+                    >
+                      {wedding.coupleName1}
+                    </h2>
+                    {wedding.coupleName2 && (
+                      <>
+                        <span className="font-serif italic text-[10px] sm:text-xs text-amber-800 font-bold block my-0.5">&</span>
+                        <h2 
+                          className="font-script text-lg sm:text-3xl text-stone-900 leading-none"
+                          style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : {}}
+                        >
+                          {wedding.coupleName2}
+                        </h2>
+                      </>
+                    )}
+                  </div>
                 </div>
 
-                <span className="text-[7px] sm:text-[9px] tracking-[0.2em] sm:tracking-[0.3em] font-mono uppercase font-bold text-amber-900 block">
-                  {wedding.headline || 'PLEASE JOIN US FOR THE WEDDING OF'}
-                </span>
-
-                {/* Honoree or Couple Names Calligraphy */}
-                <div className="my-0.5 space-y-0">
-                  <h2 className="font-script text-lg sm:text-3xl text-stone-900 leading-none">
-                    {wedding.coupleName1}
-                  </h2>
-                  {wedding.coupleName2 && (
-                    <>
-                      <span className="font-serif italic text-[10px] sm:text-xs text-amber-800 font-bold block my-0.5">&</span>
-                      <h2 className="font-script text-lg sm:text-3xl text-stone-900 leading-none">
-                        {wedding.coupleName2}
-                      </h2>
-                    </>
-                  )}
+                {/* Date & Venue */}
+                <div className="pt-1 border-t border-amber-200/80 text-[10px] sm:text-xs font-serif text-stone-800 space-y-0">
+                  <div className="font-bold text-stone-900 tracking-wider text-[10px] sm:text-xs">
+                    {wedding.weddingDate} · {wedding.weddingTime}
+                  </div>
+                  <div className="text-[9px] sm:text-[11px] text-stone-600 font-medium">
+                    {wedding.venueName}
+                  </div>
+                  <div className="text-[8px] sm:text-[10px] text-stone-500 font-sans">
+                    {wedding.cityState}
+                  </div>
                 </div>
+
+                {/* 1-Click Action to Unfold Full Suite */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpen();
+                  }}
+                  className="mt-1 w-full py-1.5 sm:py-2 px-2.5 sm:px-4 rounded-xl text-[9px] sm:text-xs font-serif font-bold tracking-wider uppercase text-white shadow-md flex items-center justify-center gap-1.5 transition-all hover:brightness-110 active:scale-98 cursor-pointer"
+                  style={{
+                    backgroundColor: theme.waxSealBg,
+                    border: `1px solid ${theme.waxSealBorder}`,
+                  }}
+                >
+                  <Sparkles size={11} />
+                  <span>Unfold Full Suite & RSVP</span>
+                  <ArrowRight size={11} />
+                </button>
+
               </div>
-
-              {/* Date & Venue */}
-              <div className="pt-1 sm:pt-2 border-t border-amber-200/80 text-[10px] sm:text-xs font-serif text-stone-800 space-y-0">
-                <div className="font-bold text-stone-900 tracking-wider text-[10px] sm:text-xs">
-                  {wedding.weddingDate} · {wedding.weddingTime}
-                </div>
-                <div className="text-[9px] sm:text-[11px] text-stone-600 font-medium">
-                  {wedding.venueName}
-                </div>
-                <div className="text-[8px] sm:text-[10px] text-stone-500 font-sans">
-                  {wedding.cityState}
-                </div>
-              </div>
-
-              {/* 1-Click Action to Unfold Full Suite */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpen();
-                }}
-                className="mt-1.5 w-full py-1.5 sm:py-2 px-2.5 sm:px-4 rounded-xl text-[9px] sm:text-xs font-serif font-bold tracking-wider uppercase text-white shadow-md flex items-center justify-center gap-1.5 transition-all hover:brightness-110 active:scale-98 cursor-pointer"
-                style={{
-                  backgroundColor: theme.waxSealBg,
-                  border: `1px solid ${theme.waxSealBorder}`,
-                }}
-              >
-                <Sparkles size={11} />
-                <span>Unfold Full Suite & RSVP</span>
-                <ArrowRight size={11} />
-              </button>
-
             </div>
           </div>
 
-          {/* ==================== 2. TOP VELVET COVER (Folds Open Upward 130deg) ==================== */}
+          {/* ==================== 2. TOP VELVET COVER WITH VINTAGE STAMP & POSTMARK ==================== */}
           <div
             className="absolute top-0 inset-x-0 h-1/2 rounded-t-2xl p-3 sm:p-4 origin-top transition-transform duration-[1750ms] ease-in-out shadow-2xl overflow-hidden will-change-transform"
             style={{
               backgroundColor: theme.envelopeColor || '#064e3b',
-              borderTop: '1px solid rgba(212, 175, 55, 0.6)',
-              borderLeft: '1px solid rgba(212, 175, 55, 0.6)',
-              borderRight: '1px solid rgba(212, 175, 55, 0.6)',
+              borderTop: `1px solid ${currentFoil.sampleHex}99`,
+              borderLeft: `1px solid ${currentFoil.sampleHex}99`,
+              borderRight: `1px solid ${currentFoil.sampleHex}99`,
               transform: isRibbonOpen ? 'rotateX(130deg)' : 'rotateX(0deg)',
               transformStyle: 'preserve-3d',
               zIndex: 20,
             }}
           >
-            <div className="absolute inset-2 sm:inset-3 rounded-t-xl border border-amber-300/40 pointer-events-none" />
-            <div className="h-full flex items-center justify-center text-center">
+            <div className="absolute inset-2 sm:inset-3 rounded-t-xl border border-amber-300/30 pointer-events-none" />
+            
+            {/* Vintage Postal Stamp & Cancellation Postmark (Top-Right) */}
+            <div className="absolute top-2 sm:top-2.5 right-2 sm:right-2.5 z-20 flex items-center gap-1 pointer-events-none">
+              {/* Circular Postal Cancellation Stamp */}
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-amber-300/60 text-amber-200/80 text-[6px] font-mono uppercase flex flex-col items-center justify-center text-center p-0.5 rotate-[-12deg] shadow-xs">
+                <span className="font-bold tracking-tight text-[5px] sm:text-[6px] leading-tight line-clamp-1">{postmarkCity}</span>
+                <span className="text-[5px] border-y border-amber-300/40 my-0.5 px-0.5 font-bold">
+                  {wedding.weddingDate?.split('-')[0] || '2027'}
+                </span>
+                <span className="tracking-tighter text-[4px] sm:text-[5px]">POSTAL</span>
+              </div>
+
+              {/* Scalloped Vintage Stamp */}
+              <div 
+                className="w-10 h-13 sm:w-12 sm:h-15 bg-[#FFFDF7] p-1 shadow-lg border border-amber-400/80 relative overflow-hidden flex flex-col justify-between rounded-xs"
+                style={{
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.5)',
+                }}
+              >
+                <div className="h-6 sm:h-7 w-full overflow-hidden rounded-xs bg-stone-900 border border-amber-400/40">
+                  <img src={currentStamp.imageUrl} alt={currentStamp.name} className="w-full h-full object-cover brightness-95" />
+                </div>
+                <div className="text-[5px] font-mono text-center font-bold tracking-tight text-stone-900 leading-none mt-0.5">
+                  {currentStamp.denom}
+                </div>
+                <div className="text-[4px] font-mono text-center text-amber-800 leading-none font-bold pb-0.5">
+                  {wedding.weddingDate?.slice(0, 7) || '2027'}
+                </div>
+              </div>
+            </div>
+
+            <div className="h-full flex items-center justify-start pl-2">
               <span className="text-[8px] sm:text-[10px] font-mono tracking-[0.25em] sm:tracking-[0.3em] text-amber-200/90 uppercase font-bold drop-shadow">
                 ÉTERNEL COUTURE
               </span>
@@ -312,17 +379,17 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             className="absolute bottom-0 inset-x-0 h-1/2 rounded-b-2xl p-3 sm:p-4 origin-bottom transition-transform duration-[1750ms] ease-in-out shadow-2xl overflow-hidden will-change-transform"
             style={{
               backgroundColor: theme.envelopeColor || '#064e3b',
-              borderBottom: '1px solid rgba(212, 175, 55, 0.6)',
-              borderLeft: '1px solid rgba(212, 175, 55, 0.6)',
-              borderRight: '1px solid rgba(212, 175, 55, 0.6)',
+              borderBottom: `1px solid ${currentFoil.sampleHex}99`,
+              borderLeft: `1px solid ${currentFoil.sampleHex}99`,
+              borderRight: `1px solid ${currentFoil.sampleHex}99`,
               transform: isRibbonOpen ? 'rotateX(-130deg)' : 'rotateX(0deg)',
               transformStyle: 'preserve-3d',
               zIndex: 20,
             }}
           >
-            <div className="absolute inset-2 sm:inset-3 rounded-b-xl border border-amber-300/40 pointer-events-none" />
+            <div className="absolute inset-2 sm:inset-3 rounded-b-xl border border-amber-300/30 pointer-events-none" />
             <div className="h-full flex items-center justify-center text-center">
-              <span className="text-[7px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.25em] text-amber-300/80 uppercase">
+              <span className="text-[7px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.25em] text-amber-300/80 uppercase font-medium">
                 TAP TO UNTIE RIBBON
               </span>
             </div>
@@ -343,9 +410,10 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           >
             {/* Ornate Gold Bow & Monogram Clasp */}
             <div
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-300 flex items-center justify-center shadow-2xl relative transition-transform duration-300 group-hover:scale-110 active:scale-95"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 flex items-center justify-center shadow-2xl relative transition-transform duration-300 group-hover:scale-110 active:scale-95"
               style={{
                 backgroundColor: theme.waxSealBg,
+                borderColor: currentFoil.sampleHex,
                 boxShadow: `0 6px 16px -2px ${theme.waxSealBg}cc, inset 0 2px 4px rgba(255,255,255,0.4)`,
               }}
             >

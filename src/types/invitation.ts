@@ -5,6 +5,30 @@ export interface ColorSwatch {
   hex: string;
 }
 
+export type EnvelopeLinerId = 
+  | 'botanical-gold' 
+  | 'marble-noir' 
+  | 'champagne-silk' 
+  | 'french-toile' 
+  | 'art-deco' 
+  | 'vintage-floral';
+
+export type StampStyleId = 
+  | 'vintage-rose' 
+  | 'royal-crest' 
+  | 'golden-swans' 
+  | 'botanical-olive' 
+  | 'monogram-initials';
+
+export type FoilFinishId = 'gold' | 'rose-gold' | 'silver' | 'emerald' | 'none';
+
+export interface StationeryConfig {
+  linerId: EnvelopeLinerId;
+  stampId: StampStyleId;
+  postmarkCity?: string;
+  foilFinish: FoilFinishId;
+}
+
 export interface ThemeConfig {
   id: ThemeId;
   name: string;
@@ -26,6 +50,7 @@ export interface ThemeConfig {
   illustrationUrl: string;
   musicTrackUrl: string;
   musicTitle: string;
+  stationery?: StationeryConfig;
 }
 
 export interface TimelineEvent {
@@ -151,6 +176,7 @@ export interface WeddingData {
   hostNames?: string;
   blocks?: EventBlockConfig[];
   rsvpSurvey?: RSVPSurveyConfig;
+  stationery?: StationeryConfig;
   slug: string;
   coupleName1: string;
   coupleName2: string;

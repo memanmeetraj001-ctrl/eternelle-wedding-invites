@@ -13,6 +13,7 @@ import {
   generateYahooCalendarUrl, 
   downloadIcsFile 
 } from '../../utils/calendar';
+import { FOIL_FINISH_OPTIONS, DEFAULT_STATIONERY } from '../../constants/stationery';
 
 interface GuestInvitationViewProps {
   wedding: WeddingData;
@@ -242,13 +243,19 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 
                 {/* Romantic Calligraphy Script */}
                 <div className="my-1.5 space-y-0">
-                  <h2 className="font-script text-2xl sm:text-4xl text-stone-900 leading-none">
+                  <h2 
+                    className="font-script text-2xl sm:text-4xl text-stone-900 leading-none"
+                    style={(wedding.stationery || theme.stationery)?.foilFinish !== 'none' ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle : {}}
+                  >
                     {wedding.coupleName1}
                   </h2>
                   {wedding.coupleName2 && (
                     <>
                       <span className="font-serif italic text-xs sm:text-base text-amber-800 font-bold block my-0.5">&</span>
-                      <h2 className="font-script text-2xl sm:text-4xl text-stone-900 leading-none">
+                      <h2 
+                        className="font-script text-2xl sm:text-4xl text-stone-900 leading-none"
+                        style={(wedding.stationery || theme.stationery)?.foilFinish !== 'none' ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle : {}}
+                      >
                         {wedding.coupleName2}
                       </h2>
                     </>
