@@ -127,16 +127,35 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
             </button>
 
             <span className="font-script text-base sm:text-xl text-amber-200 tracking-wide truncate text-center px-1">
-              {wedding.coupleName1} & {wedding.coupleName2}
+              {wedding.coupleName1} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
             </span>
 
-            <button
-              onClick={onOpenRSVP}
-              className="px-3 sm:px-3.5 py-1 rounded-full text-[10px] sm:text-xs font-serif font-bold tracking-wider uppercase transition-all shadow-md hover:brightness-110 cursor-pointer shrink-0"
-              style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
-            >
-              RSVP
-            </button>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={() => {
+                  const url = window.location.href;
+                  const title = `${wedding.coupleName1} ${wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''} — Invitation`;
+                  const text = `Join us to celebrate with ${wedding.coupleName1} ${wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''} on ${wedding.weddingDate}! Open 3D invitation: ${url}`;
+                  if (navigator.share) {
+                    navigator.share({ title, text, url }).catch(() => {});
+                  } else {
+                    navigator.clipboard.writeText(url);
+                  }
+                }}
+                className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-stone-200 transition-colors cursor-pointer"
+                title="Share Invitation"
+              >
+                <Share2 size={13} />
+              </button>
+
+              <button
+                onClick={onOpenRSVP}
+                className="px-3 sm:px-3.5 py-1 rounded-full text-[10px] sm:text-xs font-serif font-bold tracking-wider uppercase transition-all shadow-md hover:brightness-110 cursor-pointer"
+                style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
+              >
+                RSVP
+              </button>
+            </div>
           </header>
 
           {/* Hero Floral Banner & Formal Monogram Suite */}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Share2, Sparkles, Copy, Check, QrCode, 
-  Smartphone, Download, Heart, MessageSquare, Instagram
+  Smartphone, Download, Heart, MessageSquare, Instagram,
+  Send, Mail, Globe, ExternalLink
 } from 'lucide-react';
 import { WeddingData, ThemeConfig } from '../../types/invitation';
 
@@ -18,14 +19,117 @@ export const SaveTheDateStudio: React.FC<SaveTheDateStudioProps> = ({ wedding, t
     ? `https://eternelleweddinginvites.online/invite/${wedding.slug || 'alex-sarah'}`
     : `${window.location.origin}/invite/${wedding.slug || 'alex-sarah'}`;
 
-  const whatsappMessage = `We are getting married! 💕 ${wedding.coupleName1} & ${wedding.coupleName2} invite you to celebrate on ${wedding.weddingDate} at ${wedding.venueName}. Open our digital invitation & RSVP here: ${destinationUrl}`;
-  const socialCaption = `We said YES! 💍 Join us for the wedding of ${wedding.coupleName1} & ${wedding.coupleName2} on ${wedding.weddingDate}. Tap the link in our bio to view the animated envelope, schedule & RSVP! ✨ #weddinginvitation #savethedate #${(wedding.coupleName1 || 'wedding').toLowerCase()}and${(wedding.coupleName2 || 'celebration').toLowerCase()}`;
+  const coupleOrHonoree = wedding.coupleName2 
+    ? `${wedding.coupleName1} & ${wedding.coupleName2}` 
+    : wedding.coupleName1;
+
+  const eventLabel = wedding.eventType === 'birthday' 
+    ? 'birthday celebration' 
+    : wedding.eventType === 'engagement' 
+    ? 'engagement party' 
+    : wedding.eventType === 'anniversary' 
+    ? 'anniversary celebration' 
+    : wedding.eventType === 'baby_shower' 
+    ? 'baby shower' 
+    : wedding.eventType === 'gala' 
+    ? 'gala dinner' 
+    : 'wedding';
+
+  const shareTitle = `${coupleOrHonoree} — ${wedding.headline || 'Celebration Invitation'}`;
+  
+  const whatsappMessage = wedding.eventType === 'birthday'
+    ? `You're invited! 🎂 Join us to celebrate ${wedding.coupleName1}'s birthday on ${wedding.weddingDate} at ${wedding.venueName}. Open the digital invitation & RSVP here: ${destinationUrl}`
+    : wedding.eventType === 'gala'
+    ? `You are cordially invited to ${wedding.coupleName1} on ${wedding.weddingDate} at ${wedding.venueName}. View the full program & RSVP: ${destinationUrl}`
+    : `We are getting married! 💕 ${wedding.coupleName1} & ${wedding.coupleName2} invite you to celebrate on ${wedding.weddingDate} at ${wedding.venueName}. Open our 3D digital invitation & RSVP here: ${destinationUrl}`;
+
+  const socialCaption = wedding.eventType === 'birthday'
+    ? `It's a celebration! 🎂 Join us for ${wedding.coupleName1}'s milestone birthday on ${wedding.weddingDate}. Tap the link in bio for full details, itinerary & RSVP! ✨ #birthdaycelebration #milestone #${(wedding.coupleName1 || 'birthday').toLowerCase().replace(/\s+/g, '')}`
+    : `We said YES! 💍 Join us for the wedding of ${coupleOrHonoree} on ${wedding.weddingDate}. Tap the link in our bio to view the animated envelope, schedule & RSVP! ✨ #weddinginvitation #savethedate #${(wedding.coupleName1 || 'wedding').toLowerCase().replace(/\s+/g, '')}and${(wedding.coupleName2 || 'celebration').toLowerCase().replace(/\s+/g, '')}`;
+
+  const emailSubject = `Invitation: ${coupleOrHonoree}'s ${eventLabel.toUpperCase()} (${wedding.weddingDate})`;
+  const emailBody = `Dear Friends and Family,\n\nWe would be honored by your presence to celebrate with us!\n\nEvent: ${shareTitle}\nDate & Time: ${wedding.weddingDate} at ${wedding.weddingTime}\nVenue: ${wedding.venueName} (${wedding.cityState})\n\nPlease open your interactive 3D invitation card and RSVP using the link below:\n${destinationUrl}\n\nWarmly,\n${coupleOrHonoree}`;
 
   const copyText = (text: string, sectionId: string) => {
     navigator.clipboard.writeText(text);
     setCopiedSection(sectionId);
     setTimeout(() => setCopiedSection(null), 2000);
   };
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: whatsappMessage,
+          url: destinationUrl,
+        });
+      } catch (err) {
+        // Share was cancelled or failed
+      }
+    } else {
+      copyText(destinationUrl, 'native_share');
+    }
+  };
+
+  const socialChannels = [
+    {
+      id: 'whatsapp',
+      name: 'WhatsApp',
+      icon: '💬',
+      bg: 'bg-emerald-600 hover:bg-emerald-700 text-white',
+      badge: 'Family & Group Chats',
+      actionUrl: `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappMessage)}`,
+    },
+    {
+      id: 'sms',
+      name: 'iMessage / SMS',
+      icon: '📱',
+      bg: 'bg-blue-600 hover:bg-blue-700 text-white',
+      badge: 'Direct Phone Contacts',
+      actionUrl: `sms:?&body=${encodeURIComponent(whatsappMessage)}`,
+    },
+    {
+      id: 'pinterest',
+      name: 'Pinterest',
+      icon: '📌',
+      bg: 'bg-rose-700 hover:bg-rose-800 text-white',
+      badge: 'Moodboards & Pins',
+      actionUrl: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(destinationUrl)}&media=${encodeURIComponent(theme.illustrationUrl)}&description=${encodeURIComponent(socialCaption)}`,
+    },
+    {
+      id: 'telegram',
+      name: 'Telegram',
+      icon: '✈️',
+      bg: 'bg-sky-500 hover:bg-sky-600 text-white',
+      badge: 'Channels & Groups',
+      actionUrl: `https://t.me/share/url?url=${encodeURIComponent(destinationUrl)}&text=${encodeURIComponent(whatsappMessage)}`,
+    },
+    {
+      id: 'facebook',
+      name: 'Facebook',
+      icon: '👥',
+      bg: 'bg-indigo-600 hover:bg-indigo-700 text-white',
+      badge: 'Friends & Family Feed',
+      actionUrl: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(destinationUrl)}`,
+    },
+    {
+      id: 'twitter',
+      name: 'X (Twitter)',
+      icon: '✖️',
+      bg: 'bg-stone-900 hover:bg-black text-white',
+      badge: 'Post to Feed',
+      actionUrl: `https://twitter.com/intent/tweet?text=${encodeURIComponent(whatsappMessage)}`,
+    },
+    {
+      id: 'email',
+      name: 'Email Invite',
+      icon: '✉️',
+      bg: 'bg-stone-700 hover:bg-stone-800 text-white',
+      badge: 'Formal Guest Broadcast',
+      actionUrl: `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`,
+    },
+  ];
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4 md:p-8 space-y-6 text-stone-900 font-sans">
@@ -39,14 +143,18 @@ export const SaveTheDateStudio: React.FC<SaveTheDateStudioProps> = ({ wedding, t
             Save-the-Date & Social Share Studio
           </h1>
           <p className="text-xs text-stone-600 mt-0.5">
-            Share your interactive invitation on WhatsApp, iMessage, Instagram Stories, and Pinterest.
+            Share your interactive invitation on WhatsApp, iMessage, Instagram Stories, Pinterest, and Email.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 font-mono font-bold">
-            {wedding.coupleName1} & {wedding.coupleName2}
-          </span>
+          <button
+            onClick={handleNativeShare}
+            className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white font-serif text-xs font-semibold flex items-center gap-2 shadow-md transition-all cursor-pointer"
+          >
+            <Share2 size={15} />
+            <span>Instant Mobile Share Sheet</span>
+          </button>
         </div>
       </div>
 
@@ -101,7 +209,7 @@ export const SaveTheDateStudio: React.FC<SaveTheDateStudioProps> = ({ wedding, t
                       className="w-12 h-12 rounded-full border border-amber-300/60 flex items-center justify-center text-xs font-serif font-bold shadow-2xl"
                       style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
                     >
-                      {wedding.coupleInitials}
+                      {wedding.coupleInitials || 'É'}
                     </div>
                   </div>
                 </div>
@@ -109,7 +217,7 @@ export const SaveTheDateStudio: React.FC<SaveTheDateStudioProps> = ({ wedding, t
 
               <div className="bg-black/60 backdrop-blur-md p-3 rounded-2xl border border-white/10 text-center space-y-1">
                 <span className="font-serif text-lg text-amber-100 block">
-                  {wedding.coupleName1} & {wedding.coupleName2}
+                  {coupleOrHonoree}
                 </span>
                 <span className="text-[10px] text-stone-300 font-mono block">
                   {wedding.weddingDate} · {wedding.venueName}
@@ -126,89 +234,109 @@ export const SaveTheDateStudio: React.FC<SaveTheDateStudioProps> = ({ wedding, t
           </div>
         </div>
 
-        {/* Right Column: 1-Click Share & QR Kit */}
+        {/* Right Column: 1-Click Social Media Sharing Matrix & QR Kit */}
         <div className="lg:col-span-7 space-y-5">
           
-          {/* WhatsApp & Message Share Box */}
+          {/* 1-Click Social Sharing Channels */}
           <div className="bg-white border border-amber-200/80 rounded-3xl p-6 space-y-4 shadow-sm">
-            <div className="flex items-center gap-2">
-              <MessageSquare size={18} className="text-emerald-600" />
-              <h3 className="font-serif text-xl font-bold text-stone-900">
-                1-Click WhatsApp & SMS Text
-              </h3>
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <div className="flex items-center gap-2">
+                <Share2 size={18} className="text-amber-700" />
+                <h3 className="font-serif text-xl font-bold text-stone-900">
+                  1-Click Direct Social Media Sharing
+                </h3>
+              </div>
+              <span className="text-[11px] text-stone-500 font-sans">
+                Opens directly in app
+              </span>
             </div>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              Copy and paste this message directly into your WhatsApp family group, bridesmaid chat, or SMS list:
-            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {socialChannels.map((channel) => (
+                <a
+                  key={channel.id}
+                  href={channel.actionUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`p-3.5 rounded-2xl flex items-center justify-between shadow-xs transition-all no-underline ${channel.bg}`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xl">{channel.icon}</span>
+                    <div>
+                      <div className="font-serif font-bold text-sm leading-tight">{channel.name}</div>
+                      <div className="text-[10px] opacity-80 font-sans">{channel.badge}</div>
+                    </div>
+                  </div>
+                  <ExternalLink size={14} className="opacity-75" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* WhatsApp & Message Copy Box */}
+          <div className="bg-white border border-amber-200/80 rounded-3xl p-6 space-y-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MessageSquare size={18} className="text-emerald-600" />
+                <h3 className="font-serif text-xl font-bold text-stone-900">
+                  Customized Message Template
+                </h3>
+              </div>
+              <button
+                onClick={() => copyText(whatsappMessage, 'whatsapp')}
+                className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+              >
+                {copiedSection === 'whatsapp' ? <Check size={13} /> : <Copy size={13} />}
+                <span>{copiedSection === 'whatsapp' ? 'Copied!' : 'Copy Text'}</span>
+              </button>
+            </div>
 
             <div className="p-4 bg-[#FAF7F2] rounded-2xl text-xs font-sans text-stone-800 border border-stone-200 leading-relaxed font-mono">
               {whatsappMessage}
             </div>
-
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => copyText(whatsappMessage, 'whatsapp')}
-                className="px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
-              >
-                {copiedSection === 'whatsapp' ? <Check size={14} /> : <Copy size={14} />}
-                <span>{copiedSection === 'whatsapp' ? 'Copied Message!' : 'Copy WhatsApp Text'}</span>
-              </button>
-
-              <a
-                href={'https://api.whatsapp.com/send?text=' + encodeURIComponent(whatsappMessage)}
-                target="_blank"
-                rel="noreferrer"
-                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm no-underline"
-              >
-                <span>Open Directly in WhatsApp</span>
-              </a>
-            </div>
           </div>
 
-          {/* Social Caption & Pinterest */}
+          {/* Instagram Bio & Caption */}
           <div className="bg-white border border-amber-200/80 rounded-3xl p-6 space-y-4 shadow-sm">
-            <div className="flex items-center gap-2">
-              <Instagram size={18} className="text-rose-600" />
-              <h3 className="font-serif text-xl font-bold text-stone-900">
-                Instagram Story & Pinterest Caption
-              </h3>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Instagram size={18} className="text-rose-600" />
+                <h3 className="font-serif text-xl font-bold text-stone-900">
+                  Instagram Story & Feed Caption
+                </h3>
+              </div>
+              <button
+                onClick={() => copyText(socialCaption, 'caption')}
+                className="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-800 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+              >
+                {copiedSection === 'caption' ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
+                <span>{copiedSection === 'caption' ? 'Copied!' : 'Copy Caption'}</span>
+              </button>
             </div>
 
             <div className="p-4 bg-[#FAF7F2] rounded-2xl text-xs font-sans text-stone-800 border border-stone-200 leading-relaxed">
               {socialCaption}
             </div>
-
-            <button
-              onClick={() => copyText(socialCaption, 'caption')}
-              className="px-4 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-800 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
-            >
-              {copiedSection === 'caption' ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
-              <span>{copiedSection === 'caption' ? 'Copied!' : 'Copy Caption & Hashtags'}</span>
-            </button>
           </div>
 
-          {/* QR Code Kit for Physical Save-the-Date Printing */}
+          {/* QR Code Kit for Physical Printing */}
           <div className="bg-white border border-amber-200/80 rounded-3xl p-6 space-y-3 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <QrCode size={18} className="text-amber-700" />
                 <h3 className="font-serif text-xl font-bold text-stone-900">
-                  QR Code for Paper Save-The-Dates
+                  Direct Link & Physical Print Kit
                 </h3>
               </div>
-            </div>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              Printing paper Save-The-Date cards? Include your QR code so guests scan and instantly experience the 3D envelope and RSVP online.
-            </p>
-
-            <div className="p-3.5 bg-[#FAF7F2] rounded-2xl border border-stone-200 flex items-center justify-between">
-              <span className="font-mono text-xs text-stone-800 truncate pr-2">{destinationUrl}</span>
               <button
                 onClick={() => copyText(destinationUrl, 'qr_url')}
-                className="px-3 py-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-xs text-white font-semibold shadow-xs shrink-0"
+                className="px-3.5 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-xs text-white font-semibold shadow-xs cursor-pointer"
               >
-                {copiedSection === 'qr_url' ? 'Copied Link' : 'Copy Link'}
+                {copiedSection === 'qr_url' ? 'Copied Link!' : 'Copy Invite URL'}
               </button>
+            </div>
+            <div className="p-3.5 bg-[#FAF7F2] rounded-2xl border border-stone-200 flex items-center justify-between">
+              <span className="font-mono text-xs text-stone-800 truncate pr-2">{destinationUrl}</span>
             </div>
           </div>
 
@@ -217,3 +345,4 @@ export const SaveTheDateStudio: React.FC<SaveTheDateStudioProps> = ({ wedding, t
     </div>
   );
 };
+
