@@ -158,14 +158,14 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       </div>
 
       {/* 3. Header Intro Text (Fixed height to prevent layout reflow) */}
-      <div className="text-center mb-5 max-w-md h-20 flex flex-col justify-center transition-opacity duration-500">
-        <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.35em] text-amber-300/90 uppercase block drop-shadow-md">
+      <div className="text-center mb-4 sm:mb-5 max-w-md h-18 sm:h-20 flex flex-col justify-center transition-opacity duration-500 px-2">
+        <span className="text-[9px] sm:text-[11px] font-mono font-bold tracking-[0.3em] sm:tracking-[0.35em] text-amber-300/90 uppercase block drop-shadow-md">
           {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
         </span>
-        <h1 className="font-script text-4xl sm:text-5xl text-amber-100 font-normal mt-0.5 drop-shadow-lg leading-tight">
+        <h1 className="font-script text-3xl sm:text-5xl text-amber-100 font-normal mt-0.5 drop-shadow-lg leading-tight">
           {wedding.coupleName1} & {wedding.coupleName2}
         </h1>
-        <p className="text-xs font-serif italic text-stone-300/90 tracking-wide mt-0.5">
+        <p className="text-[11px] sm:text-xs font-serif italic text-stone-300/90 tracking-wide mt-0.5">
           Request the honour of your presence at their wedding
         </p>
       </div>
@@ -176,7 +176,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={stage === 'sealed' ? handleOpenBook : undefined}
-        className={`relative w-full max-w-[360px] sm:max-w-[420px] aspect-[4/3] ${
+        className={`relative w-full max-w-[340px] sm:max-w-[420px] aspect-[4/3] ${
           stage === 'sealed' ? 'cursor-pointer group' : ''
         }`}
         style={{
@@ -196,7 +196,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           {/* ==================== 1. RIGHT PAGE (Formal Invitation Card Suite) ==================== */}
           <div
             onClick={isFullyOpen ? onOpen : undefined}
-            className={`absolute inset-0 rounded-2xl p-5 sm:p-6 flex flex-col justify-between text-center overflow-hidden transition-all duration-700 bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] ${
+            className={`absolute inset-0 rounded-2xl p-3.5 sm:p-6 flex flex-col justify-between text-center overflow-hidden transition-all duration-700 bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] ${
               isFullyOpen ? 'cursor-pointer hover:scale-[1.01] shadow-2xl' : ''
             }`}
             style={{
@@ -205,20 +205,20 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             }}
           >
             {/* Botanical Floral Corner Accents */}
-            <div className="absolute top-0 right-0 w-24 h-24 opacity-20 pointer-events-none overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 sm:w-24 h-20 sm:h-24 opacity-20 pointer-events-none overflow-hidden">
               <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
             </div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
+            <div className="absolute bottom-0 left-0 w-20 sm:w-24 h-20 sm:h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
               <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
             </div>
 
             {/* Inner Double Gold Frame */}
-            <div className="border border-amber-300/80 rounded-xl p-4 sm:p-5 text-center relative z-10 bg-white/40 backdrop-blur-xs h-full flex flex-col justify-between">
+            <div className="border border-amber-300/80 rounded-xl p-3 sm:p-5 text-center relative z-10 bg-white/40 backdrop-blur-xs h-full flex flex-col justify-between">
               
               {/* Monogram Crest */}
               <div>
                 <div 
-                  className="w-8 h-8 mx-auto rounded-full border border-amber-400 flex items-center justify-center mb-1.5 shadow-xs"
+                  className="w-7 h-7 sm:w-8 sm:h-8 mx-auto rounded-full border border-amber-400 flex items-center justify-center mb-1 shadow-xs"
                   style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
                 >
                   <span className="font-serif italic text-xs font-bold">
@@ -226,31 +226,31 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                   </span>
                 </div>
 
-                <span className="text-[9px] sm:text-[10px] tracking-[0.3em] font-mono uppercase font-bold text-amber-900 block">
+                <span className="text-[8px] sm:text-[10px] tracking-[0.25em] sm:tracking-[0.3em] font-mono uppercase font-bold text-amber-900 block">
                   {wedding.headline || 'PLEASE JOIN US FOR THE WEDDING OF'}
                 </span>
 
                 {/* Couple Names Calligraphy */}
-                <div className="my-1.5 space-y-0.5">
-                  <h2 className="font-script text-3xl sm:text-4xl text-stone-900 leading-none">
+                <div className="my-1 space-y-0.5">
+                  <h2 className="font-script text-2xl sm:text-4xl text-stone-900 leading-none">
                     {wedding.coupleName1}
                   </h2>
-                  <span className="font-serif italic text-sm text-amber-800 font-bold block">&</span>
-                  <h2 className="font-script text-3xl sm:text-4xl text-stone-900 leading-none">
+                  <span className="font-serif italic text-xs sm:text-sm text-amber-800 font-bold block">&</span>
+                  <h2 className="font-script text-2xl sm:text-4xl text-stone-900 leading-none">
                     {wedding.coupleName2}
                   </h2>
                 </div>
               </div>
 
               {/* Date & Venue */}
-              <div className="pt-2 border-t border-amber-200/80 text-xs font-serif text-stone-800 space-y-0.5">
+              <div className="pt-1.5 sm:pt-2 border-t border-amber-200/80 text-[11px] sm:text-xs font-serif text-stone-800 space-y-0.5">
                 <div className="font-bold text-stone-900 tracking-wider">
                   {wedding.weddingDate} · {wedding.weddingTime}
                 </div>
-                <div className="text-[11px] text-stone-600 font-medium">
+                <div className="text-[10px] sm:text-[11px] text-stone-600 font-medium">
                   {wedding.venueName}
                 </div>
-                <div className="text-[10px] text-stone-500 font-sans">
+                <div className="text-[9px] sm:text-[10px] text-stone-500 font-sans">
                   {wedding.cityState}
                 </div>
               </div>
@@ -262,15 +262,15 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                   e.stopPropagation();
                   onOpen();
                 }}
-                className="mt-2.5 w-full py-2.5 px-4 rounded-xl text-xs font-serif font-bold tracking-wider uppercase text-white shadow-md flex items-center justify-center gap-1.5 transition-all hover:brightness-110 active:scale-98 cursor-pointer"
+                className="mt-2 w-full py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl text-[10px] sm:text-xs font-serif font-bold tracking-wider uppercase text-white shadow-md flex items-center justify-center gap-1.5 transition-all hover:brightness-110 active:scale-98 cursor-pointer"
                 style={{
                   backgroundColor: theme.waxSealBg,
                   border: `1px solid ${theme.waxSealBorder}`,
                 }}
               >
-                <Sparkles size={13} />
+                <Sparkles size={12} />
                 <span>Unfold Full Wedding Suite & RSVP</span>
-                <ArrowRight size={13} />
+                <ArrowRight size={12} />
               </button>
 
             </div>

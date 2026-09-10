@@ -96,7 +96,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
       
       {/* 1. 3D ENVELOPE UNBOXING STAGE */}
       {!isEnvelopeOpen ? (
-        <div className="w-full flex-1 flex items-center justify-center p-3 sm:p-6 my-auto">
+        <div className="w-full flex-1 flex items-center justify-center p-2 sm:p-6 my-auto">
           <EnvelopeExperience
             wedding={wedding}
             theme={theme}
@@ -109,22 +109,23 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
         <div className="w-full max-w-lg mx-auto min-h-screen flex flex-col pb-28 animate-fadeIn">
           
           {/* Top Return-to-Envelope & Quick Bar */}
-          <header className="sticky top-0 z-40 w-full px-4 py-3 bg-black/70 backdrop-blur-md border-b border-white/10 flex items-center justify-between shadow-lg">
+          <header className="sticky top-0 z-40 w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-black/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between shadow-lg gap-2">
             <button
               onClick={() => setIsEnvelopeOpen(false)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs text-stone-200 transition-colors cursor-pointer"
+              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-[11px] sm:text-xs text-stone-200 transition-colors cursor-pointer shrink-0"
+              title="Return to 3D Keepsake"
             >
-              <RotateCcw size={13} />
-              <span>3D Envelope</span>
+              <RotateCcw size={12} />
+              <span className="text-[10px] sm:text-xs font-sans">Keepsake</span>
             </button>
 
-            <span className="font-script text-2xl text-amber-200 tracking-wide">
+            <span className="font-script text-xl sm:text-2xl text-amber-200 tracking-wide truncate text-center px-1">
               {wedding.coupleName1} & {wedding.coupleName2}
             </span>
 
             <button
               onClick={onOpenRSVP}
-              className="px-4 py-1.5 rounded-full text-xs font-serif font-bold tracking-wider uppercase transition-all shadow-md hover:brightness-110 cursor-pointer"
+              className="px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-serif font-bold tracking-wider uppercase transition-all shadow-md hover:brightness-110 cursor-pointer shrink-0"
               style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
             >
               RSVP
@@ -132,20 +133,20 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
           </header>
 
           {/* Hero Floral Banner & Formal Monogram Suite */}
-          <section className="p-4 space-y-4">
+          <section className="p-3 sm:p-4 space-y-4">
             
             {/* Top Artwork Banner (Botanical Floral Watercolor) */}
-            <div className="relative w-full h-52 sm:h-56 rounded-3xl overflow-hidden shadow-2xl border border-stone-700/60 group">
+            <div className="relative w-full h-44 sm:h-56 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-stone-700/60 group">
               <img
                 src={theme.illustrationUrl}
                 alt="Botanical Wedding Art"
                 className="w-full h-full object-cover brightness-95 contrast-105 transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-5">
-                <span className="text-[10px] font-mono tracking-[0.35em] uppercase text-amber-300 font-bold drop-shadow">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-4 sm:p-5">
+                <span className="text-[9px] sm:text-[10px] font-mono tracking-[0.3em] sm:tracking-[0.35em] uppercase text-amber-300 font-bold drop-shadow">
                   {wedding.weddingDate} · {wedding.cityState}
                 </span>
-                <p className="font-serif italic text-amber-100 text-sm sm:text-base tracking-wide mt-1 drop-shadow">
+                <p className="font-serif italic text-amber-100 text-xs sm:text-base tracking-wide mt-1 drop-shadow">
                   "Two lives, two hearts, joined together in friendship, united forever in love."
                 </p>
               </div>
@@ -153,7 +154,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 
             {/* Main Formal Couple Card (Fine Cotton Linen with Deckled Gold Border) */}
             <div
-              className="rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6]"
+              className="rounded-2xl sm:rounded-3xl p-4 sm:p-7 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6]"
               style={{
                 border: '1px solid rgba(212, 175, 55, 0.7)',
                 color: '#2A1810',
@@ -161,54 +162,54 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               }}
             >
               {/* Botanical Floral Corner Watercolors */}
-              <div className="absolute top-0 right-0 w-28 h-28 opacity-20 pointer-events-none overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 sm:w-28 h-24 sm:h-28 opacity-20 pointer-events-none overflow-hidden">
                 <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
               </div>
-              <div className="absolute bottom-0 left-0 w-28 h-28 opacity-20 pointer-events-none overflow-hidden rotate-180">
+              <div className="absolute bottom-0 left-0 w-24 sm:w-28 h-24 sm:h-28 opacity-20 pointer-events-none overflow-hidden rotate-180">
                 <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
               </div>
 
               {/* Inner Double Gold Frame */}
-              <div className="border border-amber-300/80 rounded-2xl p-5 sm:p-6 text-center relative z-10 bg-white/40 backdrop-blur-xs">
+              <div className="border border-amber-300/80 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center relative z-10 bg-white/40 backdrop-blur-xs">
                 
                 {/* Monogram Wax Seal Crest */}
                 <div 
-                  className="w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-3 shadow-md border"
+                  className="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-full flex items-center justify-center mb-2.5 shadow-md border"
                   style={{
                     backgroundColor: theme.waxSealBg,
                     borderColor: theme.waxSealBorder,
                     color: theme.waxSealColor,
                   }}
                 >
-                  <span className="font-serif italic text-sm font-bold tracking-widest">
+                  <span className="font-serif italic text-xs sm:text-sm font-bold tracking-widest">
                     {wedding.coupleInitials || 'É'}
                   </span>
                 </div>
 
-                <span className="text-[10px] sm:text-[11px] tracking-[0.35em] uppercase font-mono font-bold text-amber-900 block">
+                <span className="text-[9px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.35em] uppercase font-mono font-bold text-amber-900 block">
                   {wedding.headline || 'PLEASE JOIN US FOR THE WEDDING OF'}
                 </span>
 
                 {/* Romantic Calligraphy Script */}
-                <div className="my-3 space-y-1">
-                  <h2 className="font-script text-4xl sm:text-5xl text-stone-900 leading-none">
+                <div className="my-2.5 space-y-0.5">
+                  <h2 className="font-script text-3xl sm:text-5xl text-stone-900 leading-none">
                     {wedding.coupleName1}
                   </h2>
-                  <span className="font-serif italic text-base sm:text-lg text-amber-800 font-bold block">&</span>
-                  <h2 className="font-script text-4xl sm:text-5xl text-stone-900 leading-none">
+                  <span className="font-serif italic text-sm sm:text-lg text-amber-800 font-bold block">&</span>
+                  <h2 className="font-script text-3xl sm:text-5xl text-stone-900 leading-none">
                     {wedding.coupleName2}
                   </h2>
                 </div>
 
                 {/* Formal Venue & Date Info */}
-                <div className="mt-4 pt-4 border-t border-amber-200/80 text-xs sm:text-sm font-serif text-stone-800 space-y-1">
-                  <div className="font-bold text-stone-900 text-sm tracking-wider">
+                <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-amber-200/80 text-xs sm:text-sm font-serif text-stone-800 space-y-1">
+                  <div className="font-bold text-stone-900 text-xs sm:text-sm tracking-wider">
                     {wedding.weddingDate} at {wedding.weddingTime}
                   </div>
-                  <div className="text-xs text-stone-700 font-medium">
+                  <div className="text-[11px] sm:text-xs text-stone-700 font-medium">
                     {wedding.venueName}
                   </div>
-                  <div className="text-[11px] text-stone-500 font-sans">
+                  <div className="text-[10px] sm:text-[11px] text-stone-500 font-sans">
                     {wedding.venueAddress}, {wedding.cityState}
                   </div>
 
@@ -229,58 +230,58 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
             </div>
 
             {/* Quick RSVP & Details Action Row */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
               <button
                 onClick={() => {
                   const el = document.getElementById('details-section');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="py-3 px-4 rounded-2xl font-serif text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-lg hover:brightness-110 active:scale-98 cursor-pointer"
+                className="py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl sm:rounded-2xl font-serif text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 transition-all shadow-lg hover:brightness-110 active:scale-98 cursor-pointer"
                 style={{ backgroundColor: theme.badgeBg, color: theme.badgeText }}
               >
-                <Sparkles size={14} />
-                <span>Event Schedule</span>
+                <Sparkles size={13} />
+                <span>Schedule</span>
               </button>
 
               <button
                 onClick={onOpenRSVP}
-                className="py-3 px-4 rounded-2xl font-serif text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-lg hover:brightness-110 active:scale-98 cursor-pointer"
+                className="py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl sm:rounded-2xl font-serif text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 transition-all shadow-lg hover:brightness-110 active:scale-98 cursor-pointer"
                 style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
               >
-                <Heart size={14} fill="currentColor" />
+                <Heart size={13} fill="currentColor" />
                 <span>Confirm RSVP</span>
               </button>
             </div>
 
             {/* Live Countdown Timer Widget */}
-            <div className="rounded-3xl p-5 sm:p-6 bg-black/50 backdrop-blur-md border border-amber-400/30 shadow-2xl text-center">
-              <span className="text-[10px] tracking-[0.35em] uppercase text-amber-300/90 font-sans block mb-3 font-bold">
+            <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-black/50 backdrop-blur-md border border-amber-400/30 shadow-2xl text-center">
+              <span className="text-[9px] sm:text-[10px] tracking-[0.3em] sm:tracking-[0.35em] uppercase text-amber-300/90 font-sans block mb-2.5 font-bold">
                 Time Until Celebration
               </span>
-              <div className="grid grid-cols-4 gap-2 text-center">
-                <div className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-inner">
-                  <span className="font-serif text-2xl sm:text-3xl text-amber-100 font-light block">
+              <div className="grid grid-cols-4 gap-1.5 sm:gap-2 text-center">
+                <div className="bg-stone-900/90 rounded-xl sm:rounded-2xl p-2 sm:p-3 border border-stone-800 shadow-inner">
+                  <span className="font-serif text-xl sm:text-3xl text-amber-100 font-light block">
                     {timeLeft.days}
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider text-stone-400 font-mono">Days</span>
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-stone-400 font-mono">Days</span>
                 </div>
-                <div className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-inner">
-                  <span className="font-serif text-2xl sm:text-3xl text-amber-100 font-light block">
+                <div className="bg-stone-900/90 rounded-xl sm:rounded-2xl p-2 sm:p-3 border border-stone-800 shadow-inner">
+                  <span className="font-serif text-xl sm:text-3xl text-amber-100 font-light block">
                     {timeLeft.hours}
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider text-stone-400 font-mono">Hours</span>
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-stone-400 font-mono">Hours</span>
                 </div>
-                <div className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-inner">
-                  <span className="font-serif text-2xl sm:text-3xl text-amber-100 font-light block">
+                <div className="bg-stone-900/90 rounded-xl sm:rounded-2xl p-2 sm:p-3 border border-stone-800 shadow-inner">
+                  <span className="font-serif text-xl sm:text-3xl text-amber-100 font-light block">
                     {timeLeft.minutes}
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider text-stone-400 font-mono">Mins</span>
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-stone-400 font-mono">Mins</span>
                 </div>
-                <div className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-inner">
-                  <span className="font-serif text-2xl sm:text-3xl text-amber-100 font-light block">
+                <div className="bg-stone-900/90 rounded-xl sm:rounded-2xl p-2 sm:p-3 border border-stone-800 shadow-inner">
+                  <span className="font-serif text-xl sm:text-3xl text-amber-100 font-light block">
                     {timeLeft.seconds}
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider text-stone-400 font-mono">Secs</span>
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-stone-400 font-mono">Secs</span>
                 </div>
               </div>
             </div>
