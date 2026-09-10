@@ -202,10 +202,14 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                   <h2 className="font-script text-2xl sm:text-4xl text-stone-900 leading-none">
                     {wedding.coupleName1}
                   </h2>
-                  <span className="font-serif italic text-xs sm:text-base text-amber-800 font-bold block my-0.5">&</span>
-                  <h2 className="font-script text-2xl sm:text-4xl text-stone-900 leading-none">
-                    {wedding.coupleName2}
-                  </h2>
+                  {wedding.coupleName2 && (
+                    <>
+                      <span className="font-serif italic text-xs sm:text-base text-amber-800 font-bold block my-0.5">&</span>
+                      <h2 className="font-script text-2xl sm:text-4xl text-stone-900 leading-none">
+                        {wedding.coupleName2}
+                      </h2>
+                    </>
+                  )}
                 </div>
 
                 {/* Formal Venue & Date Info */}

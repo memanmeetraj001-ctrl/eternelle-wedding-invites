@@ -84,9 +84,34 @@ export interface MusicTrack {
   description: string;
 }
 
+export type EventType = 
+  | 'wedding' 
+  | 'engagement' 
+  | 'birthday' 
+  | 'anniversary' 
+  | 'baby_shower' 
+  | 'gala' 
+  | 'custom';
+
+export interface EventCategoryPreset {
+  type: EventType;
+  label: string;
+  badge: string;
+  icon: string;
+  description: string;
+  defaultHeadline: string;
+  defaultSubtitle: string;
+  defaultStoryTitle: string;
+  defaultTheme: ThemeId;
+}
+
 export interface WeddingData {
   id: string;
   userId?: string;
+  eventType?: EventType;
+  eventTitle?: string;
+  honoreeName?: string;
+  hostNames?: string;
   slug: string;
   coupleName1: string;
   coupleName2: string;
@@ -115,6 +140,8 @@ export interface WeddingData {
   musicEnabled: boolean;
   backgroundMusicUrl: string;
 }
+
+export type EventData = WeddingData;
 
 export interface RSVPRecord {
   id: string;

@@ -6,8 +6,8 @@ import {
   Upload, Check, Volume2, VolumeX, ExternalLink, Tag,
   Play, Pause, Radio, Disc
 } from 'lucide-react';
-import { WeddingData, ThemeConfig, ThemeId, TimelineEvent, HotelLodging, MenuItem, WeddingFAQ, PhotoMoment, MusicTrack } from '../../types/invitation';
-import { THEME_PRESETS, CURATED_MUSIC_OPTIONS } from '../../constants/themes';
+import { WeddingData, ThemeConfig, ThemeId, TimelineEvent, HotelLodging, MenuItem, WeddingFAQ, PhotoMoment, MusicTrack, EventType } from '../../types/invitation';
+import { THEME_PRESETS, CURATED_MUSIC_OPTIONS, EVENT_CATEGORY_PRESETS } from '../../constants/themes';
 
 interface InvitationEditorProps {
   wedding: WeddingData;
@@ -89,6 +89,19 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
 
   const handleThemeSelect = (themeId: ThemeId) => {
     notifyChange({ ...wedding, themeId });
+  };
+
+  const handleSelectCategory = (type: EventType) => {
+    const preset = EVENT_CATEGORY_PRESETS[type];
+    if (!preset) return;
+    notifyChange({
+      ...wedding,
+      eventType: type,
+      headline: preset.defaultHeadline,
+      subtitleIntro: preset.defaultSubtitle,
+      storyTitle: preset.defaultStoryTitle,
+      themeId: preset.defaultTheme || wedding.themeId,
+    });
   };
 
   // Timeline Handlers
@@ -287,14 +300,69 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
         </button>
       </div>
 
-      {/* 2. SECTION NAVIGATION TABS */}
+      {/* 2. MULTI-EVENT CATEGORY SELECTOR BAR (Paperless Post Inspiration) */}
+      <div className="bg-gradient-to-r from-stone-900 via-stone-850 to-stone-900 rounded-3xl p-4 sm:p-5 text-white shadow-lg border border-amber-500/30 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2.5">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-xs font-mono font-bold tracking-wider text-amber-300 uppercase">
+              Event Category & Milestone Type
+            </span>
+          </div>
+          <span className="text-[11px] text-stone-300 font-serif italic">
+            Switch celebration mode to auto-adapt wording & stationery styling
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+          {Object.entries(EVENT_CATEGORY_PRESETS).map(([catKey, preset]) => {
+            const isSelected = (wedding.eventType || 'wedding') === catKey;
+            return (
+              <button
+                key={catKey}
+                type="button"
+                onClick={() => handleSelectCategory(catKey as EventType)}
+                className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all cursor-pointer text-center ${
+                  isSelected
+                    ? 'bg-amber-500/30 border-amber-400 text-amber-100 shadow-md ring-1 ring-amber-400/50 font-semibold scale-[1.02]'
+                    : 'bg-white/5 border-white/10 text-stone-300 hover:bg-white/10 hover:border-white/25'
+                }`}
+              >
+                <span className="text-xl sm:text-2xl mb-1">{preset.icon}</span>
+                <span className="text-xs font-serif font-medium line-clamp-1">{preset.label.split(' ')[0]}</span>
+                <span className="text-[9px] text-amber-300/80 font-mono mt-0.5">{preset.badge.split(' ')[0]}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. SECTION NAVIGATION TABS */}
       <div className="flex overflow-x-auto gap-1.5 p-1.5 rounded-2xl bg-white border border-amber-200/70 shadow-sm scrollbar-none text-xs font-medium">
         {[
           { id: 'theme', label: '1. Designer Themes', icon: Palette },
-          { id: 'couple', label: '2. Couple & Date', icon: Heart },
+          { 
+            id: 'couple', 
+            label: wedding.eventType === 'birthday' 
+              ? '2. Honoree & Date' 
+              : wedding.eventType === 'gala' 
+              ? '2. Gala & Host' 
+              : wedding.eventType === 'baby_shower' 
+              ? '2. Parents & Date' 
+              : '2. Couple & Date', 
+            icon: Heart 
+          },
           { id: 'schedule', label: '3. Order of Events', icon: Clock },
           { id: 'menu', label: '4. Food & Drinks Menu', icon: Utensils },
-          { id: 'gallery', label: '5. Love Gallery & Story', icon: ImageIcon },
+          { 
+            id: 'gallery', 
+            label: wedding.eventType === 'birthday' 
+              ? '5. Photo Memories' 
+              : wedding.eventType === 'gala' 
+              ? '5. Highlights & Mission' 
+              : '5. Love Gallery & Story', 
+            icon: ImageIcon 
+          },
           { id: 'attire', label: '6. Dress Code', icon: Sparkles },
           { id: 'stay', label: '7. Hotels & Travel', icon: Hotel },
           { id: 'faqs', label: '8. Guest Q&A / FAQs', icon: HelpCircle },
@@ -373,11 +441,21 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
           </div>
         )}
 
-        {/* SECTION 2: COUPLE & EVENT INFORMATION */}
+        {/* SECTION 2: COUPLE / HONOREE & EVENT INFORMATION */}
         {activeSection === 'couple' && (
           <div className="space-y-6 animate-fadeIn">
             <div>
-              <h3 className="font-serif text-2xl text-stone-900 font-normal">Couple Names & Venue Details</h3>
+              <h3 className="font-serif text-2xl text-stone-900 font-normal">
+                {wedding.eventType === 'birthday' 
+                  ? 'Honoree, Milestone & Venue Details' 
+                  : wedding.eventType === 'gala' 
+                  ? 'Gala Title, Host & Venue Details' 
+                  : wedding.eventType === 'baby_shower' 
+                  ? 'Expecting Parents & Celebration Details'
+                  : wedding.eventType === 'anniversary'
+                  ? 'Anniversary Couple & Venue Details'
+                  : 'Couple Names & Venue Details'}
+              </h3>
               <p className="text-xs text-stone-500 mt-0.5">
                 These details are displayed on the front of your 3D digital envelope and invitation cards.
               </p>
@@ -385,35 +463,51 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">Partner 1 First Name</label>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
+                  {wedding.eventType === 'birthday' 
+                    ? 'Honoree / Birthday Star Name' 
+                    : wedding.eventType === 'gala' || wedding.eventType === 'custom'
+                    ? 'Primary Host / Organization Name' 
+                    : wedding.eventType === 'baby_shower' 
+                    ? 'Expecting Parent / Mother Name' 
+                    : 'Partner 1 First Name'}
+                </label>
                 <input
                   type="text"
                   value={wedding.coupleName1}
                   onChange={(e) => handleFieldChange('coupleName1', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
-                  placeholder="e.g. Liam"
+                  placeholder={wedding.eventType === 'birthday' ? 'e.g. Sophia Laurent' : wedding.eventType === 'gala' ? 'e.g. The Elysée Foundation' : 'e.g. Liam'}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">Partner 2 First Name</label>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
+                  {wedding.eventType === 'birthday' 
+                    ? 'Milestone Tagline (e.g. Turning 30!)' 
+                    : wedding.eventType === 'gala' || wedding.eventType === 'custom'
+                    ? 'Event Sub-title / Keynote' 
+                    : wedding.eventType === 'baby_shower' 
+                    ? 'Partner / Baby Name' 
+                    : 'Partner 2 First Name'}
+                </label>
                 <input
                   type="text"
                   value={wedding.coupleName2}
                   onChange={(e) => handleFieldChange('coupleName2', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
-                  placeholder="e.g. Scarlett"
+                  placeholder={wedding.eventType === 'birthday' ? 'e.g. Celebrating 30 Years' : wedding.eventType === 'gala' ? 'e.g. Annual Charity Banquet' : 'e.g. Scarlett'}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">Monogram Initials (Wax Seal)</label>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Monogram Initials (Wax Seal Clasp)</label>
                 <input
                   type="text"
                   value={wedding.coupleInitials}
                   onChange={(e) => handleFieldChange('coupleInitials', e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
-                  placeholder="e.g. L&S"
+                  className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900 font-serif"
+                  placeholder={wedding.eventType === 'birthday' ? 'e.g. S' : 'e.g. L&S'}
                 />
               </div>
 

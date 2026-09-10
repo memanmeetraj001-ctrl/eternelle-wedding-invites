@@ -163,10 +163,16 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
         </span>
         <h1 className="font-script text-2xl sm:text-4xl text-amber-100 font-normal mt-0.5 drop-shadow-lg leading-tight">
-          {wedding.coupleName1} & {wedding.coupleName2}
+          {wedding.coupleName1} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
         </h1>
         <p className="text-[10px] sm:text-xs font-serif italic text-stone-300/90 tracking-wide mt-0.5">
-          Request the honour of your presence at their wedding
+          {wedding.eventType === 'birthday' 
+            ? 'Cordially invites you to celebrate this special milestone' 
+            : wedding.eventType === 'gala'
+            ? 'Requests the pleasure of your company for an unforgettable evening'
+            : wedding.eventType === 'baby_shower'
+            ? 'Invites you to celebrate with love and joy'
+            : 'Request the honour of your presence at their celebration'}
         </p>
       </div>
 
@@ -230,15 +236,19 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                   {wedding.headline || 'PLEASE JOIN US FOR THE WEDDING OF'}
                 </span>
 
-                {/* Couple Names Calligraphy */}
+                {/* Honoree or Couple Names Calligraphy */}
                 <div className="my-0.5 space-y-0">
                   <h2 className="font-script text-lg sm:text-3xl text-stone-900 leading-none">
                     {wedding.coupleName1}
                   </h2>
-                  <span className="font-serif italic text-[10px] sm:text-xs text-amber-800 font-bold block my-0.5">&</span>
-                  <h2 className="font-script text-lg sm:text-3xl text-stone-900 leading-none">
-                    {wedding.coupleName2}
-                  </h2>
+                  {wedding.coupleName2 && (
+                    <>
+                      <span className="font-serif italic text-[10px] sm:text-xs text-amber-800 font-bold block my-0.5">&</span>
+                      <h2 className="font-script text-lg sm:text-3xl text-stone-900 leading-none">
+                        {wedding.coupleName2}
+                      </h2>
+                    </>
+                  )}
                 </div>
               </div>
 

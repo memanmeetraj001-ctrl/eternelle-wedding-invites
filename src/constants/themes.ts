@@ -439,3 +439,94 @@ export const CURATED_MUSIC_OPTIONS: MusicTrack[] = [
     description: 'Modern, chill romantic beat with soft tape-decay Rhodes piano.',
   },
 ];
+
+export const EVENT_CATEGORY_PRESETS: Record<string, {
+  type: string;
+  label: string;
+  badge: string;
+  icon: string;
+  description: string;
+  defaultHeadline: string;
+  defaultSubtitle: string;
+  defaultStoryTitle: string;
+  defaultTheme: ThemeId;
+}> = {
+  wedding: {
+    type: 'wedding',
+    label: 'Wedding & Reception',
+    badge: 'Couture Classic',
+    icon: '💍',
+    description: 'Ceremony, grand dinner, toasts, bridal party & honeymoon registry.',
+    defaultHeadline: 'PLEASE JOIN US FOR THE WEDDING OF',
+    defaultSubtitle: 'TOGETHER WITH THEIR FAMILIES',
+    defaultStoryTitle: 'Our Love Story',
+    defaultTheme: 'botanical-emerald',
+  },
+  engagement: {
+    type: 'engagement',
+    label: 'Engagement Party',
+    badge: 'Chic Celebration',
+    icon: '💎',
+    description: 'Cocktail soirée, champagne toasts, and proposal celebration.',
+    defaultHeadline: 'JOIN US TO CELEBRATE THE ENGAGEMENT OF',
+    defaultSubtitle: 'POP THE CHAMPAGNE FOR',
+    defaultStoryTitle: 'The Proposal',
+    defaultTheme: 'dusty-rose',
+  },
+  birthday: {
+    type: 'birthday',
+    label: 'Birthday & Milestone',
+    badge: 'Milestone Soirée',
+    icon: '🎂',
+    description: '1st, 18th, 21st, 30th, 40th, 50th and milestone birthday celebrations.',
+    defaultHeadline: 'YOU ARE CORDIALLY INVITED TO CELEBRATE',
+    defaultSubtitle: 'A SPECTACULAR MILESTONE',
+    defaultStoryTitle: 'A Chapter of Memories',
+    defaultTheme: 'champagne-noir',
+  },
+  anniversary: {
+    type: 'anniversary',
+    label: 'Anniversary & Vow Renewal',
+    badge: 'Golden Romance',
+    icon: '🥂',
+    description: 'Celebrating 10, 25, 50 years of love, memories and renewed vows.',
+    defaultHeadline: 'CELEBRATING 25 YEARS OF LOVE & DEVOTION',
+    defaultSubtitle: 'HONOURING THE ANNIVERSARY OF',
+    defaultStoryTitle: '25 Years of Beautiful Memories',
+    defaultTheme: 'tuscan-terracotta',
+  },
+  baby_shower: {
+    type: 'baby_shower',
+    label: 'Baby Shower & Gender Reveal',
+    badge: 'Sweet Welcome',
+    icon: '🍼',
+    description: 'Welcoming the new arrival with registry links and sweet festivities.',
+    defaultHeadline: 'JOIN US IN CELEBRATING THE ARRIVAL OF',
+    defaultSubtitle: 'A SWEET LITTLE BLESSING',
+    defaultStoryTitle: 'Our Growing Family',
+    defaultTheme: 'dusty-rose',
+  },
+  gala: {
+    type: 'gala',
+    label: 'Gala, Soirée & Charity Dinner',
+    badge: 'Black-Tie Editorial',
+    icon: '🍸',
+    description: 'Formal charity galas, keynote banquets, and annual celebrations.',
+    defaultHeadline: 'REQUESTS THE PLEASURE OF YOUR COMPANY AT',
+    defaultSubtitle: 'ANNUAL CHARITY SOIREE',
+    defaultStoryTitle: 'Our Mission & Vision',
+    defaultTheme: 'champagne-noir',
+  },
+  custom: {
+    type: 'custom',
+    label: 'Custom Milestone',
+    badge: 'Bespoke Atelier',
+    icon: '✨',
+    description: 'Design your own custom celebration with bespoke titles and sections.',
+    defaultHeadline: 'CORDIALLY INVITES YOU TO CELEBRATE',
+    defaultSubtitle: 'AN EXCLUSIVE GATHERING',
+    defaultStoryTitle: 'About This Event',
+    defaultTheme: 'botanical-emerald',
+  },
+};
+
