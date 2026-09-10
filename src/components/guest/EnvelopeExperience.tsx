@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, Volume2, VolumeX, Heart, ArrowRight, RotateCcw } from 'lucide-react';
+import { Sparkles, Volume2, VolumeX, Heart, ArrowRight, RotateCcw, BookOpen } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { WeddingData, ThemeConfig } from '../../types/invitation';
 
@@ -18,11 +18,11 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   onOpen,
   onReset,
 }) => {
-  const [stage, setStage] = useState<'sealed' | 'untying' | 'opening' | 'revealed'>('sealed');
+  const [stage, setStage] = useState<'sealed' | 'opening' | 'opened'>('sealed');
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
   
-  // Parallax tilt on mouse move
+  // Parallax tilt on mouse move (only when sealed)
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -52,8 +52,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (stage !== 'sealed' || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -8;
     setTilt({ x, y });
   };
 
@@ -61,13 +61,11 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     setTilt({ x: 0, y: 0 });
   };
 
-  // Design 4: Silk Ribbon Untie & Slide Choreography
-  const handleOpenEnvelope = () => {
+  // Design 5: Velvet Bookfold Unboxing Choreography
+  const handleOpenBook = () => {
     if (stage !== 'sealed') return;
     setTilt({ x: 0, y: 0 });
-    
-    // Step 1: Untie ribbon band & pop wax seal
-    setStage('untying');
+    setStage('opening');
 
     // Play romance music if enabled
     if (wedding.musicEnabled && audioElement && !isMusicPlaying) {
@@ -77,23 +75,18 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     // Sparkle Gold & Burgundy Confetti Burst
     try {
       confetti({
-        particleCount: 60,
-        spread: 70,
+        particleCount: 65,
+        spread: 75,
         origin: { y: 0.6 },
         colors: [theme.waxSealBg, '#d4af37', '#fdf2f4', '#535e3b', '#ffffff'],
         disableForReducedMotion: true,
       });
     } catch {}
 
-    // Step 2: Open top envelope flap smoothly
+    // Complete bookfold open
     setTimeout(() => {
-      setStage('opening');
-    }, 200);
-
-    // Step 3: Glide stationery card gracefully into full view
-    setTimeout(() => {
-      setStage('revealed');
-    }, 600);
+      setStage('opened');
+    }, 700);
   };
 
   const handleReplay = (e: React.MouseEvent) => {
@@ -106,9 +99,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     if (onReset) onReset();
   };
 
-  const isRibbonUntied = stage !== 'sealed';
-  const isFlapOpen = stage === 'opening' || stage === 'revealed';
-  const isCardUp = stage === 'revealed';
+  const isBookOpen = stage === 'opened' || stage === 'opening';
+  const isFullyOpen = stage === 'opened';
 
   return (
     <div className="relative w-full min-h-[640px] flex flex-col items-center justify-center p-3 sm:p-6 select-none font-sans">
@@ -154,13 +146,13 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           )}
         </div>
 
-        {isCardUp && (
+        {isFullyOpen && (
           <button
             onClick={handleReplay}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/15 text-stone-200 text-xs font-sans transition-all shadow-lg cursor-pointer hover:text-amber-200"
           >
             <RotateCcw size={12} />
-            <span>Re-seal</span>
+            <span>Close Keepsake</span>
           </button>
         )}
       </div>
@@ -178,159 +170,55 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         </p>
       </div>
 
-      {/* 4. DESIGN 4 ENVELOPE STAGE (Silk Ribbon Untie & Slide) */}
+      {/* 4. DESIGN 5: VELVET BOOKFOLD STAGE */}
       <div
         ref={containerRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onClick={stage === 'sealed' ? handleOpenEnvelope : undefined}
+        onClick={stage === 'sealed' ? handleOpenBook : undefined}
         className={`relative w-full max-w-[360px] sm:max-w-[420px] aspect-[4/3] ${
           stage === 'sealed' ? 'cursor-pointer group' : ''
         }`}
         style={{
-          perspective: '1200px',
+          perspective: '1400px',
         }}
       >
-        {/* Envelope Body Container */}
+        {/* Book Container Box */}
         <div
           className="relative w-full h-full rounded-2xl transition-transform duration-300 ease-out"
           style={{
             transform: `rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
             transformStyle: 'preserve-3d',
-            boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 10px 25px -5px rgba(0, 0, 0, 0.6)',
+            boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.85), 0 10px 25px -5px rgba(0, 0, 0, 0.6)',
           }}
         >
-          {/* ==================== 1. BACK LINER & ARTWORK (Layer 1, zIndex 5) ==================== */}
-          <div
-            className="absolute inset-0 rounded-2xl overflow-hidden border border-white/10"
-            style={{
-              backgroundColor: theme.envelopeFlapColor,
-              zIndex: 5,
-            }}
-          >
-            {/* Botanical Floral Wallpaper Artwork */}
-            <div className="absolute inset-2 rounded-xl overflow-hidden">
-              <img
-                src={theme.illustrationUrl}
-                alt="Botanical Liner Artwork"
-                className="w-full h-full object-cover brightness-95 contrast-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            </div>
-            <div className="absolute inset-2 rounded-xl border border-amber-300/30 pointer-events-none" />
-          </div>
 
-          {/* ==================== 2. TOP FLAP (Layer 2, zIndex: 10 when open, 25 when closed) ==================== */}
+          {/* ==================== 1. RIGHT PAGE (Formal Invitation Card Suite) ==================== */}
           <div
-            className="absolute inset-x-0 top-0 h-[52%] transition-transform duration-600 ease-in-out origin-top will-change-transform"
-            style={{
-              transform: isFlapOpen ? 'rotateX(180deg)' : 'rotateX(0deg)',
-              transformStyle: 'preserve-3d',
-              zIndex: isCardUp ? 10 : 25,
-            }}
-          >
-            {/* Front of Flap (Closed state) */}
-            <div
-              className="absolute inset-0 backface-hidden"
-              style={{
-                backfaceVisibility: 'hidden',
-              }}
-            >
-              <svg
-                className="w-full h-full"
-                viewBox="0 0 420 165"
-                preserveAspectRatio="none"
-              >
-                <defs>
-                  <linearGradient id="flapFrontGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={theme.envelopeFlapColor} />
-                    <stop offset="100%" stopColor={theme.envelopeColor} />
-                  </linearGradient>
-                  <filter id="flapShadow" x="-10%" y="-10%" width="120%" height="130%">
-                    <feDropShadow dx="0" dy="6" stdDeviation="6" floodOpacity="0.45" />
-                  </filter>
-                </defs>
-                <polygon
-                  points="0,0 420,0 210,165"
-                  fill="url(#flapFrontGrad)"
-                  filter="url(#flapShadow)"
-                  stroke="rgba(255,255,255,0.15)"
-                  strokeWidth="1"
-                />
-                <polyline
-                  points="0,0 210,165 420,0"
-                  fill="none"
-                  stroke="rgba(212,175,55,0.35)"
-                  strokeWidth="1"
-                />
-              </svg>
-            </div>
-
-            {/* Back of Flap (Open state, shows matching floral liner in crisp SVG pattern) */}
-            <div
-              className="absolute inset-0 backface-hidden"
-              style={{
-                transform: 'rotateX(180deg)',
-                backfaceVisibility: 'hidden',
-              }}
-            >
-              <svg
-                className="w-full h-full"
-                viewBox="0 0 420 165"
-                preserveAspectRatio="none"
-              >
-                <defs>
-                  <pattern id="flapLinerPattern" patternUnits="userSpaceOnUse" width="420" height="165">
-                    <image href={theme.illustrationUrl} x="0" y="0" width="420" height="165" preserveAspectRatio="xMidYMid slice" />
-                  </pattern>
-                </defs>
-                <polygon
-                  points="0,0 420,0 210,165"
-                  fill="url(#flapLinerPattern)"
-                  stroke="rgba(212,175,55,0.4)"
-                  strokeWidth="1"
-                />
-                <polygon
-                  points="0,0 420,0 210,165"
-                  fill="rgba(0,0,0,0.15)"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* ==================== 3. SLIDING STATIONERY CARD (Layer 3, zIndex 15) ==================== */}
-          <div
-            onClick={isCardUp ? onOpen : undefined}
-            className={`absolute inset-x-3 sm:inset-x-4 top-2 rounded-2xl transition-all duration-700 will-change-transform ${
-              isCardUp
-                ? '-translate-y-[48%] opacity-100 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.85)] cursor-pointer hover:scale-[1.01]'
-                : 'translate-y-0 opacity-0 pointer-events-none'
+            onClick={isFullyOpen ? onOpen : undefined}
+            className={`absolute inset-0 rounded-2xl p-5 sm:p-6 flex flex-col justify-between text-center overflow-hidden transition-all duration-700 bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] ${
+              isFullyOpen ? 'cursor-pointer hover:scale-[1.01] shadow-2xl' : ''
             }`}
             style={{
-              backgroundColor: '#FAF7F2',
-              color: '#2A1810',
               border: '1px solid rgba(212, 175, 55, 0.75)',
-              transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-              zIndex: 15,
+              zIndex: 10,
             }}
           >
-            {/* Fine Linen Texture with Gold Framing */}
-            <div className="relative p-5 sm:p-6 rounded-2xl overflow-hidden bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6]">
-              
-              {/* Botanical Corner Accents */}
-              <div className="absolute top-0 right-0 w-24 h-24 opacity-20 pointer-events-none overflow-hidden">
-                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
-              </div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
-                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
-              </div>
+            {/* Botanical Floral Corner Accents */}
+            <div className="absolute top-0 right-0 w-24 h-24 opacity-20 pointer-events-none overflow-hidden">
+              <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+            </div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
+              <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+            </div>
 
-              {/* Inner Double Gold Frame */}
-              <div className="border border-amber-300/80 rounded-xl p-4 sm:p-5 text-center relative z-10 bg-white/40 backdrop-blur-xs">
-                
-                {/* Monogram Crest */}
+            {/* Inner Double Gold Frame */}
+            <div className="border border-amber-300/80 rounded-xl p-4 sm:p-5 text-center relative z-10 bg-white/40 backdrop-blur-xs h-full flex flex-col justify-between">
+              
+              {/* Monogram Crest */}
+              <div>
                 <div 
-                  className="w-8 h-8 mx-auto rounded-full border border-amber-400 flex items-center justify-center mb-2 shadow-xs"
+                  className="w-8 h-8 mx-auto rounded-full border border-amber-400 flex items-center justify-center mb-1.5 shadow-xs"
                   style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
                 >
                   <span className="font-serif italic text-xs font-bold">
@@ -343,7 +231,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                 </span>
 
                 {/* Couple Names Calligraphy */}
-                <div className="my-2 space-y-0.5">
+                <div className="my-1.5 space-y-0.5">
                   <h2 className="font-script text-3xl sm:text-4xl text-stone-900 leading-none">
                     {wedding.coupleName1}
                   </h2>
@@ -352,149 +240,155 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                     {wedding.coupleName2}
                   </h2>
                 </div>
-
-                {/* Date & Venue */}
-                <div className="mt-3 pt-2 border-t border-amber-200/80 text-xs font-serif text-stone-800 space-y-0.5">
-                  <div className="font-bold text-stone-900 tracking-wider">
-                    {wedding.weddingDate} · {wedding.weddingTime}
-                  </div>
-                  <div className="text-[11px] text-stone-600 font-medium">
-                    {wedding.venueName}
-                  </div>
-                  <div className="text-[10px] text-stone-500 font-sans">
-                    {wedding.cityState}
-                  </div>
-                </div>
-
-                {/* 1-Click Action to Unfold Full Suite */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpen();
-                  }}
-                  className="mt-3.5 w-full py-2.5 px-4 rounded-xl text-xs font-serif font-bold tracking-wider uppercase text-white shadow-md flex items-center justify-center gap-1.5 transition-all hover:brightness-110 active:scale-98 cursor-pointer"
-                  style={{
-                    backgroundColor: theme.waxSealBg,
-                    border: `1px solid ${theme.waxSealBorder}`,
-                  }}
-                >
-                  <Sparkles size={13} />
-                  <span>Unfold Full Wedding Suite & RSVP</span>
-                  <ArrowRight size={13} />
-                </button>
-
               </div>
+
+              {/* Date & Venue */}
+              <div className="pt-2 border-t border-amber-200/80 text-xs font-serif text-stone-800 space-y-0.5">
+                <div className="font-bold text-stone-900 tracking-wider">
+                  {wedding.weddingDate} · {wedding.weddingTime}
+                </div>
+                <div className="text-[11px] text-stone-600 font-medium">
+                  {wedding.venueName}
+                </div>
+                <div className="text-[10px] text-stone-500 font-sans">
+                  {wedding.cityState}
+                </div>
+              </div>
+
+              {/* 1-Click Action to Unfold Full Suite */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpen();
+                }}
+                className="mt-2.5 w-full py-2.5 px-4 rounded-xl text-xs font-serif font-bold tracking-wider uppercase text-white shadow-md flex items-center justify-center gap-1.5 transition-all hover:brightness-110 active:scale-98 cursor-pointer"
+                style={{
+                  backgroundColor: theme.waxSealBg,
+                  border: `1px solid ${theme.waxSealBorder}`,
+                }}
+              >
+                <Sparkles size={13} />
+                <span>Unfold Full Wedding Suite & RSVP</span>
+                <ArrowRight size={13} />
+              </button>
+
             </div>
           </div>
 
-          {/* ==================== 4. FRONT ENVELOPE POCKET (Layer 4, zIndex 20) ==================== */}
-          <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none" style={{ zIndex: 20 }}>
-            <svg
-              className="w-full h-full"
-              viewBox="0 0 420 315"
-              preserveAspectRatio="none"
-            >
-              <defs>
-                <linearGradient id="pocketGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={theme.envelopeColor} />
-                  <stop offset="100%" stopColor={theme.envelopeFlapColor} />
-                </linearGradient>
-                <filter id="pocketShadow" x="-10%" y="-10%" width="120%" height="120%">
-                  <feDropShadow dx="0" dy="-4" stdDeviation="6" floodOpacity="0.4" />
-                </filter>
-              </defs>
-
-              {/* Front V-pocket Shape */}
-              <polygon
-                points="0,0 210,165 420,0 420,315 0,315"
-                fill="url(#pocketGradient)"
-                filter="url(#pocketShadow)"
-                stroke="rgba(255,255,255,0.12)"
-                strokeWidth="1"
-              />
-
-              {/* Subtle Pocket Highlight Trim */}
-              <polyline
-                points="0,0 210,165 420,0"
-                fill="none"
-                stroke="rgba(212,175,55,0.4)"
-                strokeWidth="1"
-              />
-            </svg>
-          </div>
-
-          {/* ==================== 5. SILK RIBBON UNTIE (Layer 5, zIndex 30) ==================== */}
-          <div className="absolute inset-x-0 top-[52%] h-10 -translate-y-1/2 pointer-events-none overflow-hidden" style={{ zIndex: 30 }}>
-            {/* Left Ribbon Wing */}
-            <div
-              className={`absolute inset-y-0 left-0 w-1/2 transition-all duration-500 ease-in-out flex items-center justify-end pr-2 ${
-                isRibbonUntied ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-95'
-              }`}
-              style={{
-                backgroundColor: theme.waxSealBg,
-                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-                borderTop: '1px solid rgba(212, 175, 55, 0.45)',
-                borderBottom: '1px solid rgba(212, 175, 55, 0.45)',
-              }}
-            >
-              <span className="text-[8px] tracking-[0.4em] uppercase font-mono text-amber-200 font-bold drop-shadow pr-4">
-                ÉTERNELLE
-              </span>
-            </div>
-
-            {/* Right Ribbon Wing */}
-            <div
-              className={`absolute inset-y-0 right-0 w-1/2 transition-all duration-500 ease-in-out flex items-center justify-start pl-2 ${
-                isRibbonUntied ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-95'
-              }`}
-              style={{
-                backgroundColor: theme.waxSealBg,
-                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-                borderTop: '1px solid rgba(212, 175, 55, 0.45)',
-                borderBottom: '1px solid rgba(212, 175, 55, 0.45)',
-              }}
-            >
-              <span className="text-[8px] tracking-[0.4em] uppercase font-mono text-amber-200 font-bold drop-shadow pl-4">
-                SUITE
-              </span>
-            </div>
-          </div>
-
-          {/* ==================== 6. MONOGRAM WAX SEAL (Layer 6, zIndex 35) ==================== */}
+          {/* ==================== 2. LEFT HARDCOVER (180deg Book Flip) ==================== */}
           <div
-            onClick={stage === 'sealed' ? handleOpenEnvelope : undefined}
-            className={`absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-400 ease-out flex items-center justify-center cursor-pointer ${
-              isRibbonUntied ? 'opacity-0 scale-135 pointer-events-none' : 'group-hover:scale-105 active:scale-95'
-            }`}
+            className="absolute inset-0 rounded-2xl transition-transform duration-700 ease-in-out will-change-transform"
             style={{
-              zIndex: 35,
+              transformOrigin: 'left center',
+              transform: isBookOpen ? 'rotateY(-180deg)' : 'rotateY(0deg)',
+              transformStyle: 'preserve-3d',
+              zIndex: 25,
             }}
           >
+            {/* FRONT OF HARDCOVER (Facing viewer when closed) */}
             <div
-              className="w-18 h-18 sm:w-20 sm:h-20 rounded-full shadow-2xl flex items-center justify-center relative border-2"
+              className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl p-5 flex flex-col items-center justify-between border"
               style={{
-                backgroundColor: theme.waxSealBg,
-                borderColor: theme.waxSealBorder,
-                boxShadow: `0 12px 28px -4px ${theme.waxSealBg}cc, 0 8px 12px -4px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -3px 6px rgba(0,0,0,0.6)`,
+                backgroundColor: theme.envelopeColor,
+                borderColor: 'rgba(212, 175, 55, 0.5)',
+                backfaceVisibility: 'hidden',
+                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.9), inset 0 2px 4px rgba(255,255,255,0.2)',
               }}
             >
-              {/* Melted Wax Rim Ring */}
-              <div className="absolute inset-1 rounded-full border border-amber-300/40 opacity-75" />
-              
-              {/* Engraved Monogram Initial Crest */}
-              <div
-                className="w-13 h-13 sm:w-15 sm:h-15 rounded-full border-2 border-amber-300/60 flex flex-col items-center justify-center shadow-inner relative bg-black/10"
-                style={{ color: theme.waxSealColor }}
-              >
-                <span className="font-serif italic font-bold text-base sm:text-lg tracking-widest leading-none drop-shadow">
-                  {wedding.coupleInitials || theme.waxSealText}
-                </span>
-                <span className="text-[7px] font-mono tracking-widest uppercase opacity-80 mt-0.5">
-                  VOWS
+              {/* Gold Foil Ornate Border */}
+              <div className="absolute inset-3 rounded-xl border border-amber-300/40 pointer-events-none" />
+              <div className="absolute inset-4 rounded-lg border border-amber-300/20 pointer-events-none" />
+
+              {/* Book Spine Texture Gradient on Left Edge */}
+              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/40 via-transparent to-transparent pointer-events-none" />
+
+              {/* Top Subtitle */}
+              <div className="relative z-10 text-center pt-2">
+                <span className="text-[9px] font-mono tracking-[0.35em] text-amber-200 uppercase font-bold drop-shadow">
+                  A CELEBRATION OF LOVE
                 </span>
               </div>
+
+              {/* Center Monogram Crest & Couple Names */}
+              <div className="relative z-10 text-center my-auto space-y-2">
+                <div 
+                  className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-full border-2 border-amber-300/80 flex flex-col items-center justify-center shadow-2xl relative"
+                  style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
+                >
+                  <span className="font-serif italic font-bold text-xl sm:text-2xl drop-shadow">
+                    {wedding.coupleInitials || 'É'}
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="font-script text-4xl sm:text-5xl text-amber-100 font-normal leading-tight drop-shadow-md">
+                    {wedding.coupleName1} & {wedding.coupleName2}
+                  </h3>
+                  <span className="text-[10px] font-serif italic text-amber-200/90 tracking-widest uppercase block mt-1">
+                    {wedding.weddingDate}
+                  </span>
+                </div>
+              </div>
+
+              {/* Bottom Touch Clasp Hint */}
+              <div className="relative z-10 text-center pb-2">
+                <span className="text-[8px] font-mono tracking-[0.25em] text-amber-300/80 uppercase">
+                  TAP TO OPEN KEEPSAKE BOOK
+                </span>
+              </div>
+
+              {/* Monogram Wax Seal Clasp on the Right Edge */}
+              <div
+                className={`absolute top-1/2 right-3 -translate-y-1/2 transition-all duration-400 ${
+                  isBookOpen ? 'opacity-0 scale-125' : 'group-hover:scale-105 active:scale-95'
+                }`}
+              >
+                <div
+                  className="w-12 h-12 rounded-full border-2 border-amber-400 shadow-2xl flex items-center justify-center relative"
+                  style={{
+                    backgroundColor: theme.waxSealBg,
+                    boxShadow: `0 8px 18px -2px ${theme.waxSealBg}cc, inset 0 2px 4px rgba(255,255,255,0.4)`,
+                  }}
+                >
+                  <span className="font-serif italic font-bold text-xs text-amber-200">
+                    {wedding.coupleInitials || 'É'}
+                  </span>
+                </div>
+              </div>
+
             </div>
+
+            {/* INSIDE OF HARDCOVER (Revealed on the left when opened) */}
+            <div
+              className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border"
+              style={{
+                backgroundColor: theme.envelopeFlapColor,
+                borderColor: 'rgba(212, 175, 55, 0.4)',
+                transform: 'rotateY(180deg)',
+                backfaceVisibility: 'hidden',
+              }}
+            >
+              {/* Full-bleed Botanical Artwork */}
+              <img
+                src={theme.illustrationUrl}
+                alt="Botanical Liner Artwork"
+                className="w-full h-full object-cover brightness-90 contrast-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+              <div className="absolute inset-3 rounded-xl border border-amber-300/30 pointer-events-none" />
+
+              {/* Inner Keepsake Inscription */}
+              <div className="absolute inset-0 flex flex-col justify-end p-6 text-center">
+                <span className="text-[9px] font-mono tracking-[0.3em] uppercase text-amber-300 font-bold drop-shadow">
+                  TOGETHER FOREVER
+                </span>
+                <p className="font-serif italic text-amber-100 text-xs mt-1 drop-shadow">
+                  "Two lives, two hearts, joined together in friendship, united forever in love."
+                </p>
+              </div>
+            </div>
+
           </div>
 
         </div>
@@ -504,18 +398,18 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       <div className="mt-8 text-center z-40 h-14 flex items-center justify-center">
         {stage === 'sealed' ? (
           <div
-            onClick={handleOpenEnvelope}
+            onClick={handleOpenBook}
             className="inline-flex flex-col items-center cursor-pointer group"
           >
             <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-amber-500/20 hover:bg-amber-500/30 backdrop-blur-md border border-amber-400/50 text-amber-200 text-xs font-sans font-bold tracking-widest uppercase shadow-xl transition-all group-hover:scale-105 group-hover:shadow-amber-500/20">
-              <Sparkles size={14} className="text-amber-400 animate-spin" />
-              <span>Touch Wax Seal to Open</span>
+              <BookOpen size={14} className="text-amber-400" />
+              <span>Tap to Open Keepsake Book</span>
             </div>
             <p className="font-serif italic text-xs text-stone-300/80 font-medium mt-1.5">
-              Tap the seal to unbox your invitation
+              Unfold your heirloom wedding invitation
             </p>
           </div>
-        ) : isCardUp ? (
+        ) : isFullyOpen ? (
           <div className="flex flex-col sm:flex-row items-center gap-3 animate-fadeIn">
             <button
               onClick={onOpen}
