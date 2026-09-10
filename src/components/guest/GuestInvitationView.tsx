@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar, MapPin, Clock, Heart, Sparkles, Navigation, 
   Hotel, Music, Utensils, GlassWater, PartyPopper, Check, 
-  ExternalLink, ChevronDown, RotateCcw, Share2
+  ExternalLink, ChevronDown, RotateCcw, Share2, Volume2, VolumeX, ShieldCheck
 } from 'lucide-react';
 import { WeddingData, ThemeConfig, TimelineEvent } from '../../types/invitation';
 import { EnvelopeExperience } from './EnvelopeExperience';
@@ -24,6 +24,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
 
+  // Background Audio
   useEffect(() => {
     if (wedding.musicEnabled && wedding.backgroundMusicUrl) {
       const audio = new Audio(wedding.backgroundMusicUrl);
@@ -45,7 +46,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
     }
   };
 
-  // Group menu by course
+  // Group menu items by course
   const menuByCourse = (wedding.menu || []).reduce<Record<string, typeof wedding.menu>>((acc, item) => {
     const course = item.course || 'Main Entrée';
     if (!acc[course]) acc[course] = [];
@@ -53,7 +54,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
     return acc;
   }, {});
 
-  // Countdown timer logic
+  // Countdown timer
   useEffect(() => {
     const targetDate = new Date(wedding.weddingDate + 'T15:00:00').getTime();
 
@@ -91,11 +92,11 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
   };
 
   return (
-    <div className={`w-full min-h-screen bg-gradient-to-b ${theme.bgGradient} text-stone-100 flex flex-col items-center select-none overflow-x-hidden`}>
+    <div className={`w-full min-h-screen bg-gradient-to-b ${theme.bgGradient} text-stone-100 flex flex-col items-center select-none overflow-x-hidden font-sans`}>
       
-      {/* 1. If Envelope is Not Yet Opened -> Show 3D Envelope Experience */}
+      {/* 1. 3D ENVELOPE UNBOXING STAGE */}
       {!isEnvelopeOpen ? (
-        <div className="w-full flex-1 flex items-center justify-center p-4">
+        <div className="w-full flex-1 flex items-center justify-center p-3 sm:p-6 my-auto">
           <EnvelopeExperience
             wedding={wedding}
             theme={theme}
@@ -104,209 +105,236 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
           />
         </div>
       ) : (
-        /* 2. Unfolded Full Micro-Site */
-        <div className="w-full max-w-md mx-auto min-h-screen flex flex-col pb-24 animate-fadeIn">
+        /* 2. UNFURLED LUXURY WEDDING MICRO-SITE */
+        <div className="w-full max-w-lg mx-auto min-h-screen flex flex-col pb-28 animate-fadeIn">
           
-          {/* Top Return-to-Envelope & Action Bar */}
-          <header className="sticky top-0 z-40 w-full px-4 py-3 bg-black/60 backdrop-blur-md border-b border-white/10 flex items-center justify-between">
+          {/* Top Return-to-Envelope & Quick Bar */}
+          <header className="sticky top-0 z-40 w-full px-4 py-3 bg-black/70 backdrop-blur-md border-b border-white/10 flex items-center justify-between shadow-lg">
             <button
               onClick={() => setIsEnvelopeOpen(false)}
-              className="flex items-center gap-1.5 text-xs text-stone-300 hover:text-amber-200 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs text-stone-200 transition-colors cursor-pointer"
             >
               <RotateCcw size={13} />
-              <span>Envelope</span>
+              <span>3D Envelope</span>
             </button>
 
-            <span className="font-script text-xl text-amber-200">
+            <span className="font-script text-2xl text-amber-200 tracking-wide">
               {wedding.coupleName1} & {wedding.coupleName2}
             </span>
 
             <button
               onClick={onOpenRSVP}
-              className="px-3 py-1 rounded-full text-xs font-medium transition-all shadow-md"
+              className="px-4 py-1.5 rounded-full text-xs font-serif font-bold tracking-wider uppercase transition-all shadow-md hover:brightness-110 cursor-pointer"
               style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
             >
               RSVP
             </button>
           </header>
 
-          {/* Hero Stationery Card Suite (Matching the video layout) */}
+          {/* Hero Floral Banner & Formal Monogram Suite */}
           <section className="p-4 space-y-4">
             
-            {/* Top Artwork Banner (Swan Lake or Vineyard) */}
-            <div className="relative w-full h-44 rounded-2xl overflow-hidden shadow-xl border border-stone-700/60">
+            {/* Top Artwork Banner (Botanical Floral Watercolor) */}
+            <div className="relative w-full h-52 sm:h-56 rounded-3xl overflow-hidden shadow-2xl border border-stone-700/60 group">
               <img
                 src={theme.illustrationUrl}
-                alt="Stationery Artwork"
-                className="w-full h-full object-cover brightness-90 contrast-105"
+                alt="Botanical Wedding Art"
+                className="w-full h-full object-cover brightness-95 contrast-105 transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4">
-                <p className="font-serif italic text-amber-100/90 text-sm tracking-wider">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-5">
+                <span className="text-[10px] font-mono tracking-[0.35em] uppercase text-amber-300 font-bold drop-shadow">
+                  {wedding.weddingDate} · {wedding.cityState}
+                </span>
+                <p className="font-serif italic text-amber-100 text-sm sm:text-base tracking-wide mt-1 drop-shadow">
                   "Two lives, two hearts, joined together in friendship, united forever in love."
                 </p>
               </div>
             </div>
 
-            {/* Split Cards: Invitation + Date */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              
-              {/* Left/Main Card: Couple Names */}
-              <div
-                className="rounded-2xl p-5 shadow-xl flex flex-col justify-between text-center relative overflow-hidden"
-                style={{
-                  backgroundColor: theme.cardBg,
-                  border: `1px solid ${theme.cardBorder}`,
-                  color: theme.cardTextPrimary,
-                }}
-              >
-                <div className="space-y-1">
-                  <span className="text-[10px] tracking-[0.25em] uppercase font-sans font-bold" style={{ color: theme.cardAccentColor || theme.cardTextSecondary || theme.cardTextPrimary }}>
-                    {wedding.headline}
+            {/* Main Formal Couple Card (Fine Cotton Linen with Deckled Gold Border) */}
+            <div
+              className="rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6]"
+              style={{
+                border: '1px solid rgba(212, 175, 55, 0.7)',
+                color: '#2A1810',
+                boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5), 0 0 15px rgba(212,175,55,0.15)',
+              }}
+            >
+              {/* Botanical Floral Corner Watercolors */}
+              <div className="absolute top-0 right-0 w-28 h-28 opacity-20 pointer-events-none overflow-hidden">
+                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+              </div>
+              <div className="absolute bottom-0 left-0 w-28 h-28 opacity-20 pointer-events-none overflow-hidden rotate-180">
+                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+              </div>
+
+              {/* Inner Double Gold Frame */}
+              <div className="border border-amber-300/80 rounded-2xl p-5 sm:p-6 text-center relative z-10 bg-white/40 backdrop-blur-xs">
+                
+                {/* Monogram Wax Seal Crest */}
+                <div 
+                  className="w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-3 shadow-md border"
+                  style={{
+                    backgroundColor: theme.waxSealBg,
+                    borderColor: theme.waxSealBorder,
+                    color: theme.waxSealColor,
+                  }}
+                >
+                  <span className="font-serif italic text-sm font-bold tracking-widest">
+                    {wedding.coupleInitials || 'É'}
                   </span>
-                  <h2 className="font-script text-4xl font-bold mt-2 leading-none" style={{ color: theme.cardTextPrimary }}>
+                </div>
+
+                <span className="text-[10px] sm:text-[11px] tracking-[0.35em] uppercase font-mono font-bold text-amber-900 block">
+                  {wedding.headline || 'PLEASE JOIN US FOR THE WEDDING OF'}
+                </span>
+
+                {/* Romantic Calligraphy Script */}
+                <div className="my-3 space-y-1">
+                  <h2 className="font-script text-4xl sm:text-5xl text-stone-900 leading-none">
                     {wedding.coupleName1}
                   </h2>
-                  <span className="font-serif text-xl italic font-bold block" style={{ color: theme.cardAccentColor || theme.cardTextPrimary }}>&</span>
-                  <h2 className="font-script text-4xl font-bold leading-none" style={{ color: theme.cardTextPrimary }}>
+                  <span className="font-serif italic text-base sm:text-lg text-amber-800 font-bold block">&</span>
+                  <h2 className="font-script text-4xl sm:text-5xl text-stone-900 leading-none">
                     {wedding.coupleName2}
                   </h2>
                 </div>
-                <div className="mt-4 pt-3 border-t text-[11px] font-sans font-medium" style={{ borderColor: theme.cardBorder, color: theme.cardTextSecondary || theme.cardTextPrimary }}>
-                  Celebrate our wedding ceremony & reception
-                </div>
-              </div>
 
-              {/* Right Card: Date & Location Badge */}
-              <div
-                className="rounded-2xl p-5 shadow-xl flex flex-col justify-between text-center bg-stone-900/90 border border-stone-700/80 text-stone-100"
-              >
-                <div className="space-y-1">
-                  <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300/80 font-sans block">
-                    Save The Date
-                  </span>
-                  <div className="font-serif text-3xl font-light text-amber-50 mt-1">
-                    {wedding.weddingDate}
+                {/* Formal Venue & Date Info */}
+                <div className="mt-4 pt-4 border-t border-amber-200/80 text-xs sm:text-sm font-serif text-stone-800 space-y-1">
+                  <div className="font-bold text-stone-900 text-sm tracking-wider">
+                    {wedding.weddingDate} at {wedding.weddingTime}
                   </div>
-                  <div className="text-xs font-sans text-stone-300 flex items-center justify-center gap-1 mt-1">
-                    <Clock size={12} className="text-amber-400" />
-                    <span>At {wedding.weddingTime}</span>
+                  <div className="text-xs text-stone-700 font-medium">
+                    {wedding.venueName}
                   </div>
+                  <div className="text-[11px] text-stone-500 font-sans">
+                    {wedding.venueAddress}, {wedding.cityState}
+                  </div>
+
+                  {wedding.mapsUrl && (
+                    <a
+                      href={wedding.mapsUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs text-amber-900 font-semibold underline hover:text-amber-700 mt-2 font-sans"
+                    >
+                      <Navigation size={12} />
+                      <span>Open Venue in Google Maps</span>
+                    </a>
+                  )}
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-stone-800 text-xs font-serif text-stone-300 space-y-0.5">
-                  <p className="font-medium text-amber-200">{wedding.venueName}</p>
-                  <p className="text-[11px] opacity-75">{wedding.cityState}</p>
-                </div>
               </div>
             </div>
 
-            {/* Quick Interactive Action Badges */}
+            {/* Quick RSVP & Details Action Row */}
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => {
                   const el = document.getElementById('details-section');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="py-3 px-4 rounded-xl font-serif text-base tracking-wide flex items-center justify-center gap-2 transition-all shadow-lg hover:brightness-110 active:scale-98"
+                className="py-3 px-4 rounded-2xl font-serif text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-lg hover:brightness-110 active:scale-98 cursor-pointer"
                 style={{ backgroundColor: theme.badgeBg, color: theme.badgeText }}
               >
-                <Sparkles size={15} />
-                <span>Wedding Details</span>
+                <Sparkles size={14} />
+                <span>Event Schedule</span>
               </button>
 
               <button
                 onClick={onOpenRSVP}
-                className="py-3 px-4 rounded-xl font-serif text-base tracking-wide flex items-center justify-center gap-2 transition-all shadow-lg hover:brightness-110 active:scale-98"
+                className="py-3 px-4 rounded-2xl font-serif text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-lg hover:brightness-110 active:scale-98 cursor-pointer"
                 style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
               >
-                <Heart size={15} fill="currentColor" />
-                <span>Kindly RSVP</span>
+                <Heart size={14} fill="currentColor" />
+                <span>Confirm RSVP</span>
               </button>
             </div>
 
             {/* Live Countdown Timer Widget */}
-            <div className="rounded-2xl p-5 bg-black/40 backdrop-blur-md border border-amber-500/20 shadow-xl text-center">
-              <span className="text-[10px] tracking-[0.35em] uppercase text-amber-300/90 font-sans block mb-3">
+            <div className="rounded-3xl p-5 sm:p-6 bg-black/50 backdrop-blur-md border border-amber-400/30 shadow-2xl text-center">
+              <span className="text-[10px] tracking-[0.35em] uppercase text-amber-300/90 font-sans block mb-3 font-bold">
                 Time Until Celebration
               </span>
               <div className="grid grid-cols-4 gap-2 text-center">
-                <div className="bg-stone-900/80 rounded-xl p-2.5 border border-stone-800">
+                <div className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-inner">
                   <span className="font-serif text-2xl sm:text-3xl text-amber-100 font-light block">
                     {timeLeft.days}
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider text-stone-400">Days</span>
+                  <span className="text-[9px] uppercase tracking-wider text-stone-400 font-mono">Days</span>
                 </div>
-                <div className="bg-stone-900/80 rounded-xl p-2.5 border border-stone-800">
+                <div className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-inner">
                   <span className="font-serif text-2xl sm:text-3xl text-amber-100 font-light block">
                     {timeLeft.hours}
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider text-stone-400">Hours</span>
+                  <span className="text-[9px] uppercase tracking-wider text-stone-400 font-mono">Hours</span>
                 </div>
-                <div className="bg-stone-900/80 rounded-xl p-2.5 border border-stone-800">
+                <div className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-inner">
                   <span className="font-serif text-2xl sm:text-3xl text-amber-100 font-light block">
                     {timeLeft.minutes}
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider text-stone-400">Mins</span>
+                  <span className="text-[9px] uppercase tracking-wider text-stone-400 font-mono">Mins</span>
                 </div>
-                <div className="bg-stone-900/80 rounded-xl p-2.5 border border-stone-800">
+                <div className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-inner">
                   <span className="font-serif text-2xl sm:text-3xl text-amber-100 font-light block">
                     {timeLeft.seconds}
                   </span>
-                  <span className="text-[9px] uppercase tracking-wider text-stone-400">Secs</span>
+                  <span className="text-[9px] uppercase tracking-wider text-stone-400 font-mono">Secs</span>
                 </div>
               </div>
             </div>
 
             {/* Navigation Tabs - 5 Interactive Wedding Card Sections */}
-            <div className="flex rounded-xl bg-black/60 p-1 border border-stone-800 text-[11px] font-sans overflow-x-auto scrollbar-none gap-1">
+            <div className="flex rounded-2xl bg-black/60 p-1.5 border border-stone-800 text-xs font-sans overflow-x-auto scrollbar-none gap-1.5 shadow-xl">
               <button
                 onClick={() => setActiveTab('invite')}
-                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
-                  activeTab === 'invite' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
+                className={`px-3.5 py-2 rounded-xl font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  activeTab === 'invite' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
                 }`}
               >
                 Schedule
               </button>
               <button
                 onClick={() => setActiveTab('menu')}
-                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
-                  activeTab === 'menu' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
+                className={`px-3.5 py-2 rounded-xl font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  activeTab === 'menu' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
                 }`}
               >
                 Food & Drinks
               </button>
               <button
                 onClick={() => setActiveTab('story')}
-                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
-                  activeTab === 'story' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
+                className={`px-3.5 py-2 rounded-xl font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  activeTab === 'story' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
                 }`}
               >
                 Love Gallery
               </button>
               <button
                 onClick={() => setActiveTab('stay')}
-                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
-                  activeTab === 'stay' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
+                className={`px-3.5 py-2 rounded-xl font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  activeTab === 'stay' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
                 }`}
               >
                 Travel & Stay
               </button>
               <button
                 onClick={() => setActiveTab('faqs')}
-                className={`px-3 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${
-                  activeTab === 'faqs' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-white'
+                className={`px-3.5 py-2 rounded-xl font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  activeTab === 'faqs' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
                 }`}
               >
                 Q&A FAQs
               </button>
             </div>
 
-            {/* Tab 1: Day at a Glance / Schedule */}
+            {/* TAB 1: SCHEDULE & TIMELINE */}
             {activeTab === 'invite' && (
-              <div id="details-section" className="space-y-4 pt-2">
-                <div className="rounded-2xl p-6 bg-stone-900/80 border border-stone-800 shadow-xl">
+              <div id="details-section" className="space-y-4 pt-2 animate-fadeIn">
+                <div className="rounded-3xl p-6 bg-stone-900/90 border border-stone-800 shadow-2xl">
                   <div className="text-center mb-6">
-                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans">
+                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans font-bold">
                       Order of Events
                     </span>
                     <h3 className="font-serif text-2xl text-amber-50 mt-1">Our Day at a Glance</h3>
@@ -320,66 +348,78 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                         <div className="absolute -left-[27px] top-0 w-6 h-6 rounded-full bg-stone-900 border border-amber-400 flex items-center justify-center shadow-md">
                           {getTimelineIcon(event.icon)}
                         </div>
-                        <div>
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-xs font-mono font-semibold text-amber-300">
-                              {event.time}
-                            </span>
-                            <span className="font-serif text-lg text-stone-100 font-normal">
+
+                        <div className="bg-stone-950/70 p-4 rounded-2xl border border-stone-800/80 shadow-md">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-serif text-base text-amber-200 font-medium">
                               {event.title}
                             </span>
+                            <span className="font-mono text-[11px] text-amber-400/90 font-bold bg-stone-900 px-2 py-0.5 rounded-md border border-stone-800">
+                              {event.time}
+                            </span>
                           </div>
-                          <p className="text-xs text-stone-400 mt-1 leading-relaxed">
-                            {event.description}
-                          </p>
+                          {event.description && (
+                            <p className="text-xs text-stone-300 mt-1.5 leading-relaxed font-light">
+                              {event.description}
+                            </p>
+                          )}
                         </div>
                       </div>
                     ))}
                   </div>
-                </div>
 
-                {/* Dress Code Section */}
-                <div className="rounded-2xl p-6 bg-stone-900/80 border border-stone-800 shadow-xl space-y-3">
-                  <div className="text-center">
-                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans">
-                      Attire Guide
-                    </span>
-                    <h3 className="font-serif text-2xl text-amber-50 mt-1">{wedding.dressCode.title}</h3>
-                    <p className="text-xs text-amber-200/80 font-sans font-medium mt-0.5">
-                      {wedding.dressCode.subtitle}
-                    </p>
-                  </div>
-                  <p className="text-xs text-stone-300 text-center leading-relaxed">
-                    {wedding.dressCode.description}
-                  </p>
-                  
-                  {/* Swatch Palette */}
-                  <div className="flex justify-center items-center gap-2.5 pt-2">
-                    {wedding.dressCode.swatches.map((swatch, idx) => (
-                      <div key={idx} className="flex flex-col items-center gap-1" title={swatch.name}>
-                        <div
-                          className="w-7 h-7 rounded-full border border-white/20 shadow-inner"
-                          style={{ backgroundColor: swatch.hex }}
-                        />
-                        <span className="text-[9px] text-stone-400 font-sans">{swatch.name}</span>
-                      </div>
-                    ))}
-                  </div>
+                  {/* Dress Code Section */}
+                  {wedding.dressCode && (
+                    <div className="mt-8 pt-6 border-t border-stone-800 text-center space-y-3">
+                      <span className="text-[10px] tracking-[0.25em] uppercase text-amber-300 font-sans font-bold">
+                        Attire Guidance
+                      </span>
+                      <h4 className="font-serif text-xl text-amber-100 font-bold">
+                        {wedding.dressCode.title || 'Black Tie Optional'}
+                      </h4>
+                      <p className="text-xs text-stone-300 leading-relaxed max-w-sm mx-auto font-light">
+                        {wedding.dressCode.description || 'We invite our guests to dress in formal black-tie or romantic evening cocktail attire.'}
+                      </p>
+
+                      {wedding.dressCode.swatches && wedding.dressCode.swatches.length > 0 && (
+                        <div className="flex items-center justify-center gap-2 pt-2">
+                          {wedding.dressCode.swatches.map((swatch, idx) => (
+                            <div
+                              key={idx}
+                              className="w-6 h-6 rounded-full border border-white/20 shadow-md"
+                              style={{ backgroundColor: swatch.hex }}
+                              title={swatch.name || `Palette Color ${idx + 1}`}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Transport & Ferry */}
+                  {wedding.transportInfo && (
+                    <div className="mt-6 p-4 rounded-2xl bg-amber-950/30 border border-amber-700/40 text-xs text-stone-300 leading-relaxed text-center">
+                      <span className="font-serif text-amber-200 font-bold block mb-1">
+                        🚌 Shuttle & Guest Transportation
+                      </span>
+                      {wedding.transportInfo}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* Tab 2: Cuisine & Cocktails Menu */}
+            {/* TAB 2: CUISINE & DRINKS MENU */}
             {activeTab === 'menu' && (
               <div className="space-y-4 pt-2 animate-fadeIn">
-                <div className="rounded-2xl p-6 bg-stone-900/80 border border-stone-800 shadow-xl">
-                  <div className="text-center mb-6">
-                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans">
+                <div className="rounded-3xl p-6 bg-stone-900/90 border border-stone-800 shadow-2xl space-y-6">
+                  <div className="text-center">
+                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans font-bold">
                       Culinary Experience
                     </span>
                     <h3 className="font-serif text-2xl text-amber-50 mt-1">Cuisine & Cocktails</h3>
                     <p className="text-xs text-stone-400 mt-1">
-                      Specially curated farm-to-table dining and artisan wine pairing
+                      A multi-course gourmet celebration crafted with seasonal local ingredients.
                     </p>
                   </div>
 
@@ -389,27 +429,25 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                     ) : (
                       Object.entries(menuByCourse).map(([courseName, items]) => (
                         <div key={courseName} className="space-y-3">
-                          <div className="flex items-center gap-3">
-                            <span className="px-3 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-700/40 text-[11px] font-serif tracking-wider uppercase">
-                              {courseName}
-                            </span>
-                            <div className="flex-1 h-[1px] bg-stone-800" />
-                          </div>
+                          <h4 className="font-serif text-lg text-amber-200 border-b border-stone-800 pb-1.5 flex items-center gap-2 font-bold">
+                            <Utensils size={15} className="text-amber-400" />
+                            <span>{courseName}</span>
+                          </h4>
 
-                          <div className="space-y-3 pl-2">
+                          <div className="space-y-2.5">
                             {items?.map((item) => (
-                              <div key={item.id} className="bg-stone-950/60 p-3.5 rounded-xl border border-stone-800/80 space-y-1">
+                              <div key={item.id} className="bg-stone-950/70 p-4 rounded-2xl border border-stone-800/80 space-y-1.5">
                                 <div className="flex items-start justify-between gap-2">
-                                  <h4 className="font-serif text-base text-stone-100">{item.title}</h4>
+                                  <h5 className="font-serif text-base text-stone-100 font-semibold">{item.title}</h5>
                                   <div className="flex items-center gap-1 flex-wrap justify-end">
                                     {item.dietaryTags?.map((tag, tIdx) => (
-                                      <span key={tIdx} className="px-2 py-0.5 rounded-full bg-stone-800 text-emerald-300 text-[9px] font-mono">
+                                      <span key={tIdx} className="px-2 py-0.5 rounded-full bg-stone-800 text-emerald-300 text-[9px] font-mono border border-emerald-900/50">
                                         {tag}
                                       </span>
                                     ))}
                                   </div>
                                 </div>
-                                <p className="text-xs text-stone-400 leading-relaxed">{item.description}</p>
+                                <p className="text-xs text-stone-400 leading-relaxed font-light">{item.description}</p>
                               </div>
                             ))}
                           </div>
@@ -421,11 +459,11 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               </div>
             )}
 
-            {/* Tab 3: Love Story Photo Gallery */}
+            {/* TAB 3: LOVE STORY PHOTO GALLERY */}
             {activeTab === 'story' && (
               <div className="space-y-4 pt-2 animate-fadeIn">
-                <div className="rounded-2xl p-6 bg-stone-900/80 border border-stone-800 shadow-xl space-y-3 text-center">
-                  <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans">
+                <div className="rounded-3xl p-6 bg-stone-900/90 border border-stone-800 shadow-2xl space-y-3 text-center">
+                  <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans font-bold">
                     Our Journey
                   </span>
                   <h3 className="font-serif text-2xl text-amber-50">{wedding.storyTitle || 'Our Love Story'}</h3>
@@ -441,16 +479,16 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                     wedding.photos.map((photo) => (
                       <div
                         key={photo.id}
-                        className="bg-stone-900/90 rounded-2xl p-3 border border-stone-800 shadow-xl space-y-3"
+                        className="bg-stone-900/90 rounded-3xl p-3 border border-stone-800 shadow-2xl space-y-3"
                       >
-                        <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-stone-950">
+                        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-stone-950">
                           <img
                             src={photo.url}
                             alt={photo.caption}
                             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                           />
                           {photo.dateTag && (
-                            <span className="absolute bottom-2 right-2 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] text-amber-200 font-sans border border-white/10">
+                            <span className="absolute bottom-2.5 right-2.5 px-3 py-1 rounded-full bg-black/75 backdrop-blur-md text-[10px] text-amber-200 font-sans border border-white/15">
                               {photo.dateTag}
                             </span>
                           )}
@@ -463,7 +501,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                       </div>
                     ))
                   ) : (
-                    <div className="p-8 text-center text-xs text-stone-500 italic bg-stone-900/50 rounded-2xl border border-stone-800">
+                    <div className="p-8 text-center text-xs text-stone-500 italic bg-stone-900/50 rounded-3xl border border-stone-800">
                       No photos added yet. Add photo moments in the Studio Customizer!
                     </div>
                   )}
@@ -471,73 +509,74 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               </div>
             )}
 
-            {/* Tab 4: Travel & Lodging */}
+            {/* TAB 4: ACCOMMODATIONS & TRAVEL */}
             {activeTab === 'stay' && (
               <div className="space-y-4 pt-2 animate-fadeIn">
-                {/* Transport Note */}
-                <div className="rounded-2xl p-5 bg-stone-900/80 border border-stone-800 shadow-xl space-y-2 text-center">
-                  <Navigation size={20} className="mx-auto text-amber-400 mb-1" />
-                  <h4 className="font-serif text-xl text-amber-100">Transport & Location</h4>
-                  <p className="text-xs text-stone-300 leading-relaxed">
-                    {wedding.transportInfo}
-                  </p>
-                  <a
-                    href={wedding.mapsUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-amber-200 mt-2 underline underline-offset-4"
-                  >
-                    <span>Open in Google Maps</span>
-                    <ExternalLink size={12} />
-                  </a>
-                </div>
+                <div className="rounded-3xl p-6 bg-stone-900/90 border border-stone-800 shadow-2xl space-y-4">
+                  <div className="text-center mb-2">
+                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans font-bold">
+                      Lodging Recommendations
+                    </span>
+                    <h3 className="font-serif text-2xl text-amber-50 mt-1">Where to Stay</h3>
+                    <p className="text-xs text-stone-400 mt-1">
+                      Curated hotels and luxury villas reserved for our wedding guests.
+                    </p>
+                  </div>
 
-                {/* Hotel Cards */}
-                <div className="space-y-3">
-                  {wedding.hotels.map((hotel) => (
-                    <div
-                      key={hotel.id}
-                      className="rounded-2xl p-5 bg-stone-900/90 border border-stone-800 shadow-lg space-y-3"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-sans bg-amber-950/80 text-amber-300 border border-amber-800/40 mb-1">
-                            {hotel.badge}
-                          </span>
-                          <h4 className="font-serif text-xl text-stone-100">{hotel.name}</h4>
+                  <div className="space-y-3">
+                    {wedding.hotels && wedding.hotels.length > 0 ? (
+                      wedding.hotels.map((hotel) => (
+                        <div key={hotel.id} className="p-4 rounded-2xl bg-stone-950/70 border border-stone-800 space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <h5 className="font-serif text-base text-amber-200 font-medium">
+                                {hotel.name}
+                              </h5>
+                              <span className="text-xs text-stone-400">
+                                {hotel.badge || hotel.description}
+                              </span>
+                            </div>
+                            {hotel.priceLevel && (
+                              <span className="px-2.5 py-0.5 rounded-full bg-stone-900 text-amber-300 font-mono text-[10px] border border-stone-800">
+                                {hotel.priceLevel}
+                              </span>
+                            )}
+                          </div>
+
+                          {hotel.discountCode && (
+                            <div className="flex items-center gap-2 p-2 bg-stone-900/80 rounded-xl border border-stone-800 text-xs">
+                              <span className="text-stone-400">Wedding Discount Code:</span>
+                              <span className="font-mono text-amber-300 font-bold">{hotel.discountCode}</span>
+                            </div>
+                          )}
+
+                          {hotel.bookingUrl && (
+                            <a
+                              href={hotel.bookingUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-amber-300 hover:text-amber-200 underline pt-1 font-sans"
+                            >
+                              <span>Book Hotel Reservation</span>
+                              <ExternalLink size={12} />
+                            </a>
+                          )}
                         </div>
-                        <span className="text-xs font-mono text-stone-400">{hotel.priceLevel}</span>
-                      </div>
-                      <p className="text-xs text-stone-300 leading-relaxed">
-                        {hotel.description}
-                      </p>
-                      {hotel.discountCode && (
-                        <div className="text-[11px] font-sans bg-stone-800/80 p-2 rounded-lg text-amber-200 flex items-center justify-between">
-                          <span>Promo Code: <strong>{hotel.discountCode}</strong></span>
-                        </div>
-                      )}
-                      <a
-                        href={hotel.bookingUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="w-full py-2.5 rounded-xl text-xs font-medium font-sans flex items-center justify-center gap-1.5 transition-all shadow"
-                        style={{ backgroundColor: theme.cardBg, border: `1px solid ${theme.cardBorder}`, color: theme.cardTextPrimary }}
-                      >
-                        <Hotel size={14} />
-                        <span>Reserve Room / View Rates</span>
-                      </a>
-                    </div>
-                  ))}
+                      ))
+                    ) : (
+                      <p className="text-xs text-stone-400 text-center italic">No hotel blocks specified.</p>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
 
-            {/* Tab 5: Guest Q&A FAQs */}
+            {/* TAB 5: GUEST Q&A FAQS & REGISTRY */}
             {activeTab === 'faqs' && (
               <div className="space-y-4 pt-2 animate-fadeIn">
-                <div className="rounded-2xl p-6 bg-stone-900/80 border border-stone-800 shadow-xl space-y-4">
+                <div className="rounded-3xl p-6 bg-stone-900/90 border border-stone-800 shadow-2xl space-y-4">
                   <div className="text-center mb-2">
-                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans">
+                    <span className="text-[10px] tracking-[0.3em] uppercase text-amber-300 font-sans font-bold">
                       Guest Information
                     </span>
                     <h3 className="font-serif text-2xl text-amber-50 mt-1">Frequently Asked Questions</h3>
@@ -546,11 +585,11 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                   <div className="space-y-3">
                     {wedding.faqs && wedding.faqs.length > 0 ? (
                       wedding.faqs.map((faq) => (
-                        <div key={faq.id} className="p-4 rounded-xl bg-stone-950/70 border border-stone-800 space-y-1.5 text-left">
+                        <div key={faq.id} className="p-4 rounded-2xl bg-stone-950/70 border border-stone-800 space-y-1.5 text-left">
                           <h4 className="font-serif text-base text-amber-200 font-medium">
                             {faq.question}
                           </h4>
-                          <p className="text-xs text-stone-300 leading-relaxed">
+                          <p className="text-xs text-stone-300 leading-relaxed font-light">
                             {faq.answer}
                           </p>
                         </div>
@@ -567,7 +606,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                         href={wedding.giftRegistryUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-amber-200 text-xs font-serif transition-colors"
+                        className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-stone-800 hover:bg-stone-700 text-amber-200 text-xs font-serif transition-colors shadow-md"
                       >
                         <Sparkles size={13} />
                         <span>Visit Couple's Registry</span>
@@ -583,7 +622,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
             <div className="pt-6 pb-4 text-center">
               <button
                 onClick={onOpenRSVP}
-                className="w-full py-3.5 rounded-2xl font-serif text-lg tracking-wide flex items-center justify-center gap-2 transition-all shadow-2xl hover:brightness-110 active:scale-98 animate-pulse-glow"
+                className="w-full py-4 rounded-2xl font-serif text-base sm:text-lg font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-all shadow-2xl hover:brightness-110 active:scale-98 cursor-pointer"
                 style={{
                   backgroundColor: theme.waxSealBg,
                   color: theme.waxSealColor,
@@ -600,7 +639,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 
           </section>
 
-          {/* Floating Background Ambient Music Pill */}
+          {/* Floating Ambient Music Audio Controller */}
           {wedding.musicEnabled && wedding.backgroundMusicUrl && (
             <button
               onClick={toggleMusic}
@@ -612,8 +651,8 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               {isPlayingMusic && (
                 <span className="flex items-center gap-0.5 ml-1">
                   <span className="w-1 h-3 bg-amber-400 rounded-full animate-pulse" />
-                  <span className="w-1 h-4 bg-amber-400 rounded-full animate-pulse" />
-                  <span className="w-1 h-2 bg-amber-400 rounded-full animate-pulse" />
+                  <span className="w-1 h-4 bg-amber-400 rounded-full animate-pulse delay-75" />
+                  <span className="w-1 h-2 bg-amber-400 rounded-full animate-pulse delay-150" />
                 </span>
               )}
             </button>
