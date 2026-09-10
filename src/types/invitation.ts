@@ -222,6 +222,8 @@ export interface RSVPRecord {
   songRequest?: string;
   personalMessage?: string;
   customAnswers?: Record<string, string>;
+  checkedIn?: boolean;
+  checkedInAt?: string;
   submittedAt: string;
 }
 

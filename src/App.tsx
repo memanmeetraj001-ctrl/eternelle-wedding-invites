@@ -416,6 +416,26 @@ export function App() {
     }
   };
 
+  const handleToggleCheckIn = (rsvpId: string) => {
+    setRsvps(prev => {
+      const updated = prev.map(r => {
+        if (r.id === rsvpId) {
+          const isNowCheckedIn = !r.checkedIn;
+          return {
+            ...r,
+            checkedIn: isNowCheckedIn,
+            checkedInAt: isNowCheckedIn ? new Date().toISOString() : undefined,
+          };
+        }
+        return r;
+      });
+      try {
+        localStorage.setItem(`eternelle_rsvps_${wedding.id}`, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
   const activeTheme = THEME_PRESETS[wedding.themeId] || THEME_PRESETS['olive-burgundy'];
 
   // 1. Render Master Admin Panel
@@ -653,6 +673,7 @@ export function App() {
             onChangeWedding={handleUpdateWedding}
             rsvps={rsvps}
             onAddRSVP={handleAddRSVP}
+            onToggleCheckIn={handleToggleCheckIn}
             user={user}
             onOpenGuestPreview={() => setViewMode('guest')}
             onOpenCheckout={handleOpenCheckout}

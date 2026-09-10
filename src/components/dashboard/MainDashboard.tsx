@@ -18,6 +18,7 @@ interface MainDashboardProps {
   onChangeWedding: (updated: WeddingData) => void;
   rsvps: RSVPRecord[];
   onAddRSVP: (record: Omit<RSVPRecord, 'id' | 'submittedAt'>) => void;
+  onToggleCheckIn?: (rsvpId: string) => void;
   user: { name: string; email: string; plan: 'free' | 'pro' | 'lifetime'; licenseKey?: string } | null;
   onOpenGuestPreview: () => void;
   onOpenCheckout: (plan: 'pro' | 'lifetime') => void;
@@ -31,6 +32,7 @@ export function MainDashboard({
   onChangeWedding,
   rsvps,
   onAddRSVP,
+  onToggleCheckIn,
   user,
   onOpenGuestPreview,
   onOpenCheckout,
@@ -431,6 +433,7 @@ export function MainDashboard({
           <RSVPDashboard
             rsvps={rsvps}
             wedding={wedding}
+            onToggleCheckIn={onToggleCheckIn}
           />
         )}
 
