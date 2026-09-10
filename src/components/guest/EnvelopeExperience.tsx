@@ -158,14 +158,14 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       </div>
 
       {/* 3. Header Intro Text (Fixed height to prevent layout reflow) */}
-      <div className="text-center mb-4 sm:mb-5 max-w-md h-18 sm:h-20 flex flex-col justify-center transition-opacity duration-500 px-2">
-        <span className="text-[9px] sm:text-[11px] font-mono font-bold tracking-[0.3em] sm:tracking-[0.35em] text-amber-300/90 uppercase block drop-shadow-md">
+      <div className="text-center mb-3 sm:mb-5 max-w-md h-16 sm:h-20 flex flex-col justify-center transition-opacity duration-500 px-2">
+        <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-[0.25em] sm:tracking-[0.35em] text-amber-300/90 uppercase block drop-shadow-md">
           {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
         </span>
-        <h1 className="font-script text-3xl sm:text-5xl text-amber-100 font-normal mt-0.5 drop-shadow-lg leading-tight">
+        <h1 className="font-script text-2xl sm:text-4xl text-amber-100 font-normal mt-0.5 drop-shadow-lg leading-tight">
           {wedding.coupleName1} & {wedding.coupleName2}
         </h1>
-        <p className="text-[11px] sm:text-xs font-serif italic text-stone-300/90 tracking-wide mt-0.5">
+        <p className="text-[10px] sm:text-xs font-serif italic text-stone-300/90 tracking-wide mt-0.5">
           Request the honour of your presence at their wedding
         </p>
       </div>
@@ -196,7 +196,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           {/* ==================== 1. RIGHT PAGE (Formal Invitation Card Suite) ==================== */}
           <div
             onClick={isFullyOpen ? onOpen : undefined}
-            className={`absolute inset-0 rounded-2xl p-3.5 sm:p-6 flex flex-col justify-between text-center overflow-hidden transition-all duration-700 bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] ${
+            className={`absolute inset-0 rounded-2xl p-3 sm:p-6 flex flex-col justify-between text-center overflow-hidden transition-all duration-700 bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] ${
               isFullyOpen ? 'cursor-pointer hover:scale-[1.01] shadow-2xl' : ''
             }`}
             style={{
@@ -205,52 +205,52 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             }}
           >
             {/* Botanical Floral Corner Accents */}
-            <div className="absolute top-0 right-0 w-20 sm:w-24 h-20 sm:h-24 opacity-20 pointer-events-none overflow-hidden">
+            <div className="absolute top-0 right-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden">
               <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
             </div>
-            <div className="absolute bottom-0 left-0 w-20 sm:w-24 h-20 sm:h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
+            <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
               <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
             </div>
 
             {/* Inner Double Gold Frame */}
-            <div className="border border-amber-300/80 rounded-xl p-3 sm:p-5 text-center relative z-10 bg-white/40 backdrop-blur-xs h-full flex flex-col justify-between">
+            <div className="border border-amber-300/80 rounded-xl p-2.5 sm:p-5 text-center relative z-10 bg-white/40 backdrop-blur-xs h-full flex flex-col justify-between">
               
               {/* Monogram Crest */}
               <div>
                 <div 
-                  className="w-7 h-7 sm:w-8 sm:h-8 mx-auto rounded-full border border-amber-400 flex items-center justify-center mb-1 shadow-xs"
+                  className="w-6 h-6 sm:w-8 sm:h-8 mx-auto rounded-full border border-amber-400 flex items-center justify-center mb-0.5 shadow-xs"
                   style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
                 >
-                  <span className="font-serif italic text-xs font-bold">
+                  <span className="font-serif italic text-[10px] sm:text-xs font-bold">
                     {wedding.coupleInitials || 'É'}
                   </span>
                 </div>
 
-                <span className="text-[8px] sm:text-[10px] tracking-[0.25em] sm:tracking-[0.3em] font-mono uppercase font-bold text-amber-900 block">
+                <span className="text-[7px] sm:text-[9px] tracking-[0.2em] sm:tracking-[0.3em] font-mono uppercase font-bold text-amber-900 block">
                   {wedding.headline || 'PLEASE JOIN US FOR THE WEDDING OF'}
                 </span>
 
                 {/* Couple Names Calligraphy */}
-                <div className="my-1 space-y-0.5">
-                  <h2 className="font-script text-2xl sm:text-4xl text-stone-900 leading-none">
+                <div className="my-0.5 space-y-0">
+                  <h2 className="font-script text-lg sm:text-3xl text-stone-900 leading-none">
                     {wedding.coupleName1}
                   </h2>
-                  <span className="font-serif italic text-xs sm:text-sm text-amber-800 font-bold block">&</span>
-                  <h2 className="font-script text-2xl sm:text-4xl text-stone-900 leading-none">
+                  <span className="font-serif italic text-[10px] sm:text-xs text-amber-800 font-bold block my-0.5">&</span>
+                  <h2 className="font-script text-lg sm:text-3xl text-stone-900 leading-none">
                     {wedding.coupleName2}
                   </h2>
                 </div>
               </div>
 
               {/* Date & Venue */}
-              <div className="pt-1.5 sm:pt-2 border-t border-amber-200/80 text-[11px] sm:text-xs font-serif text-stone-800 space-y-0.5">
-                <div className="font-bold text-stone-900 tracking-wider">
+              <div className="pt-1 sm:pt-2 border-t border-amber-200/80 text-[10px] sm:text-xs font-serif text-stone-800 space-y-0">
+                <div className="font-bold text-stone-900 tracking-wider text-[10px] sm:text-xs">
                   {wedding.weddingDate} · {wedding.weddingTime}
                 </div>
-                <div className="text-[10px] sm:text-[11px] text-stone-600 font-medium">
+                <div className="text-[9px] sm:text-[11px] text-stone-600 font-medium">
                   {wedding.venueName}
                 </div>
-                <div className="text-[9px] sm:text-[10px] text-stone-500 font-sans">
+                <div className="text-[8px] sm:text-[10px] text-stone-500 font-sans">
                   {wedding.cityState}
                 </div>
               </div>
@@ -262,15 +262,15 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                   e.stopPropagation();
                   onOpen();
                 }}
-                className="mt-2 w-full py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl text-[10px] sm:text-xs font-serif font-bold tracking-wider uppercase text-white shadow-md flex items-center justify-center gap-1.5 transition-all hover:brightness-110 active:scale-98 cursor-pointer"
+                className="mt-1.5 w-full py-1.5 sm:py-2 px-2.5 sm:px-4 rounded-xl text-[9px] sm:text-xs font-serif font-bold tracking-wider uppercase text-white shadow-md flex items-center justify-center gap-1.5 transition-all hover:brightness-110 active:scale-98 cursor-pointer"
                 style={{
                   backgroundColor: theme.waxSealBg,
                   border: `1px solid ${theme.waxSealBorder}`,
                 }}
               >
-                <Sparkles size={12} />
-                <span>Unfold Full Wedding Suite & RSVP</span>
-                <ArrowRight size={12} />
+                <Sparkles size={11} />
+                <span>Unfold Full Suite & RSVP</span>
+                <ArrowRight size={11} />
               </button>
 
             </div>
@@ -288,7 +288,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           >
             {/* FRONT OF HARDCOVER (Facing viewer when closed) */}
             <div
-              className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl p-5 flex flex-col items-center justify-between border"
+              className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl p-4 sm:p-5 flex flex-col items-center justify-between border"
               style={{
                 backgroundColor: theme.envelopeColor,
                 borderColor: 'rgba(212, 175, 55, 0.5)',
@@ -304,36 +304,36 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
               <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/40 via-transparent to-transparent pointer-events-none" />
 
               {/* Top Subtitle */}
-              <div className="relative z-10 text-center pt-2">
-                <span className="text-[9px] font-mono tracking-[0.35em] text-amber-200 uppercase font-bold drop-shadow">
+              <div className="relative z-10 text-center pt-1.5">
+                <span className="text-[8px] sm:text-[9px] font-mono tracking-[0.3em] text-amber-200 uppercase font-bold drop-shadow">
                   A CELEBRATION OF LOVE
                 </span>
               </div>
 
               {/* Center Monogram Crest & Couple Names */}
-              <div className="relative z-10 text-center my-auto space-y-2">
+              <div className="relative z-10 text-center my-auto space-y-1.5">
                 <div 
-                  className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-full border-2 border-amber-300/80 flex flex-col items-center justify-center shadow-2xl relative"
+                  className="w-12 h-12 sm:w-16 sm:h-16 mx-auto rounded-full border-2 border-amber-300/80 flex flex-col items-center justify-center shadow-2xl relative"
                   style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
                 >
-                  <span className="font-serif italic font-bold text-xl sm:text-2xl drop-shadow">
+                  <span className="font-serif italic font-bold text-lg sm:text-2xl drop-shadow">
                     {wedding.coupleInitials || 'É'}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="font-script text-4xl sm:text-5xl text-amber-100 font-normal leading-tight drop-shadow-md">
+                  <h3 className="font-script text-2xl sm:text-4xl text-amber-100 font-normal leading-tight drop-shadow-md">
                     {wedding.coupleName1} & {wedding.coupleName2}
                   </h3>
-                  <span className="text-[10px] font-serif italic text-amber-200/90 tracking-widest uppercase block mt-1">
+                  <span className="text-[9px] sm:text-[10px] font-serif italic text-amber-200/90 tracking-widest uppercase block mt-0.5">
                     {wedding.weddingDate}
                   </span>
                 </div>
               </div>
 
               {/* Bottom Touch Clasp Hint */}
-              <div className="relative z-10 text-center pb-2">
-                <span className="text-[8px] font-mono tracking-[0.25em] text-amber-300/80 uppercase">
+              <div className="relative z-10 text-center pb-1.5">
+                <span className="text-[7px] sm:text-[8px] font-mono tracking-[0.2em] text-amber-300/80 uppercase">
                   TAP TO OPEN KEEPSAKE BOOK
                 </span>
               </div>

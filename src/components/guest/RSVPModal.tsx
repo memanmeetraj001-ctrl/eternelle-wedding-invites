@@ -80,30 +80,30 @@ export const RSVPModal: React.FC<RSVPModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-lg bg-stone-900 border border-stone-700 text-stone-100 rounded-2xl shadow-2xl overflow-hidden my-8 p-6 md:p-8">
+      <div className="relative w-full max-w-lg bg-stone-900 border border-stone-700 text-stone-100 rounded-2xl shadow-2xl overflow-hidden my-4 p-4 sm:p-6 md:p-8">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-stone-400 hover:text-white rounded-full bg-stone-800/80 transition-colors"
+          className="absolute top-3.5 right-3.5 p-1.5 text-stone-400 hover:text-white rounded-full bg-stone-800/80 transition-colors"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
 
         {isSubmitted ? (
-          <div className="text-center py-8 space-y-4">
-            <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-2">
-              <CheckCircle2 size={36} />
+          <div className="text-center py-6 space-y-3">
+            <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-1">
+              <CheckCircle2 size={28} />
             </div>
-            <h3 className="font-serif text-3xl font-normal text-amber-100">
+            <h3 className="font-serif text-2xl font-normal text-amber-100">
               {attendance === 'attending' ? 'See You There!' : 'Thank You for Letting Us Know'}
             </h3>
-            <p className="text-stone-300 font-sans text-sm max-w-sm mx-auto leading-relaxed">
+            <p className="text-stone-300 font-sans text-xs sm:text-sm max-w-sm mx-auto leading-relaxed">
               {attendance === 'attending'
                 ? 'Your RSVP has been confirmed for ' + guestName + '. ' + wedding.coupleName1 + ' & ' + wedding.coupleName2 + ' can not wait to celebrate with you on ' + wedding.weddingDate + '!'
                 : 'We received your response. You will be dearly missed on our special day!'}
             </p>
             <button
               onClick={onClose}
-              className="mt-6 px-6 py-2.5 rounded-full font-sans font-medium text-sm tracking-wide transition-all shadow-md"
+              className="mt-4 px-5 py-2 rounded-full font-sans font-medium text-xs sm:text-sm tracking-wide transition-all shadow-md"
               style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
             >
               Return to Invitation
@@ -111,42 +111,42 @@ export const RSVPModal: React.FC<RSVPModalProps> = ({
           </div>
         ) : (
           <div>
-            <div className="text-center mb-6">
-              <span className="text-xs uppercase tracking-widest text-amber-200/80 font-sans">
+            <div className="text-center mb-4 sm:mb-6">
+              <span className="text-[10px] sm:text-xs uppercase tracking-widest text-amber-200/80 font-sans">
                 Response Requested by {wedding.rsvpDeadline}
               </span>
-              <h2 className="font-serif text-3xl md:text-4xl text-amber-50 mt-1 font-normal">
+              <h2 className="font-serif text-2xl sm:text-3xl text-amber-50 mt-0.5 font-normal">
                 Kindly RSVP
               </h2>
-              <p className="font-script text-2xl text-amber-200/90 mt-0.5">
+              <p className="font-script text-lg sm:text-2xl text-amber-200/90 mt-0.5">
                 for the wedding of {wedding.coupleName1} & {wedding.coupleName2}
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5 font-sans text-sm">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleSubmit} className="space-y-4 font-sans text-xs sm:text-sm">
+              <div className="grid grid-cols-2 gap-2.5">
                 <button
                   type="button"
                   onClick={() => setAttendance('attending')}
-                  className={'py-3 px-4 rounded-xl border text-center font-medium transition-all ' + (
+                  className={'py-2.5 px-3 rounded-xl border text-center text-xs font-medium transition-all ' + (
                     attendance === 'attending'
                       ? 'border-amber-400/80 bg-amber-950/40 text-amber-200 shadow-md ring-1 ring-amber-400/50'
                       : 'border-stone-800 bg-stone-800/40 text-stone-400 hover:border-stone-700'
                   )}
                 >
-                  <Heart size={18} className="mx-auto mb-1 text-rose-400" />
+                  <Heart size={16} className="mx-auto mb-0.5 text-rose-400" />
                   Joyfully Accepts
                 </button>
                 <button
                   type="button"
                   onClick={() => setAttendance('declined')}
-                  className={'py-3 px-4 rounded-xl border text-center font-medium transition-all ' + (
+                  className={'py-2.5 px-3 rounded-xl border text-center text-xs font-medium transition-all ' + (
                     attendance === 'declined'
                       ? 'border-rose-400/80 bg-rose-950/40 text-rose-200 shadow-md ring-1 ring-rose-400/50'
                       : 'border-stone-800 bg-stone-800/40 text-stone-400 hover:border-stone-700'
                   )}
                 >
-                  <span className="block text-base mb-1">💌</span>
+                  <span className="block text-sm mb-0.5">💌</span>
                   Regretfully Declines
                 </button>
               </div>
