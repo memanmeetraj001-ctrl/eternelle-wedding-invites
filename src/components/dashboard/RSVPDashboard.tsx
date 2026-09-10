@@ -51,9 +51,11 @@ export const RSVPDashboard: React.FC<RSVPDashboardProps> = ({
   // Filtered lists
   const filteredRSVPs = rsvps.filter(r => {
     const matchesFilter = filter === 'all' || r.attendance === filter;
-    const matchesSearch = r.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          r.guestEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          (r.plusOneNames && r.plusOneNames.some(p => p.toLowerCase().includes(searchTerm.toLowerCase())));
+    const term = searchTerm.toLowerCase().trim();
+    const matchesSearch = !term ||
+                          (r.guestName || '').toLowerCase().includes(term) ||
+                          (r.guestEmail || '').toLowerCase().includes(term) ||
+                          (Array.isArray(r.plusOneNames) && r.plusOneNames.some(p => (p || '').toLowerCase().includes(term)));
     return matchesFilter && matchesSearch;
   });
 
@@ -62,9 +64,11 @@ export const RSVPDashboard: React.FC<RSVPDashboardProps> = ({
       checkinFilter === 'all' ? true :
       checkinFilter === 'arrived' ? r.checkedIn :
       !r.checkedIn;
-    const matchesSearch = r.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          r.guestEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          (r.plusOneNames && r.plusOneNames.some(p => p.toLowerCase().includes(searchTerm.toLowerCase())));
+    const term = searchTerm.toLowerCase().trim();
+    const matchesSearch = !term ||
+                          (r.guestName || '').toLowerCase().includes(term) ||
+                          (r.guestEmail || '').toLowerCase().includes(term) ||
+                          (Array.isArray(r.plusOneNames) && r.plusOneNames.some(p => (p || '').toLowerCase().includes(term)));
     return matchesStatus && matchesSearch;
   });
 

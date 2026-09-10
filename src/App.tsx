@@ -27,6 +27,7 @@ import {
   createNewWeddingForUser,
   saveWedding, 
   saveRSVPForWedding, 
+  updateRSVPRecord,
   getRSVPsForWedding, 
   saveUser, 
   getAllUsers, 
@@ -418,17 +419,26 @@ export function App() {
 
   const handleToggleCheckIn = (rsvpId: string) => {
     setRsvps(prev => {
+      const target = prev.find(r => r.id === rsvpId);
+      const isNowCheckedIn = !target?.checkedIn;
+      const checkedInAt = isNowCheckedIn ? new Date().toISOString() : undefined;
+
       const updated = prev.map(r => {
         if (r.id === rsvpId) {
-          const isNowCheckedIn = !r.checkedIn;
           return {
             ...r,
             checkedIn: isNowCheckedIn,
-            checkedInAt: isNowCheckedIn ? new Date().toISOString() : undefined,
+            checkedInAt,
           };
         }
         return r;
       });
+
+      updateRSVPRecord(wedding.id, rsvpId, {
+        checkedIn: isNowCheckedIn,
+        checkedInAt,
+      });
+
       try {
         localStorage.setItem(`eternelle_rsvps_${wedding.id}`, JSON.stringify(updated));
       } catch {}

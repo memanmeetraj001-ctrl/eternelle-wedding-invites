@@ -350,6 +350,33 @@ export function saveRSVPForWedding(weddingId: string, rsvp: Omit<RSVPRecord, 'id
   return newRecord;
 }
 
+export function updateRSVPRecord(weddingId: string, rsvpId: string, updates: Partial<RSVPRecord>): RSVPRecord | null {
+  initializeStorage();
+  try {
+    const data = localStorage.getItem(STORAGE_KEYS.RSVPS);
+    const rsvps: Record<string, RSVPRecord[]> = data ? JSON.parse(data) : {};
+    const list = rsvps[weddingId] || [];
+    let updatedRecord: RSVPRecord | null = null;
+    
+    const updatedList = list.map((r) => {
+      if (r.id === rsvpId) {
+        updatedRecord = { ...r, ...updates };
+        return updatedRecord;
+      }
+      return r;
+    });
+
+    if (updatedRecord) {
+      rsvps[weddingId] = updatedList;
+      localStorage.setItem(STORAGE_KEYS.RSVPS, JSON.stringify(rsvps));
+    }
+
+    return updatedRecord;
+  } catch {
+    return null;
+  }
+}
+
 // Platform Analytics for Master Admin
 export function getPlatformAnalytics(): PlatformAnalytics {
   const users = getAllUsers();

@@ -177,7 +177,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         <h1 
           className="font-script text-3xl sm:text-5xl text-amber-100 font-bold mt-0.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight tracking-wide"
         >
-          {wedding.coupleName1} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
+          {wedding.coupleName1 || wedding.honoreeName || 'Our Celebration'} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
         </h1>
         <p className="text-[10px] sm:text-xs font-serif italic text-stone-300/90 tracking-wide mt-0.5">
           {wedding.eventType === 'birthday' 
@@ -270,7 +270,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                       className="font-script text-2xl sm:text-4xl font-bold leading-tight drop-shadow-xs"
                       style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : { color: '#1c1917' }}
                     >
-                      {wedding.coupleName1}
+                      {wedding.coupleName1 || wedding.honoreeName || 'Celebration'}
                     </h2>
                     {wedding.coupleName2 && (
                       <>

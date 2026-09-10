@@ -84,15 +84,31 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
     return acc;
   }, {});
 
-  // Countdown timer
+  // Countdown timer with robust date parsing
   useEffect(() => {
     if (!wedding.weddingDate) return;
-    const targetDate = new Date(wedding.weddingDate + 'T15:00:00').getTime();
-    if (isNaN(targetDate)) return;
+    let targetTime: number | null = null;
+    const parsed = Date.parse(wedding.weddingDate);
+    if (!isNaN(parsed)) {
+      const d = new Date(parsed);
+      if (wedding.weddingTime) {
+        const timeMatch = wedding.weddingTime.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+        if (timeMatch) {
+          let hours = parseInt(timeMatch[1], 10);
+          const minutes = parseInt(timeMatch[2], 10);
+          const ampm = timeMatch[3]?.toUpperCase();
+          if (ampm === 'PM' && hours < 12) hours += 12;
+          if (ampm === 'AM' && hours === 12) hours = 0;
+          d.setHours(hours, minutes, 0, 0);
+        }
+      }
+      targetTime = d.getTime();
+    }
+    if (!targetTime || isNaN(targetTime)) return;
 
     const updateTimer = () => {
       const now = new Date().getTime();
-      const distance = targetDate - now;
+      const distance = targetTime! - now;
 
       if (distance > 0) {
         setTimeLeft({
@@ -109,7 +125,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
     updateTimer();
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
-  }, [wedding.weddingDate]);
+  }, [wedding.weddingDate, wedding.weddingTime]);
 
   const getTimelineIcon = (iconType: TimelineEvent['icon']) => {
     switch (iconType) {
@@ -249,7 +265,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                       ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle 
                       : { color: '#1c1917' }}
                   >
-                    {wedding.coupleName1}
+                    {wedding.coupleName1 || wedding.honoreeName || 'Celebration'}
                   </h2>
                   {wedding.coupleName2 && (
                     <>

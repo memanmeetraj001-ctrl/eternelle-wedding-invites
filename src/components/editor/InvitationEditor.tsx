@@ -769,7 +769,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 </label>
                 <input
                   type="text"
-                  value={wedding.coupleName1}
+                  value={wedding.coupleName1 || ''}
                   onChange={(e) => handleFieldChange('coupleName1', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
                   placeholder={wedding.eventType === 'birthday' ? 'e.g. Sophia Laurent' : wedding.eventType === 'gala' ? 'e.g. The Elysée Foundation' : 'e.g. Liam'}
@@ -788,7 +788,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 </label>
                 <input
                   type="text"
-                  value={wedding.coupleName2}
+                  value={wedding.coupleName2 || ''}
                   onChange={(e) => handleFieldChange('coupleName2', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
                   placeholder={wedding.eventType === 'birthday' ? 'e.g. Celebrating 30 Years' : wedding.eventType === 'gala' ? 'e.g. Annual Charity Banquet' : 'e.g. Scarlett'}
@@ -799,7 +799,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 <label className="block text-xs font-semibold text-stone-700 mb-1">Monogram Initials (Wax Seal Clasp)</label>
                 <input
                   type="text"
-                  value={wedding.coupleInitials}
+                  value={wedding.coupleInitials || ''}
                   onChange={(e) => handleFieldChange('coupleInitials', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900 font-serif"
                   placeholder={wedding.eventType === 'birthday' ? 'e.g. S' : 'e.g. L&S'}
@@ -810,7 +810,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 <label className="block text-xs font-semibold text-stone-700 mb-1">Header Headline</label>
                 <input
                   type="text"
-                  value={wedding.headline}
+                  value={wedding.headline || ''}
                   onChange={(e) => handleFieldChange('headline', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
                   placeholder="PLEASE JOIN US FOR THE WEDDING OF"
@@ -821,7 +821,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 <label className="block text-xs font-semibold text-stone-700 mb-1">Wedding Date</label>
                 <input
                   type="date"
-                  value={wedding.weddingDate}
+                  value={wedding.weddingDate || ''}
                   onChange={(e) => handleFieldChange('weddingDate', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
                 />
@@ -831,7 +831,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 <label className="block text-xs font-semibold text-stone-700 mb-1">Ceremony Start Time</label>
                 <input
                   type="text"
-                  value={wedding.weddingTime}
+                  value={wedding.weddingTime || ''}
                   onChange={(e) => handleFieldChange('weddingTime', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
                   placeholder="e.g. 3:45 PM"
@@ -842,7 +842,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 <label className="block text-xs font-semibold text-stone-700 mb-1">Venue Estate Name</label>
                 <input
                   type="text"
-                  value={wedding.venueName}
+                  value={wedding.venueName || ''}
                   onChange={(e) => handleFieldChange('venueName', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
                   placeholder="e.g. Cable Bay Vineyard"
@@ -853,7 +853,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 <label className="block text-xs font-semibold text-stone-700 mb-1">City, State / Country</label>
                 <input
                   type="text"
-                  value={wedding.cityState}
+                  value={wedding.cityState || ''}
                   onChange={(e) => handleFieldChange('cityState', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
                   placeholder="e.g. Waiheke Island, New Zealand"
@@ -864,7 +864,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 <label className="block text-xs font-semibold text-stone-700 mb-1">Full Venue Street Address</label>
                 <input
                   type="text"
-                  value={wedding.venueAddress}
+                  value={wedding.venueAddress || ''}
                   onChange={(e) => handleFieldChange('venueAddress', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
                   placeholder="e.g. 12 Nick Johnstone Drive, Oneroa"
@@ -875,7 +875,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                 <label className="block text-xs font-semibold text-stone-700 mb-1">Google Maps Direct Navigation URL</label>
                 <input
                   type="url"
-                  value={wedding.mapsUrl}
+                  value={wedding.mapsUrl || ''}
                   onChange={(e) => handleFieldChange('mapsUrl', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900 font-mono"
                   placeholder="https://maps.google.com/?q=..."
