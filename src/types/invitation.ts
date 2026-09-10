@@ -122,6 +122,26 @@ export interface EventCategoryPreset {
   defaultBlocks?: EventBlockConfig[];
 }
 
+export interface RSVPCustomQuestion {
+  id: string;
+  question: string;
+  placeholder?: string;
+  required?: boolean;
+}
+
+export interface RSVPSurveyConfig {
+  allowPlusOnes: boolean;
+  maxPlusOnes?: number;
+  askMealPreference: boolean;
+  mealOptions: string[];
+  askDietaryRestrictions: boolean;
+  dietaryOptions: string[];
+  askSongRequest: boolean;
+  songRequestPrompt?: string;
+  askPersonalMessage: boolean;
+  customQuestions?: RSVPCustomQuestion[];
+}
+
 export interface WeddingData {
   id: string;
   userId?: string;
@@ -130,6 +150,7 @@ export interface WeddingData {
   honoreeName?: string;
   hostNames?: string;
   blocks?: EventBlockConfig[];
+  rsvpSurvey?: RSVPSurveyConfig;
   slug: string;
   coupleName1: string;
   coupleName2: string;
@@ -171,8 +192,10 @@ export interface RSVPRecord {
   plusOneNames: string[];
   mealChoice: string;
   dietaryNotes: string;
+  dietaryRestrictions?: string[];
   songRequest?: string;
   personalMessage?: string;
+  customAnswers?: Record<string, string>;
   submittedAt: string;
 }
 

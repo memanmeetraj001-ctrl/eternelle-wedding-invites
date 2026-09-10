@@ -34,26 +34,32 @@ export const RSVPDashboard: React.FC<RSVPDashboardProps> = ({ rsvps, wedding }) 
   });
 
   const exportToCSV = () => {
-    const headers = ['Guest Name', 'Email', 'Status', 'Party Size', 'Plus Ones', 'Meal Choice', 'Dietary Restrictions', 'Song Request', 'Message', 'Submitted At'];
-    const rows = rsvps.map(r => [
-      `"${(r.guestName || '').replace(/"/g, '""')}"`,
-      `"${(r.guestEmail || '').replace(/"/g, '""')}"`,
-      r.attendance,
-      r.partySize,
-      `"${(r.plusOneNames || []).join(', ').replace(/"/g, '""')}"`,
-      `"${(r.mealChoice || '').replace(/"/g, '""')}"`,
-      `"${(r.dietaryNotes || '').replace(/"/g, '""')}"`,
-      `"${(r.songRequest || '').replace(/"/g, '""')}"`,
-      `"${(r.personalMessage || '').replace(/"/g, '""')}"`,
-      r.submittedAt,
-    ]);
+    const headers = ['Guest Name', 'Email', 'Status', 'Party Size', 'Plus Ones', 'Meal Choice', 'Dietary Restrictions', 'Song Request', 'Custom Answers', 'Message', 'Submitted At'];
+    const rows = rsvps.map(r => {
+      const customFormatted = r.customAnswers
+        ? Object.entries(r.customAnswers).map(([k, v]) => `${k}: ${v}`).join('; ')
+        : '';
+      return [
+        `"${(r.guestName || '').replace(/"/g, '""')}"`,
+        `"${(r.guestEmail || '').replace(/"/g, '""')}"`,
+        r.attendance,
+        r.partySize,
+        `"${(r.plusOneNames || []).join(', ').replace(/"/g, '""')}"`,
+        `"${(r.mealChoice || '').replace(/"/g, '""')}"`,
+        `"${(r.dietaryNotes || '').replace(/"/g, '""')}"`,
+        `"${(r.songRequest || '').replace(/"/g, '""')}"`,
+        `"${customFormatted.replace(/"/g, '""')}"`,
+        `"${(r.personalMessage || '').replace(/"/g, '""')}"`,
+        r.submittedAt,
+      ];
+    });
 
     const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\r\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `wedding_rsvps_${wedding.slug || 'wedding'}.csv`);
+    link.setAttribute('download', `rsvps_${wedding.slug || 'celebration'}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

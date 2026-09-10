@@ -4,10 +4,15 @@ import {
   Sparkles, Music, Image as ImageIcon, Save, CheckCircle2,
   Plus, Trash2, Eye, EyeOff, Utensils, HelpCircle, Navigation, 
   Upload, Check, Volume2, VolumeX, ExternalLink, Tag,
-  Play, Pause, Radio, Disc, Layers, ArrowUp, ArrowDown
+  Play, Pause, Radio, Disc, Layers, ArrowUp, ArrowDown,
+  ListChecks, CheckSquare
 } from 'lucide-react';
-import { WeddingData, ThemeConfig, ThemeId, TimelineEvent, HotelLodging, MenuItem, WeddingFAQ, PhotoMoment, MusicTrack, EventType, EventBlockConfig, EventBlockId } from '../../types/invitation';
-import { THEME_PRESETS, CURATED_MUSIC_OPTIONS, EVENT_CATEGORY_PRESETS, DEFAULT_EVENT_BLOCKS } from '../../constants/themes';
+import { 
+  WeddingData, ThemeConfig, ThemeId, TimelineEvent, HotelLodging, 
+  MenuItem, WeddingFAQ, PhotoMoment, MusicTrack, EventType, 
+  EventBlockConfig, EventBlockId, RSVPSurveyConfig, RSVPCustomQuestion 
+} from '../../types/invitation';
+import { THEME_PRESETS, CURATED_MUSIC_OPTIONS, EVENT_CATEGORY_PRESETS, DEFAULT_EVENT_BLOCKS, DEFAULT_RSVP_SURVEY } from '../../constants/themes';
 
 interface InvitationEditorProps {
   wedding: WeddingData;
@@ -19,6 +24,7 @@ export type EditorSection =
   | 'theme' 
   | 'couple' 
   | 'blocks'
+  | 'rsvp'
   | 'schedule' 
   | 'menu' 
   | 'gallery' 
@@ -132,6 +138,73 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
       b.id === blockId ? { ...b, title } : b
     );
     notifyChange({ ...wedding, blocks: updatedBlocks });
+  };
+
+  // RSVP Survey Handlers
+  const currentSurvey: RSVPSurveyConfig = wedding.rsvpSurvey || DEFAULT_RSVP_SURVEY;
+
+  const handleUpdateSurvey = (updates: Partial<RSVPSurveyConfig>) => {
+    notifyChange({
+      ...wedding,
+      rsvpSurvey: {
+        ...currentSurvey,
+        ...updates,
+      },
+    });
+  };
+
+  const handleAddMealOption = () => {
+    const options = [...(currentSurvey.mealOptions || [])];
+    options.push('New Chef Special Entrée');
+    handleUpdateSurvey({ mealOptions: options });
+  };
+
+  const handleUpdateMealOption = (index: number, val: string) => {
+    const options = [...(currentSurvey.mealOptions || [])];
+    options[index] = val;
+    handleUpdateSurvey({ mealOptions: options });
+  };
+
+  const handleRemoveMealOption = (index: number) => {
+    const options = currentSurvey.mealOptions.filter((_, i) => i !== index);
+    handleUpdateSurvey({ mealOptions: options });
+  };
+
+  const handleAddDietaryOption = (tag: string) => {
+    if (!tag.trim()) return;
+    const options = [...(currentSurvey.dietaryOptions || [])];
+    if (!options.includes(tag.trim())) {
+      options.push(tag.trim());
+      handleUpdateSurvey({ dietaryOptions: options });
+    }
+  };
+
+  const handleRemoveDietaryOption = (index: number) => {
+    const options = currentSurvey.dietaryOptions.filter((_, i) => i !== index);
+    handleUpdateSurvey({ dietaryOptions: options });
+  };
+
+  const handleAddCustomQuestion = () => {
+    const questions = [...(currentSurvey.customQuestions || [])];
+    questions.push({
+      id: 'q-' + Date.now(),
+      question: 'New Question for Guests',
+      placeholder: 'Guest answer...',
+      required: false,
+    });
+    handleUpdateSurvey({ customQuestions: questions });
+  };
+
+  const handleUpdateCustomQuestion = (id: string, updates: Partial<RSVPCustomQuestion>) => {
+    const questions = (currentSurvey.customQuestions || []).map(q => 
+      q.id === id ? { ...q, ...updates } : q
+    );
+    handleUpdateSurvey({ customQuestions: questions });
+  };
+
+  const handleRemoveCustomQuestion = (id: string) => {
+    const questions = (currentSurvey.customQuestions || []).filter(q => q.id !== id);
+    handleUpdateSurvey({ customQuestions: questions });
   };
 
   // Timeline Handlers
@@ -383,21 +456,22 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
             icon: Heart 
           },
           { id: 'blocks', label: '3. Modular Page Blocks', icon: Layers },
-          { id: 'schedule', label: '4. Order of Events', icon: Clock },
-          { id: 'menu', label: '5. Food & Drinks Menu', icon: Utensils },
+          { id: 'rsvp', label: '4. RSVP Survey Builder', icon: ListChecks },
+          { id: 'schedule', label: '5. Order of Events', icon: Clock },
+          { id: 'menu', label: '6. Food & Drinks Menu', icon: Utensils },
           { 
             id: 'gallery', 
             label: wedding.eventType === 'birthday' 
-              ? '6. Photo Memories' 
+              ? '7. Photo Memories' 
               : wedding.eventType === 'gala' 
-              ? '6. Highlights & Mission' 
-              : '6. Love Gallery & Story', 
+              ? '7. Highlights & Mission' 
+              : '7. Love Gallery & Story', 
             icon: ImageIcon 
           },
-          { id: 'attire', label: '7. Dress Code', icon: Sparkles },
-          { id: 'stay', label: '8. Hotels & Travel', icon: Hotel },
-          { id: 'faqs', label: '9. Guest Q&A / FAQs', icon: HelpCircle },
-          { id: 'music', label: '10. Music & Audio', icon: Music },
+          { id: 'attire', label: '8. Dress Code', icon: Sparkles },
+          { id: 'stay', label: '9. Hotels & Travel', icon: Hotel },
+          { id: 'faqs', label: '10. Guest Q&A / FAQs', icon: HelpCircle },
+          { id: 'music', label: '11. Music & Audio', icon: Music },
         ].map((tab) => {
           const Icon = tab.icon;
           const isCurrent = activeSection === tab.id;
@@ -745,6 +819,301 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* SECTION: RSVP SURVEY BUILDER */}
+        {activeSection === 'rsvp' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div>
+              <h3 className="font-serif text-2xl text-stone-900 font-normal">Dynamic RSVP Survey Builder</h3>
+              <p className="text-xs text-stone-500 mt-0.5">
+                Customize the questions, meal selections, plus-one limits, and dietary options presented to guests during RSVP.
+              </p>
+            </div>
+
+            {/* General Settings: Plus Ones & Song Request */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Plus Ones Card */}
+              <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200/90 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-serif text-base text-stone-900 font-bold">Plus-One Allowances</h4>
+                    <p className="text-[11px] text-stone-500">Allow guests to bring spouses, partners, or plus-ones.</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleUpdateSurvey({ allowPlusOnes: !currentSurvey.allowPlusOnes })}
+                    className={`px-3 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+                      currentSurvey.allowPlusOnes
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : 'bg-stone-300 text-stone-700'
+                    }`}
+                  >
+                    {currentSurvey.allowPlusOnes ? 'Enabled' : 'Disabled'}
+                  </button>
+                </div>
+
+                {currentSurvey.allowPlusOnes && (
+                  <div className="pt-2 border-t border-stone-200 flex items-center justify-between gap-2">
+                    <label className="text-xs text-stone-700 font-medium">Max Additional Plus-Ones:</label>
+                    <select
+                      value={currentSurvey.maxPlusOnes || 3}
+                      onChange={(e) => handleUpdateSurvey({ maxPlusOnes: parseInt(e.target.value, 10) })}
+                      className="px-3 py-1.5 rounded-lg border border-stone-300 bg-white text-xs font-mono font-bold text-stone-900"
+                    >
+                      <option value={1}>+1 Guest Max</option>
+                      <option value={2}>+2 Guests Max</option>
+                      <option value={3}>+3 Guests Max</option>
+                      <option value={4}>+4 Guests Max</option>
+                      <option value={5}>+5 Guests Max</option>
+                    </select>
+                  </div>
+                )}
+              </div>
+
+              {/* Music Settings */}
+              <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200/90 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-serif text-base text-stone-900 font-bold">Dance Floor Song Request</h4>
+                    <p className="text-[11px] text-stone-500">Let guests submit a favorite party track.</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleUpdateSurvey({ askSongRequest: !currentSurvey.askSongRequest })}
+                    className={`px-3 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+                      currentSurvey.askSongRequest
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : 'bg-stone-300 text-stone-700'
+                    }`}
+                  >
+                    {currentSurvey.askSongRequest ? 'Enabled' : 'Disabled'}
+                  </button>
+                </div>
+
+                {currentSurvey.askSongRequest && (
+                  <div className="pt-2 border-t border-stone-200">
+                    <input
+                      type="text"
+                      value={currentSurvey.songRequestPrompt || ''}
+                      onChange={(e) => handleUpdateSurvey({ songRequestPrompt: e.target.value })}
+                      placeholder="Prompt label: e.g. What song gets you dancing?"
+                      className="w-full px-3 py-1.5 rounded-lg border border-stone-300 bg-white text-xs text-stone-900"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Dinner Entree / Meal Choices Builder */}
+            <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200/90 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Utensils size={16} className="text-amber-700" />
+                    <h4 className="font-serif text-lg text-stone-900 font-bold">Dinner & Entrée Choices</h4>
+                  </div>
+                  <p className="text-[11px] text-stone-500 mt-0.5">
+                    Provide culinary options for guests to select from on the RSVP form.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleUpdateSurvey({ askMealPreference: !currentSurvey.askMealPreference })}
+                    className={`px-3 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+                      currentSurvey.askMealPreference
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : 'bg-stone-300 text-stone-700'
+                    }`}
+                  >
+                    {currentSurvey.askMealPreference ? 'Collecting Meals' : 'Disabled'}
+                  </button>
+
+                  {currentSurvey.askMealPreference && (
+                    <button
+                      type="button"
+                      onClick={handleAddMealOption}
+                      className="px-3 py-1 rounded-xl bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Plus size={13} />
+                      <span>Add Dish</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {currentSurvey.askMealPreference && (
+                <div className="space-y-2 pt-2 border-t border-stone-200">
+                  {currentSurvey.mealOptions?.map((meal, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="w-5 text-center font-mono text-xs font-bold text-stone-400">
+                        {idx + 1}
+                      </span>
+                      <input
+                        type="text"
+                        value={meal}
+                        onChange={(e) => handleUpdateMealOption(idx, e.target.value)}
+                        placeholder="Dish Name & Description"
+                        className="flex-1 px-3 py-1.5 rounded-lg border border-stone-300 bg-white text-xs text-stone-900"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveMealOption(idx)}
+                        className="p-1.5 text-stone-400 hover:text-rose-600 transition-colors cursor-pointer"
+                        title="Delete Entree"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Dietary Restrictions & Allergies Tags */}
+            <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200/90 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h4 className="font-serif text-lg text-stone-900 font-bold">Dietary Allergies & Restrictions</h4>
+                  <p className="text-[11px] text-stone-500 mt-0.5">
+                    Predefined allergy pills guests can quickly click in the survey.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleUpdateSurvey({ askDietaryRestrictions: !currentSurvey.askDietaryRestrictions })}
+                  className={`px-3 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+                    currentSurvey.askDietaryRestrictions
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'bg-stone-300 text-stone-700'
+                  }`}
+                >
+                  {currentSurvey.askDietaryRestrictions ? 'Enabled' : 'Disabled'}
+                </button>
+              </div>
+
+              {currentSurvey.askDietaryRestrictions && (
+                <div className="space-y-3 pt-2 border-t border-stone-200">
+                  <div className="flex flex-wrap gap-2">
+                    {currentSurvey.dietaryOptions?.map((opt, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 rounded-full bg-white border border-stone-300 text-xs font-medium text-stone-800 flex items-center gap-1.5 shadow-2xs"
+                      >
+                        <span>{opt}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveDietaryOption(idx)}
+                          className="text-stone-400 hover:text-rose-600 cursor-pointer"
+                        >
+                          <Trash2 size={11} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-2 max-w-sm pt-1">
+                    <input
+                      type="text"
+                      id="new-dietary-tag-input"
+                      placeholder="Add tag (e.g. Halal, Sugar-Free)"
+                      className="flex-1 px-3 py-1.5 rounded-lg border border-stone-300 bg-white text-xs text-stone-900"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          const input = e.currentTarget;
+                          handleAddDietaryOption(input.value);
+                          input.value = '';
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const input = document.getElementById('new-dietary-tag-input') as HTMLInputElement;
+                        if (input) {
+                          handleAddDietaryOption(input.value);
+                          input.value = '';
+                        }
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-stone-800 text-white text-xs font-medium hover:bg-stone-900 cursor-pointer"
+                    >
+                      Add Tag
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Custom Host Questions */}
+            <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200/90 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h4 className="font-serif text-lg text-stone-900 font-bold">Custom Host Questions</h4>
+                  <p className="text-[11px] text-stone-500 mt-0.5">
+                    Ask custom questions (e.g., shuttle needs, parenting advice, arrival times).
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddCustomQuestion}
+                  className="px-3 py-1.5 rounded-xl bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                >
+                  <Plus size={13} />
+                  <span>Add Question</span>
+                </button>
+              </div>
+
+              {currentSurvey.customQuestions && currentSurvey.customQuestions.length > 0 ? (
+                <div className="space-y-3 pt-2 border-t border-stone-200">
+                  {currentSurvey.customQuestions.map((q) => (
+                    <div key={q.id} className="p-3.5 rounded-xl bg-white border border-stone-300 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <input
+                          type="text"
+                          value={q.question}
+                          onChange={(e) => handleUpdateCustomQuestion(q.id, { question: e.target.value })}
+                          placeholder="Question Title"
+                          className="flex-1 px-3 py-1.5 rounded-lg border border-stone-200 text-xs font-semibold text-stone-900"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveCustomQuestion(q.id)}
+                          className="p-1.5 text-stone-400 hover:text-rose-600 transition-colors cursor-pointer"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="text"
+                          value={q.placeholder || ''}
+                          onChange={(e) => handleUpdateCustomQuestion(q.id, { placeholder: e.target.value })}
+                          placeholder="Placeholder text for guest input..."
+                          className="flex-1 px-3 py-1 rounded-lg border border-stone-200 text-[11px] text-stone-600"
+                        />
+                        <label className="flex items-center gap-1 text-[11px] text-stone-600 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={q.required || false}
+                            onChange={(e) => handleUpdateCustomQuestion(q.id, { required: e.target.checked })}
+                            className="rounded border-stone-300 text-amber-600 focus:ring-amber-500"
+                          />
+                          <span>Required</span>
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-stone-400 italic pt-2 border-t border-stone-200">
+                  No custom questions added yet.
+                </p>
+              )}
             </div>
           </div>
         )}

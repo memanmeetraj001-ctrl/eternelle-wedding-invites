@@ -2,10 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar, MapPin, Clock, Heart, Sparkles, Navigation, 
   Hotel, Music, Utensils, GlassWater, PartyPopper, Check, 
-  ExternalLink, ChevronDown, RotateCcw, Share2, Volume2, VolumeX, ShieldCheck
+  ExternalLink, ChevronDown, RotateCcw, Share2, Volume2, VolumeX, ShieldCheck,
+  CalendarPlus, Download
 } from 'lucide-react';
 import { WeddingData, ThemeConfig, TimelineEvent } from '../../types/invitation';
 import { EnvelopeExperience } from './EnvelopeExperience';
+import { 
+  generateGoogleCalendarUrl, 
+  generateOutlookCalendarUrl, 
+  generateYahooCalendarUrl, 
+  downloadIcsFile 
+} from '../../utils/calendar';
 
 interface GuestInvitationViewProps {
   wedding: WeddingData;
@@ -330,6 +337,48 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                   </span>
                   <span className="text-[7px] sm:text-[8px] uppercase tracking-wider text-stone-400 font-mono">Secs</span>
                 </div>
+              </div>
+
+              {/* 1-Click Add to Calendar Bar */}
+              <div className="mt-3 pt-2.5 border-t border-stone-800/80 flex items-center justify-center gap-1.5 flex-wrap">
+                <span className="text-[9px] sm:text-[10px] text-stone-400 font-medium mr-1 flex items-center gap-1">
+                  <CalendarPlus size={11} className="text-amber-400" />
+                  <span>Add to:</span>
+                </span>
+                <a
+                  href={generateGoogleCalendarUrl(wedding)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-2 py-0.5 rounded-full bg-stone-900 hover:bg-stone-800 text-[9px] sm:text-[10px] text-amber-200 border border-stone-700 transition-colors shadow-xs"
+                  title="Add to Google Calendar"
+                >
+                  Google
+                </a>
+                <button
+                  onClick={() => downloadIcsFile(wedding)}
+                  className="px-2 py-0.5 rounded-full bg-stone-900 hover:bg-stone-800 text-[9px] sm:text-[10px] text-emerald-300 border border-stone-700 transition-colors shadow-xs cursor-pointer"
+                  title="Download iCal for Apple Calendar & Outlook"
+                >
+                  Apple / iCal
+                </button>
+                <a
+                  href={generateOutlookCalendarUrl(wedding)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-2 py-0.5 rounded-full bg-stone-900 hover:bg-stone-800 text-[9px] sm:text-[10px] text-sky-300 border border-stone-700 transition-colors shadow-xs"
+                  title="Add to Outlook Web"
+                >
+                  Outlook
+                </a>
+                <a
+                  href={generateYahooCalendarUrl(wedding)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-2 py-0.5 rounded-full bg-stone-900 hover:bg-stone-800 text-[9px] sm:text-[10px] text-purple-300 border border-stone-700 transition-colors shadow-xs"
+                  title="Add to Yahoo Calendar"
+                >
+                  Yahoo
+                </a>
               </div>
             </div>
 

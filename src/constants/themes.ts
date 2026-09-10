@@ -1,4 +1,37 @@
-import { ThemeConfig, ThemeId, WeddingData, RSVPRecord, MarketplaceOrder, MusicTrack, EventBlockConfig, EventCategoryPreset } from '../types/invitation';
+import { ThemeConfig, ThemeId, WeddingData, RSVPRecord, MarketplaceOrder, MusicTrack, EventBlockConfig, EventCategoryPreset, RSVPSurveyConfig } from '../types/invitation';
+
+export const DEFAULT_RSVP_SURVEY: RSVPSurveyConfig = {
+  allowPlusOnes: true,
+  maxPlusOnes: 3,
+  askMealPreference: true,
+  mealOptions: [
+    'Charred Prime Beef Tenderloin (Truffle Mash & Port Jus)',
+    'Crispy Skin King Salmon (Saffron Risotto & Citrus Emulsion)',
+    'Wild Mushroom & Truffle Risotto (Vegetarian / GF)',
+    'Roasted Butternut Squash & Quinoa (Vegan)',
+  ],
+  askDietaryRestrictions: true,
+  dietaryOptions: [
+    'Gluten-Free',
+    'Vegetarian',
+    'Vegan',
+    'Dairy-Free',
+    'Nut Allergy',
+    'Shellfish Allergy',
+    'Kosher / Halal',
+  ],
+  askSongRequest: true,
+  songRequestPrompt: 'A song that will get you on the dance floor!',
+  askPersonalMessage: true,
+  customQuestions: [
+    {
+      id: 'q-1',
+      question: 'Will you be taking the complimentary guest shuttle?',
+      placeholder: 'Yes, from Oneroa Wharf / No, driving directly',
+      required: false,
+    },
+  ],
+};
 
 export const THEME_PRESETS: Record<ThemeId, ThemeConfig> = {
   'olive-burgundy': {
@@ -129,6 +162,7 @@ export const INITIAL_WEDDING_DATA: WeddingData = {
   mapsUrl: 'https://maps.google.com/?q=Cable+Bay+Vineyard+Waiheke+Island',
   rsvpDeadline: 'June 15, 2027',
   themeId: 'olive-burgundy',
+  rsvpSurvey: DEFAULT_RSVP_SURVEY,
   transportInfo: 'On the day, return transport will be arranged from central Oneroa and the ferry wharf to Cable Bay Vineyard and back after the reception.',
   giftRegistryUrl: 'https://www.zola.com/registry',
   musicEnabled: true,
