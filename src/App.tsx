@@ -106,8 +106,12 @@ export function App() {
         if (userWed) return userWed;
       } catch {}
     }
-    const saved = localStorage.getItem('eternelle_wedding_data');
-    return saved ? JSON.parse(saved) : INITIAL_WEDDING_DATA;
+    try {
+      const saved = localStorage.getItem('eternelle_wedding_data');
+      return saved ? JSON.parse(saved) : INITIAL_WEDDING_DATA;
+    } catch {
+      return INITIAL_WEDDING_DATA;
+    }
   });
 
   const [rsvps, setRsvps] = useState<RSVPRecord[]>(() => {

@@ -32,7 +32,12 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
       setAudioElement(audio);
       return () => {
         audio.pause();
+        audio.src = '';
+        setIsPlayingMusic(false);
       };
+    } else {
+      setAudioElement(null);
+      setIsPlayingMusic(false);
     }
   }, [wedding.musicEnabled, wedding.backgroundMusicUrl]);
 
@@ -56,7 +61,9 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 
   // Countdown timer
   useEffect(() => {
+    if (!wedding.weddingDate) return;
     const targetDate = new Date(wedding.weddingDate + 'T15:00:00').getTime();
+    if (isNaN(targetDate)) return;
 
     const updateTimer = () => {
       const now = new Date().getTime();

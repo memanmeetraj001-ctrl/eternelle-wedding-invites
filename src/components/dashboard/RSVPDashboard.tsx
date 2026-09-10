@@ -36,26 +36,28 @@ export const RSVPDashboard: React.FC<RSVPDashboardProps> = ({ rsvps, wedding }) 
   const exportToCSV = () => {
     const headers = ['Guest Name', 'Email', 'Status', 'Party Size', 'Plus Ones', 'Meal Choice', 'Dietary Restrictions', 'Song Request', 'Message', 'Submitted At'];
     const rows = rsvps.map(r => [
-      `"${r.guestName}"`,
-      `"${r.guestEmail}"`,
+      `"${(r.guestName || '').replace(/"/g, '""')}"`,
+      `"${(r.guestEmail || '').replace(/"/g, '""')}"`,
       r.attendance,
       r.partySize,
-      `"${(r.plusOneNames || []).join(', ')}"`,
-      `"${r.mealChoice || ''}"`,
-      `"${r.dietaryNotes || ''}"`,
-      `"${r.songRequest || ''}"`,
-      `"${r.personalMessage || ''}"`,
+      `"${(r.plusOneNames || []).join(', ').replace(/"/g, '""')}"`,
+      `"${(r.mealChoice || '').replace(/"/g, '""')}"`,
+      `"${(r.dietaryNotes || '').replace(/"/g, '""')}"`,
+      `"${(r.songRequest || '').replace(/"/g, '""')}"`,
+      `"${(r.personalMessage || '').replace(/"/g, '""')}"`,
       r.submittedAt,
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
+    link.setAttribute('href', url);
     link.setAttribute('download', `wedding_rsvps_${wedding.slug || 'wedding'}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
