@@ -61,8 +61,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     setTilt({ x: 0, y: 0 });
   };
 
-  // Design 5: Velvet Bookfold Unboxing Choreography
-  const handleOpenBook = () => {
+  // Design 3: Couture Silk Ribbon Bow Untie Choreography
+  const handleUntieRibbon = () => {
     if (stage !== 'sealed') return;
     setTilt({ x: 0, y: 0 });
     setStage('opening');
@@ -72,18 +72,18 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       audioElement.play().then(() => setIsMusicPlaying(true)).catch(() => {});
     }
 
-    // Sparkle Gold & Burgundy Confetti Burst
+    // Sparkle Gold & Emerald Confetti Burst
     try {
       confetti({
-        particleCount: 65,
-        spread: 75,
+        particleCount: 75,
+        spread: 80,
         origin: { y: 0.6 },
-        colors: [theme.waxSealBg, '#d4af37', '#fdf2f4', '#535e3b', '#ffffff'],
+        colors: [theme.waxSealBg, '#d4af37', '#10b981', '#fdf2f4', '#ffffff'],
         disableForReducedMotion: true,
       });
     } catch {}
 
-    // Complete bookfold open
+    // Complete fold-drop open
     setTimeout(() => {
       setStage('opened');
     }, 700);
@@ -99,7 +99,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     if (onReset) onReset();
   };
 
-  const isBookOpen = stage === 'opened' || stage === 'opening';
+  const isRibbonOpen = stage === 'opened' || stage === 'opening';
   const isFullyOpen = stage === 'opened';
 
   return (
@@ -117,7 +117,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         />
       </div>
 
-      {/* 2. Top Bar (Audio & Re-seal) */}
+      {/* 2. Top Bar (Audio & Re-tie Ribbon) */}
       <div className="w-full max-w-md flex items-center justify-between mb-4 z-40 px-2 h-9">
         <div>
           {wedding.musicEnabled && wedding.backgroundMusicUrl && (
@@ -152,12 +152,12 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/15 text-stone-200 text-xs font-sans transition-all shadow-lg cursor-pointer hover:text-amber-200"
           >
             <RotateCcw size={12} />
-            <span>Close Keepsake</span>
+            <span>Re-tie Ribbon</span>
           </button>
         )}
       </div>
 
-      {/* 3. Header Intro Text (Fixed height to prevent layout reflow) */}
+      {/* 3. Header Intro Text */}
       <div className="text-center mb-3 sm:mb-5 max-w-md h-16 sm:h-20 flex flex-col justify-center transition-opacity duration-500 px-2">
         <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-[0.25em] sm:tracking-[0.35em] text-amber-300/90 uppercase block drop-shadow-md">
           {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
@@ -170,12 +170,12 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         </p>
       </div>
 
-      {/* 4. DESIGN 5: VELVET BOOKFOLD STAGE */}
+      {/* 4. DESIGN 3: COUTURE SILK RIBBON UNBOXING STAGE */}
       <div
         ref={containerRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onClick={stage === 'sealed' ? handleOpenBook : undefined}
+        onClick={stage === 'sealed' ? handleUntieRibbon : undefined}
         className={`relative w-full max-w-[340px] sm:max-w-[420px] aspect-[4/3] ${
           stage === 'sealed' ? 'cursor-pointer group' : ''
         }`}
@@ -183,7 +183,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           perspective: '1400px',
         }}
       >
-        {/* Book Container Box */}
+        {/* Container Box */}
         <div
           className="relative w-full h-full rounded-2xl transition-transform duration-300 ease-out"
           style={{
@@ -193,7 +193,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           }}
         >
 
-          {/* ==================== 1. RIGHT PAGE (Formal Invitation Card Suite) ==================== */}
+          {/* ==================== 1. INNER INVITATION CARD ==================== */}
           <div
             onClick={isFullyOpen ? onOpen : undefined}
             className={`absolute inset-0 rounded-2xl p-3 sm:p-6 flex flex-col justify-between text-center overflow-hidden transition-all duration-700 bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] ${
@@ -276,119 +276,76 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             </div>
           </div>
 
-          {/* ==================== 2. LEFT HARDCOVER (180deg Book Flip) ==================== */}
+          {/* ==================== 2. TOP VELVET COVER (Folds Open Upward 130deg) ==================== */}
           <div
-            className="absolute inset-0 rounded-2xl transition-transform duration-700 ease-in-out will-change-transform"
+            className="absolute top-0 inset-x-0 h-1/2 rounded-t-2xl p-3 sm:p-4 origin-top transition-transform duration-700 ease-in-out shadow-2xl overflow-hidden will-change-transform"
             style={{
-              transformOrigin: 'left center',
-              transform: isBookOpen ? 'rotateY(-180deg)' : 'rotateY(0deg)',
+              backgroundColor: theme.envelopeColor || '#064e3b',
+              borderTop: '1px solid rgba(212, 175, 55, 0.6)',
+              borderLeft: '1px solid rgba(212, 175, 55, 0.6)',
+              borderRight: '1px solid rgba(212, 175, 55, 0.6)',
+              transform: isRibbonOpen ? 'rotateX(130deg)' : 'rotateX(0deg)',
               transformStyle: 'preserve-3d',
-              zIndex: 25,
+              zIndex: 20,
             }}
           >
-            {/* FRONT OF HARDCOVER (Facing viewer when closed) */}
+            <div className="absolute inset-2 sm:inset-3 rounded-t-xl border border-amber-300/40 pointer-events-none" />
+            <div className="h-full flex items-center justify-center text-center">
+              <span className="text-[8px] sm:text-[10px] font-mono tracking-[0.25em] sm:tracking-[0.3em] text-amber-200/90 uppercase font-bold drop-shadow">
+                ÉTERNEL COUTURE
+              </span>
+            </div>
+          </div>
+
+          {/* ==================== 3. BOTTOM VELVET COVER (Folds Open Downward -130deg) ==================== */}
+          <div
+            className="absolute bottom-0 inset-x-0 h-1/2 rounded-b-2xl p-3 sm:p-4 origin-bottom transition-transform duration-700 ease-in-out shadow-2xl overflow-hidden will-change-transform"
+            style={{
+              backgroundColor: theme.envelopeColor || '#064e3b',
+              borderBottom: '1px solid rgba(212, 175, 55, 0.6)',
+              borderLeft: '1px solid rgba(212, 175, 55, 0.6)',
+              borderRight: '1px solid rgba(212, 175, 55, 0.6)',
+              transform: isRibbonOpen ? 'rotateX(-130deg)' : 'rotateX(0deg)',
+              transformStyle: 'preserve-3d',
+              zIndex: 20,
+            }}
+          >
+            <div className="absolute inset-2 sm:inset-3 rounded-b-xl border border-amber-300/40 pointer-events-none" />
+            <div className="h-full flex items-center justify-center text-center">
+              <span className="text-[7px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.25em] text-amber-300/80 uppercase">
+                TAP TO UNTIE RIBBON
+              </span>
+            </div>
+          </div>
+
+          {/* ==================== 4. SATIN RIBBON BELLYBAND & BOW CLASP ==================== */}
+          <div
+            className="absolute top-1/2 inset-x-0 -translate-y-1/2 h-9 sm:h-11 shadow-2xl flex items-center justify-center transition-all duration-500 ease-out"
+            style={{
+              background: 'linear-gradient(90deg, #b45309 0%, #f59e0b 30%, #fef3c7 50%, #f59e0b 70%, #b45309 100%)',
+              borderTop: '1px solid rgba(254, 240, 138, 0.8)',
+              borderBottom: '1px solid rgba(180, 83, 9, 0.8)',
+              transform: isRibbonOpen ? 'translateY(-50%) scaleX(0)' : 'translateY(-50%) scaleX(1)',
+              opacity: isRibbonOpen ? 0 : 1,
+              zIndex: 30,
+              boxShadow: '0 8px 20px -2px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.6)',
+            }}
+          >
+            {/* Ornate Gold Bow & Monogram Clasp */}
             <div
-              className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl p-4 sm:p-5 flex flex-col items-center justify-between border"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-300 flex items-center justify-center shadow-2xl relative transition-transform duration-300 group-hover:scale-110 active:scale-95"
               style={{
-                backgroundColor: theme.envelopeColor,
-                borderColor: 'rgba(212, 175, 55, 0.5)',
-                backfaceVisibility: 'hidden',
-                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.9), inset 0 2px 4px rgba(255,255,255,0.2)',
+                backgroundColor: theme.waxSealBg,
+                boxShadow: `0 6px 16px -2px ${theme.waxSealBg}cc, inset 0 2px 4px rgba(255,255,255,0.4)`,
               }}
             >
-              {/* Gold Foil Ornate Border */}
-              <div className="absolute inset-3 rounded-xl border border-amber-300/40 pointer-events-none" />
-              <div className="absolute inset-4 rounded-lg border border-amber-300/20 pointer-events-none" />
-
-              {/* Book Spine Texture Gradient on Left Edge */}
-              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/40 via-transparent to-transparent pointer-events-none" />
-
-              {/* Top Subtitle */}
-              <div className="relative z-10 text-center pt-1.5">
-                <span className="text-[8px] sm:text-[9px] font-mono tracking-[0.3em] text-amber-200 uppercase font-bold drop-shadow">
-                  A CELEBRATION OF LOVE
+              <div className="text-center">
+                <span className="text-sm sm:text-base block leading-none">🎀</span>
+                <span className="font-serif italic font-bold text-[8px] sm:text-[9px] text-amber-200 block -mt-0.5">
+                  {wedding.coupleInitials || 'É'}
                 </span>
-              </div>
-
-              {/* Center Monogram Crest & Couple Names */}
-              <div className="relative z-10 text-center my-auto space-y-1.5">
-                <div 
-                  className="w-12 h-12 sm:w-16 sm:h-16 mx-auto rounded-full border-2 border-amber-300/80 flex flex-col items-center justify-center shadow-2xl relative"
-                  style={{ backgroundColor: theme.waxSealBg, color: theme.waxSealColor }}
-                >
-                  <span className="font-serif italic font-bold text-lg sm:text-2xl drop-shadow">
-                    {wedding.coupleInitials || 'É'}
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="font-script text-2xl sm:text-4xl text-amber-100 font-normal leading-tight drop-shadow-md">
-                    {wedding.coupleName1} & {wedding.coupleName2}
-                  </h3>
-                  <span className="text-[9px] sm:text-[10px] font-serif italic text-amber-200/90 tracking-widest uppercase block mt-0.5">
-                    {wedding.weddingDate}
-                  </span>
-                </div>
-              </div>
-
-              {/* Bottom Touch Clasp Hint */}
-              <div className="relative z-10 text-center pb-1.5">
-                <span className="text-[7px] sm:text-[8px] font-mono tracking-[0.2em] text-amber-300/80 uppercase">
-                  TAP TO OPEN KEEPSAKE BOOK
-                </span>
-              </div>
-
-              {/* Monogram Wax Seal Clasp on the Right Edge */}
-              <div
-                className={`absolute top-1/2 right-3 -translate-y-1/2 transition-all duration-400 ${
-                  isBookOpen ? 'opacity-0 scale-125' : 'group-hover:scale-105 active:scale-95'
-                }`}
-              >
-                <div
-                  className="w-12 h-12 rounded-full border-2 border-amber-400 shadow-2xl flex items-center justify-center relative"
-                  style={{
-                    backgroundColor: theme.waxSealBg,
-                    boxShadow: `0 8px 18px -2px ${theme.waxSealBg}cc, inset 0 2px 4px rgba(255,255,255,0.4)`,
-                  }}
-                >
-                  <span className="font-serif italic font-bold text-xs text-amber-200">
-                    {wedding.coupleInitials || 'É'}
-                  </span>
-                </div>
-              </div>
-
-            </div>
-
-            {/* INSIDE OF HARDCOVER (Revealed on the left when opened) */}
-            <div
-              className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border"
-              style={{
-                backgroundColor: theme.envelopeFlapColor,
-                borderColor: 'rgba(212, 175, 55, 0.4)',
-                transform: 'rotateY(180deg)',
-                backfaceVisibility: 'hidden',
-              }}
-            >
-              {/* Full-bleed Botanical Artwork */}
-              <img
-                src={theme.illustrationUrl}
-                alt="Botanical Liner Artwork"
-                className="w-full h-full object-cover brightness-90 contrast-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-              <div className="absolute inset-3 rounded-xl border border-amber-300/30 pointer-events-none" />
-
-              {/* Inner Keepsake Inscription */}
-              <div className="absolute inset-0 flex flex-col justify-end p-6 text-center">
-                <span className="text-[9px] font-mono tracking-[0.3em] uppercase text-amber-300 font-bold drop-shadow">
-                  TOGETHER FOREVER
-                </span>
-                <p className="font-serif italic text-amber-100 text-xs mt-1 drop-shadow">
-                  "Two lives, two hearts, joined together in friendship, united forever in love."
-                </p>
               </div>
             </div>
-
           </div>
 
         </div>
@@ -398,15 +355,15 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       <div className="mt-8 text-center z-40 h-14 flex items-center justify-center">
         {stage === 'sealed' ? (
           <div
-            onClick={handleOpenBook}
+            onClick={handleUntieRibbon}
             className="inline-flex flex-col items-center cursor-pointer group"
           >
             <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-amber-500/20 hover:bg-amber-500/30 backdrop-blur-md border border-amber-400/50 text-amber-200 text-xs font-sans font-bold tracking-widest uppercase shadow-xl transition-all group-hover:scale-105 group-hover:shadow-amber-500/20">
-              <BookOpen size={14} className="text-amber-400" />
-              <span>Tap to Open Keepsake Book</span>
+              <Sparkles size={14} className="text-amber-400" />
+              <span>Tap to Untie Silk Ribbon</span>
             </div>
             <p className="font-serif italic text-xs text-stone-300/80 font-medium mt-1.5">
-              Unfold your heirloom wedding invitation
+              Unveil your couture wedding invitation
             </p>
           </div>
         ) : isFullyOpen ? (
