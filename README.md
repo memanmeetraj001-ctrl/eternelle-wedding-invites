@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🏰 Éternelle — Luxury Interactive Digital Wedding Invitations & Micro-Sites SaaS
+# 🏰 Éternelle — Luxury Interactive Digital Invitations & Event Suite SaaS
 
 <p align="center">
-  <strong>The Digital Wedding Invitation That Feels Like Fine Paper Stationery.</strong><br>
-  Interactive 3D wax seal reveals, botanical floral watercolor liners, multi-course culinary menus, love galleries, real-time RSVP & dietary catering command.
+  <strong>The Digital Invitation That Feels Like Fine Paper Stationery for Life's Milestone Celebrations.</strong><br>
+  Interactive 3D wax seal reveals, vintage postage stamps with postmarks, luxury patterned envelope liners, metallic foil typography, dynamic multi-event content blocks, custom RSVP surveys, 1-click calendar sync, and live door QR check-in command.
 </p>
 
 <p align="center">
@@ -17,9 +17,9 @@
   <img src="https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 18" />
   <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Capacitor-6.x_(iOS/Android)-119EFF?style=for-the-badge&logo=capacitor&logoColor=white" alt="Capacitor 6" />
   <img src="https://img.shields.io/badge/Node.js_Express-5.x-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express 5" />
   <img src="https://img.shields.io/badge/PostgreSQL-Managed-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/Render-Blueprint_Ready-46E3B7?style=for-the-badge&logo=render&logoColor=black" alt="Render" />
 </p>
 
 ---
@@ -30,80 +30,67 @@
 
 ## ✨ Why Éternelle?
 
-Traditional luxury paper wedding stationery costs **$800–$2,500+**, takes weeks to print, and gets lost in the mail. Static PDF links and basic Canva templates feel clunky and lack interactive unboxing or live headcount sync.
+Traditional luxury paper stationery costs **$800–$2,500+**, takes weeks to print, and gets lost in the mail. Static PDF links and basic templates feel generic and lack interactive unboxing or live headcount sync.
 
-**Éternelle** bridges tactile old-money editorial stationery with modern 3D web technology:
-- **Guests** experience a photorealistic 3D envelope with dynamic mouse/gyro parallax, crack open the engraved monogram wax seal with gold sparkle effects, listen to curated acoustic harp/piano melodies, explore multi-course menus and photo galleries, and confirm RSVPs in under 45 seconds.
-- **Couples & Planners** customize their entire wedding micro-site in the luxury warm-ivory creator studio, manage guest headcounts in real-time, and download 1-click catering spreadsheets for venues and caterers.
-
----
-
-## 📸 Platform Previews
-
-### 💌 1. Interactive 3D Guest Unboxing Experience (`/invite/:slug`)
-<div align="center">
-  <img src="docs/hero-preview.jpg" alt="3D Digital Wedding Envelope Preview" width="100%" />
-</div>
-
-- **Dynamic 3D Parallax & Specular Sheen**: The envelope tilts realistically with cursor/touch movement.
-- **Physical Wax Seal Rupture**: Tap the tactile monogram crest (`L & S`) to trigger a gold & burgundy sparkle shower.
-- **3D Flap & Liner Reveal**: The envelope flap folds backward (`rotateX(-180deg)`), revealing a full-bleed botanical olive and burgundy floral watercolor liner.
-- **Stationery Bundle Slide-Out**: The deckled cotton card slides upwards in 3D displaying French script calligraphy and formal details.
+**Éternelle** bridges tactile old-money editorial stationery with modern web and mobile technology:
+- **Guests** experience a photorealistic 3D envelope with dynamic mouse/gyro parallax, crack open the engraved monogram wax seal, inspect vintage postage stamps with custom dated cancellation postmarks, view silk/marbled envelope liners, listen to curated harp/piano melodies, explore multi-course menus and style guides, add events to Apple/Google/Outlook calendar with 1-click, and confirm RSVPs in under 45 seconds.
+- **Hosts & Planners** customize their entire event micro-site in the luxury warm-ivory creator studio across **7 Event Categories** (Weddings, Birthdays, Anniversaries, Galas, Engagements, Baby Showers, Custom Milestones), manage guest headcounts in real-time, operate **Live Door QR Check-In**, and download catering breakdown spreadsheets.
 
 ---
 
-### 🎨 2. Warm Ivory Studio Customizer & Creator Dashboard
-<div align="center">
-  <img src="docs/dashboard-customizer-preview.jpg" alt="Éternelle Creator Dashboard Preview" width="100%" />
-</div>
+## 🌟 Core Features & Capabilities
 
-- **Unified Luxury Aesthetic**: Soft ivory `#FAF7F2` background, crisp white cards, gold borders, and high-contrast typography across both mobile and desktop.
-- **Food & Drinks Menu Editor**: Add and organize dishes across Starters, Mains, Desserts, and Late-Night Cocktails with dietary badges (`Vegetarian`, `Gluten-Free`, `Vegan`, `Halal`, `Signature Cocktail`).
-- **Love Gallery & Couple Narrative**: Upload photo memories directly from device or URL with captions and date tags.
-- **Order of Events Timeline**: Add and reorder timeline moments with custom event icons and dress code color swatches.
-- **Hotels & Accommodations**: Provide room blocks, distance from venue, and discount promo codes.
-- **Guest Q&A / FAQs**: Custom questions, answers, and online wishing well / registry links.
-
----
-
-### 📊 3. Real-Time RSVP & Catering Command Center
-<div align="center">
-  <img src="docs/rsvp-dashboard-preview.jpg" alt="Éternelle RSVP Dashboard Preview" width="100%" />
-</div>
-
-- **Live Database Sync**: PostgreSQL-backed guestlist updating attendance (*Joyfully Attending* / *Regretfully Declined*), party sizes, meal choices, and dietary notes.
-- **1-Click Catering CSV Export**: Download instant venue headcount spreadsheets with entrée totals (e.g. *42 Prime Beef, 28 King Salmon, 14 Truffle Risotto*).
+### 💌 1. Multi-Event Category Engine (Paperless Post Inspiration)
+- **7 Curated Event Presets**: Instant templates for Weddings, Milestone Birthdays, Engagements, Anniversaries, Baby Showers, Charity Galas, and Custom Celebrations.
+- **Modular Content Blocks**: Enable, disable, and rename sections with 1-click:
+  - ⏱️ **Schedule & Timeline**: Multi-moment schedule with icons and location directions.
+  - 🍽️ **Catering Menu**: Multi-course culinary items with dietary badges.
+  - 📸 **Photo Gallery**: Grid gallery with lightbox modal viewer.
+  - 👔 **Attire & Style Guide**: Dress code description and interactive color palette swatches.
+  - 🏨 **Accommodations**: Hotel blocks, distance to venue, booking links, and discount codes.
+  - ❓ **Guest FAQs**: Custom questions, answers, wishing well links, and gift registry.
+  - 🎵 **Curated Music**: Royalty-free ambient harp, classical quartet, acoustic guitar, or custom MP3 streams.
 
 ---
 
-## 🎵 Curated Royalty-Free Wedding Music Suite
-
-Couples can preview and select from 5 high-speed CDN-hosted wedding tracks or enter their own custom MP3 stream URL:
-1. **Cinematic Piano Romance** — Emotional solo piano ballad with timeless warmth (`2:45`).
-2. **Acoustic Sunset Guitar** — Intimate fingerpicked acoustic guitar for rustic and outdoor celebrations (`3:12`).
-3. **Celestial Wedding Harp** — Ethereal cathedral harp arpeggios delivering fairy-tale luxury (`2:15`).
-4. **Bridgerton String Quartet** — Opulent classical violin & cello arrangement for grand ballrooms (`3:30`).
-5. **Twilight Lo-Fi Vows** — Modern, chic ambient chillhop with soft Rhodes keys (`2:50`).
+### 🎨 2. Luxury Stationery & Foil Customization Suite
+- **6 Premium Envelope Liners**: Botanical Olive Watercolor, Golden Art Deco Fan, Classic Parisian Marble, Night Sky Constellation, Rose Water Garden, Minimalist French Cream.
+- **5 Vintage Postage Stamps with Postmarks**: Antique Botanical Rose, 24K Gilded Bee, French Fleur-de-Lis, Vintage Waxed Crest, Art Deco Sunburst — complete with custom date cancellation stamp marks.
+- **5 Metallic Foil Typography Finishes**: Gilded 24K Yellow Gold, Rose Quartz Gold, Shimmering Sterling Silver, Brushed Champagne, Holographic Pearl.
 
 ---
 
-## 🌿 5 Curated Designer Themes
-
-Bespoke Kinfolk and Vogue-inspired aesthetic colorways:
-- 🌿 **Olive & Burgundy Romance**: Classic vineyard botanical with deep burgundy wax seal and watercolor florals.
-- 🥂 **Champagne & Noir Luxury**: Old-money editorial chic with obsidian cards and shimmering champagne foil.
-- 🏛️ **Tuscan Sun Terracotta**: Warm Italian countryside villa with burnt sienna, olive oil, and travertine.
-- 🌹 **Dusty Rose & French Mauve**: Chateau garden romance with heirloom roses and delicate calligraphy.
-- 🍃 **Imperial Emerald & Gold**: Conservatory greenery with gold leaf typography and crisp linen cards.
+### 📝 3. Dynamic RSVP Survey & 1-Click Calendar Engine
+- **Custom Question Builder**: Multiple-choice, text input, or checkbox questions for guests (e.g. *"Will you join the welcome cruise?"* or *"Favorite song request?"*).
+- **Party Size & Plus-One Rules**: Configure allowed extra guests per party with strict capacity controls.
+- **Dietary & Meal Selection**: Entrée options with instant allergy notes (Gluten-Free, Vegan, Halal, Nut Allergies, etc.).
+- **Universal 1-Click Add-to-Calendar**:
+  - 📅 **Google Calendar** (Auto-populated with title, venue, and descriptions)
+  - 🍎 **Apple Calendar** (RFC-5545 `.ics` file download)
+  - ✉️ **Outlook & Outlook Web**
+  - 🟣 **Yahoo Calendar**
 
 ---
 
-## 📱 Marketing & Social Share Studio
+### 🚪 4. Host Command & Live Door QR Check-In Mode
+- **Live Door Arrival Check-In**: 1-tap arrival check-in with live headcount progress bar and fast guestlist search for day-of door hosts.
+- **Visual Catering Distribution Bar**: Proportional entrée analytics chart (*Prime Beef vs King Salmon vs Truffle Risotto*).
+- **Kitchen Allergy Summary Sheet**: High-contrast dietary reference sheet formatted for banquet kitchens.
+- **Event QR Code Studio**: High-resolution PNG QR generator + printable 5x7" / 8x10" venue welcome easel stand signage with auto-matching theme borders.
 
-- **Pinterest 2:3 Pins**: Auto-generated vertical pins formatted with high-intent wedding tags.
-- **Instagram 9:16 Stories**: Vertical story cards with countdown timers and unboxing previews.
-- **WhatsApp & SMS 1-Click Messages**: Pre-formatted guest text messages with direct invitation links.
-- **Paper Save-the-Date QR Codes**: High-resolution QR code generator for printing on physical stationery cards.
+---
+
+### 📲 5. 1-Click Social Media & Save-the-Date Share Studio
+Instant, pre-formatted guest invitation sharing across all major platforms:
+- 💬 **WhatsApp** (Pre-filled greeting + direct invitation link)
+- 💬 **Apple iMessage & SMS**
+- 📌 **Pinterest** (Optimized 2:3 pin creation)
+- 📸 **Instagram Stories** (Pre-formatted 9:16 vertical cards)
+- ✈️ **Telegram**
+- 📘 **Facebook**
+- 𝕏 **X (Twitter)**
+- ✉️ **Direct Email**
+- 📱 **Native OS Share Sheet** (Web Share API)
 
 ---
 
@@ -116,18 +103,23 @@ wedding-invite-saas/
 │   │   ├── admin/         # SuperAdmin Metrics & License Management
 │   │   ├── auth/          # User Authentication & Registration Modals
 │   │   ├── billing/       # Gumroad Checkout & Licensing
-│   │   ├── dashboard/     # Creator Studio, Overview & RSVP Command
-│   │   ├── editor/        # 9-Section Suite Customizer (Menu, Gallery, Music)
-│   │   ├── guest/         # 3D Envelope Experience & 5-Tab Micro-Site
+│   │   ├── dashboard/     # Creator Studio, Live Door Check-In & QR Studio
+│   │   ├── editor/        # 12-Section Customizer (Stationery, Blocks, RSVP, Menus)
+│   │   ├── guest/         # 3D Envelope Experience, Dynamic Tab View & RSVP Modal
 │   │   ├── landing/       # High-Contrast Luxury Landing Page
-│   │   ├── marketing/     # Save-the-Date, Pinterest & WhatsApp Studio
+│   │   ├── marketing/     # 1-Click Social Share Studio (WhatsApp, Pinterest, etc.)
 │   │   └── onboarding/    # 4-Step Free Onboarding Wizard
-│   └── src/utils/api.ts   # REST API client with offline local storage cache
+│   ├── src/constants/     # Stationery liners, stamps, foils, and event presets
+│   ├── src/utils/         # RFC-5545 .ics generator & calendar deep links
+│   └── src/types/         # Universal Event Schema TypeScript interfaces
+│
+├── android/               # Native Android Capacitor Project (Java/Gradle)
+├── ios/                   # Native iOS Capacitor Project (Swift/Xcode)
 │
 ├── server/ (Node.js + Express 5 + PostgreSQL)
 │   ├── routes/
 │   │   ├── auth.js        # JWT token generation, bcrypt password hashing
-│   │   ├── weddings.js    # Wedding CRUD with custom JSON payload bundling
+│   │   ├── weddings.js    # Event CRUD with custom JSON payload bundling
 │   │   ├── rsvps.js       # Real-time RSVP submissions & CSV export
 │   │   └── admin.js       # Protected KPI routes & user tier controls
 │   └── schema.sql         # PostgreSQL schema with auto-indexing
@@ -163,9 +155,13 @@ npm run dev
 npm start
 ```
 
-### 4. Build for Production
+### 4. Build for Production & Mobile Sync
 ```bash
+# Build React web bundle
 npm run build
+
+# Synchronize native iOS & Android projects
+npx cap sync
 ```
 
 ---
@@ -181,4 +177,4 @@ This application is ready for 1-click cloud deployment on **Render**:
 
 ## 📜 License
 
-Created with ❤️ by **Éternelle Luxury Wedding Technologies**. All rights reserved.
+Created with ❤️ by **Éternelle Luxury Event Technologies**. All rights reserved.
