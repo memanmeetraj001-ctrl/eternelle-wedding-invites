@@ -83,10 +83,10 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       });
     } catch {}
 
-    // Complete fold-drop open
+    // Complete fold-drop open (0.4x cinematic speed)
     setTimeout(() => {
       setStage('opened');
-    }, 700);
+    }, 1750);
   };
 
   const handleReplay = (e: React.MouseEvent) => {
@@ -95,7 +95,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     setTimeout(() => {
       setStage('sealed');
       setTilt({ x: 0, y: 0 });
-    }, 300);
+    }, 750);
     if (onReset) onReset();
   };
 
@@ -196,7 +196,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           {/* ==================== 1. INNER INVITATION CARD ==================== */}
           <div
             onClick={isFullyOpen ? onOpen : undefined}
-            className={`absolute inset-0 rounded-2xl p-3 sm:p-6 flex flex-col justify-between text-center overflow-hidden transition-all duration-700 bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] ${
+            className={`absolute inset-0 rounded-2xl p-3 sm:p-6 flex flex-col justify-between text-center overflow-hidden transition-all duration-[1750ms] ease-out bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] ${
               isFullyOpen ? 'cursor-pointer hover:scale-[1.01] shadow-2xl' : ''
             }`}
             style={{
@@ -278,7 +278,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
 
           {/* ==================== 2. TOP VELVET COVER (Folds Open Upward 130deg) ==================== */}
           <div
-            className="absolute top-0 inset-x-0 h-1/2 rounded-t-2xl p-3 sm:p-4 origin-top transition-transform duration-700 ease-in-out shadow-2xl overflow-hidden will-change-transform"
+            className="absolute top-0 inset-x-0 h-1/2 rounded-t-2xl p-3 sm:p-4 origin-top transition-transform duration-[1750ms] ease-in-out shadow-2xl overflow-hidden will-change-transform"
             style={{
               backgroundColor: theme.envelopeColor || '#064e3b',
               borderTop: '1px solid rgba(212, 175, 55, 0.6)',
@@ -299,7 +299,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
 
           {/* ==================== 3. BOTTOM VELVET COVER (Folds Open Downward -130deg) ==================== */}
           <div
-            className="absolute bottom-0 inset-x-0 h-1/2 rounded-b-2xl p-3 sm:p-4 origin-bottom transition-transform duration-700 ease-in-out shadow-2xl overflow-hidden will-change-transform"
+            className="absolute bottom-0 inset-x-0 h-1/2 rounded-b-2xl p-3 sm:p-4 origin-bottom transition-transform duration-[1750ms] ease-in-out shadow-2xl overflow-hidden will-change-transform"
             style={{
               backgroundColor: theme.envelopeColor || '#064e3b',
               borderBottom: '1px solid rgba(212, 175, 55, 0.6)',
@@ -320,7 +320,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
 
           {/* ==================== 4. SATIN RIBBON BELLYBAND & BOW CLASP ==================== */}
           <div
-            className="absolute top-1/2 inset-x-0 -translate-y-1/2 h-9 sm:h-11 shadow-2xl flex items-center justify-center transition-all duration-500 ease-out"
+            className="absolute top-1/2 inset-x-0 -translate-y-1/2 h-9 sm:h-11 shadow-2xl flex items-center justify-center transition-all duration-[1250ms] ease-out"
             style={{
               background: 'linear-gradient(90deg, #b45309 0%, #f59e0b 30%, #fef3c7 50%, #f59e0b 70%, #b45309 100%)',
               borderTop: '1px solid rgba(254, 240, 138, 0.8)',
