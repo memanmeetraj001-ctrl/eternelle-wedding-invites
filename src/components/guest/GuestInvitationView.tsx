@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { WeddingData, ThemeConfig, TimelineEvent } from '../../types/invitation';
 import { EnvelopeExperience } from './EnvelopeExperience';
+import { OpeningOptionsModal } from './OpeningOptionsModal';
 
 interface GuestInvitationViewProps {
   wedding: WeddingData;
@@ -19,6 +20,8 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
   onOpenRSVP,
 }) => {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
+  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
+  const [selectedDesignId, setSelectedDesignId] = useState(5);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [activeTab, setActiveTab] = useState<'invite' | 'menu' | 'story' | 'stay' | 'faqs'>('invite');
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
@@ -644,7 +647,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
           {wedding.musicEnabled && wedding.backgroundMusicUrl && (
             <button
               onClick={toggleMusic}
-              className="fixed bottom-5 right-5 z-50 px-3.5 py-2 rounded-full bg-stone-900/90 backdrop-blur-md border border-amber-400/40 text-amber-200 text-xs font-sans font-medium flex items-center gap-2 shadow-2xl hover:scale-105 transition-all cursor-pointer"
+              className="fixed bottom-5 right-5 z-40 px-3.5 py-2 rounded-full bg-stone-900/90 backdrop-blur-md border border-amber-400/40 text-amber-200 text-xs font-sans font-medium flex items-center gap-2 shadow-2xl hover:scale-105 transition-all cursor-pointer"
               title={isPlayingMusic ? 'Mute Music' : 'Play Romantic Music'}
             >
               <Music size={14} className={isPlayingMusic ? 'text-amber-400 animate-bounce' : 'text-stone-400'} />
@@ -661,6 +664,29 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 
         </div>
       )}
+
+      {/* Floating 10 Opening Options Trigger Pill */}
+      <button
+        onClick={() => setIsOptionsModalOpen(true)}
+        className="fixed bottom-5 left-5 z-40 px-3.5 py-2 rounded-full bg-amber-950/90 hover:bg-amber-900 backdrop-blur-md border border-amber-400/60 text-amber-200 text-xs font-serif font-bold flex items-center gap-2 shadow-2xl hover:scale-105 transition-all cursor-pointer"
+        title="View all 10 unboxing options"
+      >
+        <Sparkles size={14} className="text-amber-400 animate-spin" />
+        <span>10 Unboxing Options</span>
+      </button>
+
+      {/* 10 Opening Options Modal */}
+      <OpeningOptionsModal
+        isOpen={isOptionsModalOpen}
+        onClose={() => setIsOptionsModalOpen(false)}
+        wedding={wedding}
+        theme={theme}
+        selectedDesignId={selectedDesignId}
+        onSelectDesign={(designId) => {
+          setSelectedDesignId(designId);
+          setIsEnvelopeOpen(false); // return to unboxing to see the selected design in action
+        }}
+      />
     </div>
   );
 };
