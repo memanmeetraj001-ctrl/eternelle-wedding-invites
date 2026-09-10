@@ -20,9 +20,26 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 }) => {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [activeTab, setActiveTab] = useState<'invite' | 'menu' | 'story' | 'stay' | 'faqs'>('invite');
+  const enabledBlocks = wedding.blocks && wedding.blocks.length > 0
+    ? wedding.blocks.filter(b => b.enabled)
+    : [
+        { id: 'schedule' as const, title: 'Schedule', icon: '⏰', enabled: true },
+        { id: 'menu' as const, title: 'Food & Drinks', icon: '🍽️', enabled: true },
+        { id: 'story' as const, title: wedding.eventType === 'birthday' ? 'Memories' : 'Story & Gallery', icon: '📸', enabled: true },
+        { id: 'hotels' as const, title: 'Travel & Stay', icon: '🏨', enabled: true },
+        { id: 'faqs' as const, title: 'Q&A FAQs', icon: '❓', enabled: true },
+      ];
+
+  const [activeTab, setActiveTab] = useState<string>(() => enabledBlocks[0]?.id || 'schedule');
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+
+  // Synchronize activeTab if enabled blocks change
+  useEffect(() => {
+    if (enabledBlocks.length > 0 && !enabledBlocks.some(b => b.id === activeTab || (activeTab === 'invite' && b.id === 'schedule') || (activeTab === 'stay' && b.id === 'hotels') || (activeTab === 'gallery' && b.id === 'story'))) {
+      setActiveTab(enabledBlocks[0].id);
+    }
+  }, [enabledBlocks, activeTab]);
 
   // Background Audio
   useEffect(() => {
@@ -317,51 +334,26 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
             </div>
 
             {/* Navigation Tabs - 5 Interactive Wedding Card Sections */}
+            {/* Dynamic Navigation Tabs based on enabled Modular Blocks */}
             <div className="flex rounded-xl sm:rounded-2xl bg-black/60 p-1 border border-stone-800 text-[11px] sm:text-xs font-sans overflow-x-auto scrollbar-none gap-1 shadow-xl">
-              <button
-                onClick={() => setActiveTab('invite')}
-                className={`px-3 py-1.5 rounded-lg sm:rounded-xl font-medium whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'invite' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
-                }`}
-              >
-                Schedule
-              </button>
-              <button
-                onClick={() => setActiveTab('menu')}
-                className={`px-3 py-1.5 rounded-lg sm:rounded-xl font-medium whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'menu' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
-                }`}
-              >
-                Food & Drinks
-              </button>
-              <button
-                onClick={() => setActiveTab('story')}
-                className={`px-3 py-1.5 rounded-lg sm:rounded-xl font-medium whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'story' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
-                }`}
-              >
-                Love Gallery
-              </button>
-              <button
-                onClick={() => setActiveTab('stay')}
-                className={`px-3 py-1.5 rounded-lg sm:rounded-xl font-medium whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'stay' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
-                }`}
-              >
-                Travel & Stay
-              </button>
-              <button
-                onClick={() => setActiveTab('faqs')}
-                className={`px-3 py-1.5 rounded-lg sm:rounded-xl font-medium whitespace-nowrap transition-all cursor-pointer ${
-                  activeTab === 'faqs' ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
-                }`}
-              >
-                Q&A FAQs
-              </button>
+              {enabledBlocks.map((block) => {
+                const isActive = activeTab === block.id || (activeTab === 'invite' && block.id === 'schedule');
+                return (
+                  <button
+                    key={block.id}
+                    onClick={() => setActiveTab(block.id)}
+                    className={`px-3 py-1.5 rounded-lg sm:rounded-xl font-medium whitespace-nowrap transition-all cursor-pointer ${
+                      isActive ? 'bg-amber-950/80 text-amber-200 border border-amber-500/40 shadow-sm' : 'text-stone-400 hover:text-stone-200'
+                    }`}
+                  >
+                    <span>{block.title}</span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* TAB 1: SCHEDULE & TIMELINE */}
-            {activeTab === 'invite' && (
+            {(activeTab === 'schedule' || activeTab === 'invite') && (
               <div id="details-section" className="space-y-3.5 pt-1 animate-fadeIn">
                 <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-stone-900/90 border border-stone-800 shadow-2xl">
                   <div className="text-center mb-4 sm:mb-6">
@@ -491,7 +483,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
             )}
 
             {/* TAB 3: LOVE STORY PHOTO GALLERY */}
-            {activeTab === 'story' && (
+            {(activeTab === 'story' || activeTab === 'gallery') && (
               <div className="space-y-3.5 pt-1 animate-fadeIn">
                 <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-stone-900/90 border border-stone-800 shadow-2xl space-y-2 text-center">
                   <span className="text-[9px] sm:text-[10px] tracking-[0.25em] uppercase text-amber-300 font-sans font-bold">
@@ -540,8 +532,68 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               </div>
             )}
 
+            {/* TAB: ATTIRE & DRESS CODE */}
+            {activeTab === 'attire' && (
+              <div className="space-y-3.5 pt-1 animate-fadeIn">
+                <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-stone-900/90 border border-stone-800 shadow-2xl space-y-4 sm:space-y-5">
+                  <div className="text-center">
+                    <span className="text-[9px] sm:text-[10px] tracking-[0.25em] uppercase text-amber-300 font-sans font-bold">
+                      Attire & Style Guide
+                    </span>
+                    <h3 className="font-serif text-lg sm:text-2xl text-amber-50 mt-0.5">
+                      {wedding.dressCode?.title || 'Dress Code'}
+                    </h3>
+                    {wedding.dressCode?.subtitle && (
+                      <p className="text-[11px] sm:text-xs text-amber-200/80 mt-0.5 font-serif italic">
+                        {wedding.dressCode.subtitle}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="bg-stone-950/70 p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-stone-800/80 text-center space-y-3">
+                    <p className="text-xs sm:text-sm text-stone-200 leading-relaxed font-light max-w-md mx-auto">
+                      {wedding.dressCode?.description || 'We invite our guests to dress in formal black-tie or romantic evening cocktail attire.'}
+                    </p>
+
+                    {wedding.dressCode?.swatches && wedding.dressCode.swatches.length > 0 && (
+                      <div className="pt-2 border-t border-stone-800">
+                        <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-widest text-stone-400 block mb-2">
+                          Inspiration Color Palette
+                        </span>
+                        <div className="flex items-center justify-center gap-3 flex-wrap">
+                          {wedding.dressCode.swatches.map((swatch, idx) => (
+                            <div key={idx} className="flex flex-col items-center gap-1">
+                              <div
+                                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white/30 shadow-lg transition-transform hover:scale-110"
+                                style={{ backgroundColor: swatch.hex }}
+                                title={swatch.name}
+                              />
+                              {swatch.name && (
+                                <span className="text-[9px] sm:text-[10px] text-stone-300 font-sans font-medium">
+                                  {swatch.name}
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {wedding.transportInfo && (
+                    <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-950/30 border border-amber-700/40 text-[11px] sm:text-xs text-stone-300 leading-relaxed text-center">
+                      <span className="font-serif text-amber-200 font-bold block mb-0.5">
+                        🚌 Shuttle & Guest Transportation
+                      </span>
+                      {wedding.transportInfo}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* TAB 4: ACCOMMODATIONS & TRAVEL */}
-            {activeTab === 'stay' && (
+            {(activeTab === 'hotels' || activeTab === 'stay') && (
               <div className="space-y-3.5 pt-1 animate-fadeIn">
                 <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-stone-900/90 border border-stone-800 shadow-2xl space-y-3 sm:space-y-4">
                   <div className="text-center mb-1.5">

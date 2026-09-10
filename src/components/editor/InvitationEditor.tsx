@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { 
   Palette, Heart, Calendar, MapPin, Clock, Hotel, 
   Sparkles, Music, Image as ImageIcon, Save, CheckCircle2,
-  Plus, Trash2, Eye, Utensils, HelpCircle, Navigation, 
+  Plus, Trash2, Eye, EyeOff, Utensils, HelpCircle, Navigation, 
   Upload, Check, Volume2, VolumeX, ExternalLink, Tag,
-  Play, Pause, Radio, Disc
+  Play, Pause, Radio, Disc, Layers, ArrowUp, ArrowDown
 } from 'lucide-react';
-import { WeddingData, ThemeConfig, ThemeId, TimelineEvent, HotelLodging, MenuItem, WeddingFAQ, PhotoMoment, MusicTrack, EventType } from '../../types/invitation';
-import { THEME_PRESETS, CURATED_MUSIC_OPTIONS, EVENT_CATEGORY_PRESETS } from '../../constants/themes';
+import { WeddingData, ThemeConfig, ThemeId, TimelineEvent, HotelLodging, MenuItem, WeddingFAQ, PhotoMoment, MusicTrack, EventType, EventBlockConfig, EventBlockId } from '../../types/invitation';
+import { THEME_PRESETS, CURATED_MUSIC_OPTIONS, EVENT_CATEGORY_PRESETS, DEFAULT_EVENT_BLOCKS } from '../../constants/themes';
 
 interface InvitationEditorProps {
   wedding: WeddingData;
@@ -18,6 +18,7 @@ interface InvitationEditorProps {
 export type EditorSection = 
   | 'theme' 
   | 'couple' 
+  | 'blocks'
   | 'schedule' 
   | 'menu' 
   | 'gallery' 
@@ -37,6 +38,10 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
   const [newPhotoCaption, setNewPhotoCaption] = useState('');
   const [newPhotoDate, setNewPhotoDate] = useState('');
   const [photoUploadError, setPhotoUploadError] = useState<string | null>(null);
+
+  const currentBlocks: EventBlockConfig[] = wedding.blocks && wedding.blocks.length > 0
+    ? wedding.blocks
+    : (DEFAULT_EVENT_BLOCKS[wedding.eventType || 'wedding'] || DEFAULT_EVENT_BLOCKS.wedding);
 
   // Audio Preview State
   const [previewingTrackId, setPreviewingTrackId] = useState<string | null>(null);
@@ -101,7 +106,32 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
       subtitleIntro: preset.defaultSubtitle,
       storyTitle: preset.defaultStoryTitle,
       themeId: preset.defaultTheme || wedding.themeId,
+      blocks: preset.defaultBlocks || DEFAULT_EVENT_BLOCKS[type] || DEFAULT_EVENT_BLOCKS.wedding,
     });
+  };
+
+  // Modular Block Handlers
+  const handleToggleBlock = (blockId: EventBlockId) => {
+    const updatedBlocks = currentBlocks.map(b => 
+      b.id === blockId ? { ...b, enabled: !b.enabled } : b
+    );
+    notifyChange({ ...wedding, blocks: updatedBlocks });
+  };
+
+  const handleMoveBlock = (index: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= currentBlocks.length) return;
+    const updated = [...currentBlocks];
+    const [moved] = updated.splice(index, 1);
+    updated.splice(targetIndex, 0, moved);
+    notifyChange({ ...wedding, blocks: updated });
+  };
+
+  const handleRenameBlock = (blockId: EventBlockId, title: string) => {
+    const updatedBlocks = currentBlocks.map(b => 
+      b.id === blockId ? { ...b, title } : b
+    );
+    notifyChange({ ...wedding, blocks: updatedBlocks });
   };
 
   // Timeline Handlers
@@ -352,21 +382,22 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
               : '2. Couple & Date', 
             icon: Heart 
           },
-          { id: 'schedule', label: '3. Order of Events', icon: Clock },
-          { id: 'menu', label: '4. Food & Drinks Menu', icon: Utensils },
+          { id: 'blocks', label: '3. Modular Page Blocks', icon: Layers },
+          { id: 'schedule', label: '4. Order of Events', icon: Clock },
+          { id: 'menu', label: '5. Food & Drinks Menu', icon: Utensils },
           { 
             id: 'gallery', 
             label: wedding.eventType === 'birthday' 
-              ? '5. Photo Memories' 
+              ? '6. Photo Memories' 
               : wedding.eventType === 'gala' 
-              ? '5. Highlights & Mission' 
-              : '5. Love Gallery & Story', 
+              ? '6. Highlights & Mission' 
+              : '6. Love Gallery & Story', 
             icon: ImageIcon 
           },
-          { id: 'attire', label: '6. Dress Code', icon: Sparkles },
-          { id: 'stay', label: '7. Hotels & Travel', icon: Hotel },
-          { id: 'faqs', label: '8. Guest Q&A / FAQs', icon: HelpCircle },
-          { id: 'music', label: '9. Music & Audio', icon: Music },
+          { id: 'attire', label: '7. Dress Code', icon: Sparkles },
+          { id: 'stay', label: '8. Hotels & Travel', icon: Hotel },
+          { id: 'faqs', label: '9. Guest Q&A / FAQs', icon: HelpCircle },
+          { id: 'music', label: '10. Music & Audio', icon: Music },
         ].map((tab) => {
           const Icon = tab.icon;
           const isCurrent = activeSection === tab.id;
@@ -613,6 +644,107 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                   />
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* SECTION 3: MODULAR PAGE BLOCKS MANAGER (Paperless Post Inspiration) */}
+        {activeSection === 'blocks' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-100 pb-4">
+              <div>
+                <h3 className="font-serif text-2xl text-stone-900 font-normal">Modular Page Blocks & Layout</h3>
+                <p className="text-xs text-stone-500 mt-0.5">
+                  Toggle sections on or off, reorder their appearance on the guest card, and rename their titles to match your celebration.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const defaultBlocks = DEFAULT_EVENT_BLOCKS[wedding.eventType || 'wedding'] || DEFAULT_EVENT_BLOCKS.wedding;
+                  notifyChange({ ...wedding, blocks: defaultBlocks });
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-medium transition-colors cursor-pointer w-fit"
+              >
+                Reset to Category Defaults
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {currentBlocks.map((block, index) => (
+                <div
+                  key={block.id}
+                  className={`p-4 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                    block.enabled
+                      ? 'bg-stone-50/80 border-stone-300 shadow-xs'
+                      : 'bg-stone-100/50 border-stone-200 opacity-60'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    <span className="w-6 text-center font-mono text-xs font-bold text-stone-400">
+                      {index + 1}
+                    </span>
+                    <span className="text-xl">{block.icon || '📄'}</span>
+                    
+                    <div className="flex-1 max-w-sm">
+                      <input
+                        type="text"
+                        value={block.title}
+                        onChange={(e) => handleRenameBlock(block.id, e.target.value)}
+                        className="w-full px-3 py-1.5 rounded-lg border border-stone-300 bg-white text-xs font-semibold text-stone-900 focus:border-amber-600 focus:outline-none"
+                        placeholder="Block Title"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 self-end sm:self-center">
+                    {/* Reorder Buttons */}
+                    <div className="flex items-center rounded-xl bg-white border border-stone-200 p-0.5">
+                      <button
+                        type="button"
+                        disabled={index === 0}
+                        onClick={() => handleMoveBlock(index, 'up')}
+                        className="p-1.5 text-stone-500 hover:text-stone-900 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg hover:bg-stone-100 transition-colors cursor-pointer"
+                        title="Move Up"
+                      >
+                        <ArrowUp size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={index === currentBlocks.length - 1}
+                        onClick={() => handleMoveBlock(index, 'down')}
+                        className="p-1.5 text-stone-500 hover:text-stone-900 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg hover:bg-stone-100 transition-colors cursor-pointer"
+                        title="Move Down"
+                      >
+                        <ArrowDown size={13} />
+                      </button>
+                    </div>
+
+                    {/* Visibility Toggle Button */}
+                    <button
+                      type="button"
+                      onClick={() => handleToggleBlock(block.id)}
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                        block.enabled
+                          ? 'bg-emerald-600 text-white shadow-xs hover:bg-emerald-700'
+                          : 'bg-stone-300 text-stone-700 hover:bg-stone-400'
+                      }`}
+                    >
+                      {block.enabled ? (
+                        <>
+                          <Eye size={13} />
+                          <span>Visible</span>
+                        </>
+                      ) : (
+                        <>
+                          <EyeOff size={13} />
+                          <span>Hidden</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}

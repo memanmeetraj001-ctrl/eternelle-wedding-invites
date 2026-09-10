@@ -1,4 +1,4 @@
-import { ThemeConfig, ThemeId, WeddingData, RSVPRecord, MarketplaceOrder, MusicTrack } from '../types/invitation';
+import { ThemeConfig, ThemeId, WeddingData, RSVPRecord, MarketplaceOrder, MusicTrack, EventBlockConfig, EventCategoryPreset } from '../types/invitation';
 
 export const THEME_PRESETS: Record<ThemeId, ThemeConfig> = {
   'olive-burgundy': {
@@ -440,17 +440,73 @@ export const CURATED_MUSIC_OPTIONS: MusicTrack[] = [
   },
 ];
 
-export const EVENT_CATEGORY_PRESETS: Record<string, {
-  type: string;
-  label: string;
-  badge: string;
-  icon: string;
-  description: string;
-  defaultHeadline: string;
-  defaultSubtitle: string;
-  defaultStoryTitle: string;
-  defaultTheme: ThemeId;
-}> = {
+export const DEFAULT_EVENT_BLOCKS: Record<string, EventBlockConfig[]> = {
+  wedding: [
+    { id: 'story', title: 'Our Love Story', icon: '❤️', enabled: true },
+    { id: 'schedule', title: 'Order of Events', icon: '⏰', enabled: true },
+    { id: 'menu', title: 'Food & Drinks Menu', icon: '🍽️', enabled: true },
+    { id: 'gallery', title: 'Photo Gallery', icon: '📸', enabled: true },
+    { id: 'attire', title: 'Dress Code & Palette', icon: '👗', enabled: true },
+    { id: 'hotels', title: 'Accommodations & Travel', icon: '🏨', enabled: true },
+    { id: 'faqs', title: 'Guest Q&A / FAQs', icon: '❓', enabled: true },
+  ],
+  engagement: [
+    { id: 'story', title: 'The Proposal Story', icon: '💍', enabled: true },
+    { id: 'schedule', title: 'Celebration Timeline', icon: '⏰', enabled: true },
+    { id: 'menu', title: 'Cocktails & Canapés', icon: '🍸', enabled: true },
+    { id: 'gallery', title: 'Engagement Portraits', icon: '📸', enabled: true },
+    { id: 'attire', title: 'Cocktail Dress Code', icon: '👗', enabled: true },
+    { id: 'hotels', title: 'Accommodations & Travel', icon: '🏨', enabled: false },
+    { id: 'faqs', title: 'Party Details & FAQs', icon: '❓', enabled: true },
+  ],
+  birthday: [
+    { id: 'story', title: 'A Chapter of Memories', icon: '✨', enabled: true },
+    { id: 'schedule', title: 'Party Schedule', icon: '⏰', enabled: true },
+    { id: 'menu', title: 'Birthday Bites & Bar', icon: '🎂', enabled: true },
+    { id: 'gallery', title: 'Memory Reel', icon: '📸', enabled: true },
+    { id: 'attire', title: 'Party Theme & Attire', icon: '👗', enabled: true },
+    { id: 'hotels', title: 'Accommodations', icon: '🏨', enabled: false },
+    { id: 'faqs', title: 'Party Info & Wishlist', icon: '❓', enabled: true },
+  ],
+  anniversary: [
+    { id: 'story', title: 'Years of Love Timeline', icon: '🥂', enabled: true },
+    { id: 'schedule', title: 'Toast & Dinner Schedule', icon: '⏰', enabled: true },
+    { id: 'menu', title: 'Anniversary Dinner Menu', icon: '🍽️', enabled: true },
+    { id: 'gallery', title: 'Journey Through the Years', icon: '📸', enabled: true },
+    { id: 'attire', title: 'Attire & Dress Code', icon: '👗', enabled: true },
+    { id: 'hotels', title: 'Hotel Recommendations', icon: '🏨', enabled: false },
+    { id: 'faqs', title: 'Guest FAQs', icon: '❓', enabled: true },
+  ],
+  baby_shower: [
+    { id: 'story', title: 'Welcoming Our Little Blessing', icon: '🍼', enabled: true },
+    { id: 'schedule', title: 'Shower Schedule & Games', icon: '⏰', enabled: true },
+    { id: 'menu', title: 'Sweets & Refreshments', icon: '🧁', enabled: true },
+    { id: 'gallery', title: 'Maternity Moments', icon: '📸', enabled: true },
+    { id: 'attire', title: 'Theme & Pastel Palette', icon: '👗', enabled: true },
+    { id: 'hotels', title: 'Travel & Accommodations', icon: '🏨', enabled: false },
+    { id: 'faqs', title: 'Registry & Diaper Raffle', icon: '🎁', enabled: true },
+  ],
+  gala: [
+    { id: 'story', title: 'Mission & Keynote Vision', icon: '🎙️', enabled: true },
+    { id: 'schedule', title: 'Gala Evening Itinerary', icon: '⏰', enabled: true },
+    { id: 'menu', title: 'Banquet & Wine Pairings', icon: '🍽️', enabled: true },
+    { id: 'gallery', title: 'Past Gala Highlights', icon: '📸', enabled: true },
+    { id: 'attire', title: 'Black-Tie Dress Code', icon: '👗', enabled: true },
+    { id: 'hotels', title: 'VIP Accommodations & Travel', icon: '🏨', enabled: true },
+    { id: 'faqs', title: 'Sponsorship & Seating FAQs', icon: '❓', enabled: true },
+  ],
+  custom: [
+    { id: 'story', title: 'About This Celebration', icon: '✨', enabled: true },
+    { id: 'schedule', title: 'Order of Events', icon: '⏰', enabled: true },
+    { id: 'menu', title: 'Food & Drinks Menu', icon: '🍽️', enabled: true },
+    { id: 'gallery', title: 'Photo Highlights', icon: '📸', enabled: true },
+    { id: 'attire', title: 'Attire & Theme', icon: '👗', enabled: true },
+    { id: 'hotels', title: 'Accommodations & Travel', icon: '🏨', enabled: false },
+    { id: 'faqs', title: 'Event FAQs', icon: '❓', enabled: true },
+  ],
+};
+
+export const EVENT_CATEGORY_PRESETS: Record<string, EventCategoryPreset> = {
   wedding: {
     type: 'wedding',
     label: 'Wedding & Reception',
@@ -461,6 +517,7 @@ export const EVENT_CATEGORY_PRESETS: Record<string, {
     defaultSubtitle: 'TOGETHER WITH THEIR FAMILIES',
     defaultStoryTitle: 'Our Love Story',
     defaultTheme: 'botanical-emerald',
+    defaultBlocks: DEFAULT_EVENT_BLOCKS.wedding,
   },
   engagement: {
     type: 'engagement',
@@ -472,6 +529,7 @@ export const EVENT_CATEGORY_PRESETS: Record<string, {
     defaultSubtitle: 'POP THE CHAMPAGNE FOR',
     defaultStoryTitle: 'The Proposal',
     defaultTheme: 'dusty-rose',
+    defaultBlocks: DEFAULT_EVENT_BLOCKS.engagement,
   },
   birthday: {
     type: 'birthday',
@@ -483,6 +541,7 @@ export const EVENT_CATEGORY_PRESETS: Record<string, {
     defaultSubtitle: 'A SPECTACULAR MILESTONE',
     defaultStoryTitle: 'A Chapter of Memories',
     defaultTheme: 'champagne-noir',
+    defaultBlocks: DEFAULT_EVENT_BLOCKS.birthday,
   },
   anniversary: {
     type: 'anniversary',
@@ -494,6 +553,7 @@ export const EVENT_CATEGORY_PRESETS: Record<string, {
     defaultSubtitle: 'HONOURING THE ANNIVERSARY OF',
     defaultStoryTitle: '25 Years of Beautiful Memories',
     defaultTheme: 'tuscan-terracotta',
+    defaultBlocks: DEFAULT_EVENT_BLOCKS.anniversary,
   },
   baby_shower: {
     type: 'baby_shower',
@@ -505,6 +565,7 @@ export const EVENT_CATEGORY_PRESETS: Record<string, {
     defaultSubtitle: 'A SWEET LITTLE BLESSING',
     defaultStoryTitle: 'Our Growing Family',
     defaultTheme: 'dusty-rose',
+    defaultBlocks: DEFAULT_EVENT_BLOCKS.baby_shower,
   },
   gala: {
     type: 'gala',
@@ -516,6 +577,7 @@ export const EVENT_CATEGORY_PRESETS: Record<string, {
     defaultSubtitle: 'ANNUAL CHARITY SOIREE',
     defaultStoryTitle: 'Our Mission & Vision',
     defaultTheme: 'champagne-noir',
+    defaultBlocks: DEFAULT_EVENT_BLOCKS.gala,
   },
   custom: {
     type: 'custom',
@@ -527,6 +589,7 @@ export const EVENT_CATEGORY_PRESETS: Record<string, {
     defaultSubtitle: 'AN EXCLUSIVE GATHERING',
     defaultStoryTitle: 'About This Event',
     defaultTheme: 'botanical-emerald',
+    defaultBlocks: DEFAULT_EVENT_BLOCKS.custom,
   },
 };
 

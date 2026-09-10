@@ -93,6 +93,22 @@ export type EventType =
   | 'gala' 
   | 'custom';
 
+export type EventBlockId = 
+  | 'story' 
+  | 'schedule' 
+  | 'menu' 
+  | 'gallery' 
+  | 'attire' 
+  | 'hotels' 
+  | 'faqs';
+
+export interface EventBlockConfig {
+  id: EventBlockId;
+  title: string;
+  icon?: string;
+  enabled: boolean;
+}
+
 export interface EventCategoryPreset {
   type: EventType;
   label: string;
@@ -103,6 +119,7 @@ export interface EventCategoryPreset {
   defaultSubtitle: string;
   defaultStoryTitle: string;
   defaultTheme: ThemeId;
+  defaultBlocks?: EventBlockConfig[];
 }
 
 export interface WeddingData {
@@ -112,6 +129,7 @@ export interface WeddingData {
   eventTitle?: string;
   honoreeName?: string;
   hostNames?: string;
+  blocks?: EventBlockConfig[];
   slug: string;
   coupleName1: string;
   coupleName2: string;
