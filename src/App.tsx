@@ -130,10 +130,20 @@ export function App() {
     return [];
   });
 
+  const isEtsyFromURL = typeof window !== 'undefined' && (() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('access') === 'etsy_vip' || 
+           params.get('etsy') === 'pro' || 
+           params.get('etsy') === 'true' || 
+           params.get('source') === 'etsy' ||
+           params.get('voucher')?.toUpperCase().startsWith('ETSY');
+  })();
+
   const [viewMode, setViewMode] = useState<AppViewMode>(() => {
     if (initialRoute.view === 'guest') return 'guest';
     if (initialRoute.view === 'admin') return 'admin';
     if (initialRoute.view === 'halloween') return 'halloween';
+    if (isEtsyFromURL) return 'landing';
     // If user is already logged in, take them to dashboard only if on landing root
     return user ? 'dashboard' : 'landing';
   });
@@ -141,9 +151,24 @@ export function App() {
   const [isMobileFrame, setIsMobileFrame] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(() => !!isEtsyFromURL);
   const [authInitialTab, setAuthInitialTab] = useState<'signin' | 'signup'>('signup');
-  const [etsyVIPAuth, setEtsyVIPAuth] = useState<{ plan: 'pro' | 'lifetime'; voucher: string } | null>(null);
+  const [etsyVIPAuth, setEtsyVIPAuth] = useState<{ plan: 'pro' | 'lifetime'; voucher: string } | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const params = new URLSearchParams(window.location.search);
+    const isEtsy = 
+      params.get('access') === 'etsy_vip' || 
+      params.get('etsy') === 'pro' || 
+      params.get('etsy') === 'true' || 
+      params.get('source') === 'etsy' ||
+      params.get('voucher')?.toUpperCase().startsWith('ETSY');
+    if (isEtsy) {
+      const voucher = params.get('voucher') || params.get('order') || 'ETSY-PRO-VIP';
+      const plan: 'pro' | 'lifetime' = params.get('plan') === 'lifetime' ? 'lifetime' : 'pro';
+      return { plan, voucher };
+    }
+    return null;
+  });
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutSelectedPlan, setCheckoutSelectedPlan] = useState<'pro' | 'lifetime'>('pro');
   const [purchaseNotification, setPurchaseNotification] = useState<string | null>(null);
@@ -831,7 +856,7 @@ export function App() {
               origin: { y: 0.4 },
               colors: ['#d4af37', '#e11d48', '#ffffff', '#e2d5c3'],
             });
-            setPurchaseNotification(`🎉 Congratulations! Your account has been created with the Pro Wedding Pass (Unlimited RSVPs unlocked).`);
+            setPurchaseNotification('🎉 Welcome from Etsy! Your Pro Wedding Pass is active with Unlimited RSVPs & All Luxury Features Unlocked.');
             setEtsyVIPAuth(null);
           }
         }}

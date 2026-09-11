@@ -204,7 +204,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </h3>
           <p className="text-xs text-stone-400 mt-1 max-w-xs mx-auto">
             {stage === 'verify'
-              ? `Enter the 6-digit confirmation code sent to ${email || 'your email'}.`
+              ? `Enter the 6-digit confirmation code sent to ${email || 'buyer@example.com'} to activate your Pro Wedding Pass.`
               : (isEtsyVIP 
                   ? 'Create your credentials to unlock your Pro Wedding Pass with unlimited RSVPs.' 
                   : 'Luxury Interactive Wedding Invitations & Micro-Sites')}
