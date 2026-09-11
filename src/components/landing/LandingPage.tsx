@@ -238,7 +238,7 @@ export function LandingPage({
           <span>•</span>
           <div className="flex items-center gap-1.5">
             <Smartphone size={15} className="text-amber-600 shrink-0" />
-            <span>Capacitor iOS & Android Apps</span>
+            <span>Instant Mobile Interactive RSVP</span>
           </div>
           <span>•</span>
           <div className="flex items-center gap-1.5">
