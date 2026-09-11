@@ -69,6 +69,21 @@ export async function apiRegister(name: string, email: string, password?: string
   }
 
   // Offline / Static fallback account creation
+  const localUsers = getAllUsers();
+  const existingUser = localUsers.find((u: UserAccount) => u.email.toLowerCase() === cleanEmail);
+  if (existingUser) {
+    const updatedUser: UserAccount = {
+      ...existingUser,
+      name: cleanName || existingUser.name,
+      plan: (plan === 'pro' || plan === 'lifetime' ? plan : existingUser.plan) as 'free' | 'pro' | 'lifetime',
+      licenseKey: (plan === 'pro' || plan === 'lifetime') ? 'ETSY-PRO-VIP' : existingUser.licenseKey,
+    };
+    saveUser(updatedUser);
+    localStorage.setItem('eternelle_jwt_token', 'local_token_' + Date.now());
+    localStorage.setItem('eternelle_user_session', JSON.stringify(updatedUser));
+    return { success: true, user: updatedUser, token: 'local_token_' + Date.now() };
+  }
+
   const isAdmin = cleanEmail === 'admin@eternelle.com';
   const fallbackUser: UserAccount = {
     id: 'usr_' + Date.now(),

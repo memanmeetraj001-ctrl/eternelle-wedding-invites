@@ -299,35 +299,11 @@ export function App() {
 
       window.history.replaceState({}, '', window.location.pathname);
 
-      if (user) {
-        // User already has an existing account! Upgrade their plan directly.
-        const updatedUser: UserAccount = {
-          ...user,
-          plan,
-          licenseKey: voucher,
-        };
-
-        setUser(updatedUser);
-        saveUser(updatedUser);
-        localStorage.setItem('eternelle_user_session', JSON.stringify(updatedUser));
-
-        confetti({
-          particleCount: 180,
-          spread: 100,
-          origin: { y: 0.4 },
-          colors: ['#d4af37', '#e11d48', '#ffffff', '#e2d5c3'],
-        });
-
-        setPurchaseNotification(`🎉 Welcome from Etsy! Your ${plan === 'lifetime' ? 'Lifetime Creator Pass' : 'Pro Wedding Pass'} is active with Unlimited RSVPs & All Luxury Features Unlocked.`);
-        setViewMode('dashboard');
-      } else {
-        // Buyer does NOT have an account yet! Prompt them to create their real ID and password.
-        setEtsyVIPAuth({ plan, voucher });
-        setAuthInitialTab('signup');
-        setIsAuthModalOpen(true);
-      }
+      setEtsyVIPAuth({ plan, voucher });
+      setIsOnboardingOpen(true);
+      setIsAuthModalOpen(false);
     }
-  }, [user, wedding.slug]);
+  }, []);
 
   // 6. Listen to Gumroad JS Overlay PostMessage
   useEffect(() => {
@@ -440,6 +416,17 @@ export function App() {
 
     setRsvps([]); // Brand new wedding starts with 0 RSVPs
     await apiSaveWedding(weddingWithUser).catch(() => {});
+
+    if (etsyVIPAuth || userAccount.plan === 'pro' || userAccount.plan === 'lifetime') {
+      confetti({
+        particleCount: 200,
+        spread: 100,
+        origin: { y: 0.4 },
+        colors: ['#d4af37', '#e11d48', '#ffffff', '#e2d5c3'],
+      });
+      setPurchaseNotification(`🎉 Welcome from Etsy! Your Pro Wedding Pass is active with Unlimited RSVPs & All Luxury Features Unlocked.`);
+      setEtsyVIPAuth(null);
+    }
 
     setViewMode('dashboard');
   };

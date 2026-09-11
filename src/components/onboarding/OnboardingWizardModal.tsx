@@ -9,7 +9,7 @@ import { WeddingData, ThemeId, ThemeConfig } from '../../types/invitation';
 import { THEME_PRESETS, INITIAL_WEDDING_DATA } from '../../constants/themes';
 import { BrandLogo } from '../common/BrandLogo';
 import { apiRegister, apiSaveWedding } from '../../utils/api';
-import { UserAccount } from '../../utils/storage';
+import { UserAccount, saveUser } from '../../utils/storage';
 
 interface OnboardingWizardModalProps {
   isOpen: boolean;
@@ -47,6 +47,14 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setStep(1);
+      setErrorMessage(null);
+      setIsSubmitting(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -97,17 +105,29 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       const targetPlan = isEtsyVIP ? etsyPlan : 'free';
       const authRes = await apiRegister(coupleName, email, password, targetPlan);
       
-      if (!authRes.success || !authRes.user) {
-        setErrorMessage(authRes.error || 'Failed to create account. Please try a different email.');
-        setIsSubmitting(false);
-        return;
+      let userAccount: UserAccount;
+      if (authRes.success && authRes.user) {
+        userAccount = { ...authRes.user, weddingSlug: coupleSlug };
+      } else {
+        userAccount = {
+          id: 'usr_' + Date.now(),
+          name: coupleName,
+          email: email.toLowerCase().trim(),
+          role: 'user',
+          plan: targetPlan,
+          licenseKey: isEtsyVIP ? etsyVoucher : undefined,
+          createdAt: new Date().toISOString(),
+          weddingSlug: coupleSlug,
+        };
       }
 
       if (isEtsyVIP) {
-        authRes.user.plan = etsyPlan;
-        authRes.user.licenseKey = etsyVoucher;
-        localStorage.setItem('eternelle_user_session', JSON.stringify(authRes.user));
+        userAccount.plan = etsyPlan;
+        userAccount.licenseKey = etsyVoucher;
       }
+      
+      saveUser(userAccount);
+      localStorage.setItem('eternelle_user_session', JSON.stringify(userAccount));
 
       const finalWedding: WeddingData = {
         ...INITIAL_WEDDING_DATA,
@@ -126,16 +146,11 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       await apiSaveWedding(finalWedding).catch(() => {});
 
       confetti({
-        particleCount: 140,
+        particleCount: 160,
         spread: 90,
         origin: { y: 0.5 },
         colors: ['#f43f5e', '#d97706', '#ec4899', '#ffffff']
       });
-
-      const userAccount: UserAccount = {
-        ...authRes.user,
-        weddingSlug: coupleSlug,
-      };
 
       onComplete(finalWedding, userAccount);
       onClose();
