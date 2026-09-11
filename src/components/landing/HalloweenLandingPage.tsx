@@ -44,6 +44,7 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
   const [demoCostume, setDemoCostume] = useState('Victorian Vampire Lord');
   const [demoPotionChoice, setDemoPotionChoice] = useState('Blackberry Bourbon Black Magic');
   const [demoRsvpSubmitted, setDemoRsvpSubmitted] = useState(false);
+  const [selectedGalleryIdx, setSelectedGalleryIdx] = useState<number | null>(null);
 
   // Live Countdown to All Hallows' Eve (Oct 31, 2026 Midnight)
   const [timeLeft, setTimeLeft] = useState({ days: 48, hours: 14, minutes: 32, seconds: 45 });
@@ -79,21 +80,21 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
     {
       title: 'Midnight Gothic Masquerade',
       tagline: 'Obsidian Velvet & Blood-Orange Seal',
-      image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
       tag: '#1 Trending on Pinterest',
       description: 'Vintage gothic damask liner, raven postage stamp, and interactive 3D wax seal unboxing.',
     },
     {
       title: 'Wicked Potion & Cocktail Bar',
       tagline: 'Dry Ice Cauldron Cocktails & Bites',
-      image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80',
       tag: 'Spooky Menus',
       description: 'Interactive cocktail cards with custom glassware icons, secret recipes, and mocktail notes.',
     },
     {
-      title: 'Costume Contest & Witching Schedule',
+      title: 'Venetian Skull Masquerade',
       tagline: 'Costume Categories & Live QR Door Check-in',
-      image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1572945550744-570423e8e773?auto=format&fit=crop&w=1200&q=80',
       tag: 'Guest Experience',
       description: 'Announce dress codes, costume award tiers, and scan guests at the manor door in real time.',
     },
@@ -202,6 +203,9 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
           </button>
           <button onClick={() => scrollToSection('potions')} className="hover:text-orange-400 transition-colors whitespace-nowrap">
             Wicked Potion Bar
+          </button>
+          <button onClick={() => scrollToSection('gallery')} className="hover:text-orange-400 transition-colors whitespace-nowrap">
+            Haunted Gallery & Lore
           </button>
           <button onClick={() => scrollToSection('costume')} className="hover:text-orange-400 transition-colors whitespace-nowrap">
             Costume Contest
@@ -589,7 +593,109 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
         </div>
       </section>
 
-      {/* 7. COSTUME CONTEST & ITINERARY */}
+      {/* 7. HAUNTED STORY & ATMOSPHERIC VISUAL GALLERY */}
+      <section id="gallery" className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono uppercase bg-purple-950 text-purple-300 border border-purple-800/50 mb-3">
+            <Moon className="w-3.5 h-3.5 text-purple-400" />
+            The Lore of Ravenswood Manor
+          </span>
+          <h2 className="font-serif text-3xl sm:text-5xl text-white font-light mb-3">
+            A Glimpse Beyond the Iron Gates
+          </h2>
+          <p className="text-stone-400 text-sm">
+            Step into the candlelit grandeur of Salem’s most storied gothic celebration.
+          </p>
+        </div>
+
+        {/* Story Lore Quote Banner */}
+        <div className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-[#120a1c] via-[#1c0f2b] to-[#120a1c] border border-orange-900/40 shadow-2xl mb-12 overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative z-10 max-w-3xl mx-auto text-center space-y-3">
+            <span className="text-2xl text-orange-400 font-serif italic block">“Enter if you dare...”</span>
+            <p className="text-xs sm:text-sm text-stone-300 font-light leading-relaxed italic">
+              Once every century, when the blood moon rises over Salem and autumn mist blankets the ancient cedar forest, the gates of Ravenswood Manor swing open. Beyond the archway lies an evening of candlelit decadence, wicked illusionists, arcane melodies, and midnight masquerade waltzes.
+            </p>
+            <span className="text-[10px] font-mono tracking-widest uppercase text-orange-400 block pt-1">
+              — All Hallows' Eve Gathering • Salem, Massachusetts
+            </span>
+          </div>
+        </div>
+
+        {/* 6 Atmospheric Horror Photo Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {SAMPLE_HALLOWEEN_PARTY_DATA.photos.map((photo, idx) => (
+            <div
+              key={idx}
+              onClick={() => setSelectedGalleryIdx(idx)}
+              className="group relative rounded-2xl overflow-hidden border border-purple-900/40 bg-stone-950 shadow-xl cursor-pointer aspect-4/3"
+            >
+              <img
+                src={photo.url}
+                alt={photo.caption}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 filter brightness-90 group-hover:brightness-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+              
+              {/* Photo Date Badge */}
+              <div className="absolute top-3 left-3">
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-mono uppercase bg-black/75 text-orange-300 border border-orange-500/30 backdrop-blur-sm">
+                  {photo.dateTag}
+                </span>
+              </div>
+
+              {/* Photo Caption Overlay */}
+              <div className="absolute bottom-0 inset-x-0 p-4">
+                <p className="text-xs text-stone-200 font-medium leading-snug group-hover:text-white transition-colors">
+                  {photo.caption}
+                </p>
+                <span className="text-[10px] text-orange-400 group-hover:underline flex items-center gap-1 mt-1 font-mono">
+                  <span>View in High-Res</span> →
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Lightbox Modal */}
+        {selectedGalleryIdx !== null && (
+          <div 
+            onClick={() => setSelectedGalleryIdx(null)}
+            className="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200"
+          >
+            <div 
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-3xl w-full bg-[#110d1a] border border-orange-900/60 rounded-3xl overflow-hidden shadow-2xl"
+            >
+              <div className="relative aspect-16/10 w-full bg-black">
+                <img
+                  src={SAMPLE_HALLOWEEN_PARTY_DATA.photos[selectedGalleryIdx].url}
+                  alt={SAMPLE_HALLOWEEN_PARTY_DATA.photos[selectedGalleryIdx].caption}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-6 flex items-center justify-between gap-4">
+                <div>
+                  <span className="text-[10px] font-mono uppercase text-orange-400 block mb-1">
+                    {SAMPLE_HALLOWEEN_PARTY_DATA.photos[selectedGalleryIdx].dateTag}
+                  </span>
+                  <h4 className="font-serif text-base text-white">
+                    {SAMPLE_HALLOWEEN_PARTY_DATA.photos[selectedGalleryIdx].caption}
+                  </h4>
+                </div>
+                <button
+                  onClick={() => setSelectedGalleryIdx(null)}
+                  className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold border border-stone-700"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* 8. COSTUME CONTEST & ITINERARY */}
       <section id="costume" className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           

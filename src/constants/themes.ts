@@ -162,7 +162,7 @@ export const THEME_PRESETS: Record<ThemeId, ThemeConfig> = {
     badgeBg: '#451a03',
     badgeText: '#fdba74',
     bgGradient: 'from-[#050407] via-[#140b22] to-[#040205]',
-    illustrationUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
+    illustrationUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
     musicTrackUrl: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792cb.mp3?filename=wedding-grand-piano-123719.mp3',
     musicTitle: 'Danse Macabre & Gothic Organ Waltz',
     stationery: {
@@ -566,21 +566,39 @@ export const SAMPLE_HALLOWEEN_PARTY_DATA: WeddingData = {
   photos: [
     {
       id: 'p-1',
-      url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
-      caption: 'The Ravenswood Manor Ballroom lit by candelabras',
+      url: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
+      caption: 'The ancient wrought-iron gates of Ravenswood Manor shrouded in Salem fog',
       dateTag: 'All Hallows’ Eve',
     },
     {
       id: 'p-2',
-      url: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80',
-      caption: 'Alchemist potion bar with dry-ice elixirs',
-      dateTag: 'The Witching Hour',
+      url: 'https://images.unsplash.com/photo-1572945550744-570423e8e773?auto=format&fit=crop&w=1200&q=80',
+      caption: 'Venetian skull masquerade masks & velvet attire for the Grand Promenade',
+      dateTag: 'Costume Showcase',
     },
     {
       id: 'p-3',
-      url: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
-      caption: 'Venetian masquerade masks & velvet attire',
+      url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=80',
+      caption: 'The Obsidian Grand Ballroom illuminated by 500 beeswax taper candles',
+      dateTag: 'The Witching Hour',
+    },
+    {
+      id: 'p-4',
+      url: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80',
+      caption: 'Alchemist cauldron potion bar featuring dry-ice elixirs & smoked bourbon',
+      dateTag: 'Potion Cellar',
+    },
+    {
+      id: 'p-5',
+      url: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=1200&q=80',
+      caption: 'Carved Jack-o’-Lanterns casting eerie shadows along the cemetery garden path',
       dateTag: 'Midnight Promenade',
+    },
+    {
+      id: 'p-6',
+      url: 'https://images.unsplash.com/photo-1514533450685-4493e01d1fdc?auto=format&fit=crop&w=1200&q=80',
+      caption: 'The Secret Crypt Library & Midnight Séance Chamber',
+      dateTag: 'Danse Macabre',
     },
   ],
 };
