@@ -214,30 +214,55 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                   {wedding.weddingDate} · {wedding.cityState}
                 </span>
                 <p className="font-serif italic text-amber-100 text-[11px] sm:text-sm tracking-wide mt-0.5 drop-shadow line-clamp-2">
-                  "Two lives, two hearts, joined together in friendship, united forever in love."
+                  {wedding.eventType === 'halloween' || theme.id === 'midnight-haunt'
+                    ? '"When the blood moon rises over Salem, step beyond the wrought-iron gates into candlelit darkness."'
+                    : '"Two lives, two hearts, joined together in friendship, united forever in love."'}
                 </p>
               </div>
             </div>
 
-            {/* Main Formal Couple Card (Fine Cotton Linen with Deckled Gold Border) */}
+            {/* Main Formal Couple Card (Fine Cotton Linen / Gothic Obsidian Parchment) */}
             <div
-              className="rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6]"
-              style={{
+              className={`rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden ${
+                wedding.eventType === 'halloween' || theme.id === 'midnight-haunt'
+                  ? 'bg-gradient-to-b from-[#12081c] via-[#09040e] to-[#12081c] text-white border border-orange-500/70 shadow-orange-950/80'
+                  : 'bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F5EFE6] text-[#2A1810]'
+              }`}
+              style={!(wedding.eventType === 'halloween' || theme.id === 'midnight-haunt') ? {
                 border: '1px solid rgba(212, 175, 55, 0.7)',
                 color: '#2A1810',
                 boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5), 0 0 15px rgba(212,175,55,0.15)',
-              }}
+              } : undefined}
             >
-              {/* Botanical Floral Corner Watercolors */}
-              <div className="absolute top-0 right-0 w-20 sm:w-28 h-20 sm:h-28 opacity-20 pointer-events-none overflow-hidden">
-                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
-              </div>
-              <div className="absolute bottom-0 left-0 w-20 sm:w-28 h-20 sm:h-28 opacity-20 pointer-events-none overflow-hidden rotate-180">
-                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
-              </div>
+              {/* Botanical Floral Corner Watercolors or Spiderwebs */}
+              {wedding.eventType === 'halloween' || theme.id === 'midnight-haunt' ? (
+                <>
+                  <svg viewBox="0 0 100 100" className="absolute top-0 right-0 w-20 sm:w-28 h-20 sm:h-28 opacity-30 pointer-events-none text-purple-400 stroke-current fill-none">
+                    <path d="M0,0 L100,100 M100,0 L0,100 M100,50 L0,50 M50,0 L50,100" strokeWidth="0.5" strokeOpacity="0.4" />
+                    <path d="M100,0 Q60,60 0,100 M100,20 Q65,65 20,100 M100,40 Q70,70 40,100 M100,60 Q80,80 60,100" strokeWidth="1" />
+                  </svg>
+                  <svg viewBox="0 0 100 100" className="absolute bottom-0 left-0 w-20 sm:w-28 h-20 sm:h-28 opacity-30 pointer-events-none text-orange-500 stroke-current fill-none rotate-180">
+                    <path d="M0,0 L100,100 M100,0 L0,100 M100,50 L0,50 M50,0 L50,100" strokeWidth="0.5" strokeOpacity="0.4" />
+                    <path d="M100,0 Q60,60 0,100 M100,20 Q65,65 20,100 M100,40 Q70,70 40,100 M100,60 Q80,80 60,100" strokeWidth="1" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  <div className="absolute top-0 right-0 w-20 sm:w-28 h-20 sm:h-28 opacity-20 pointer-events-none overflow-hidden">
+                    <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-20 sm:w-28 h-20 sm:h-28 opacity-20 pointer-events-none overflow-hidden rotate-180">
+                    <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+                  </div>
+                </>
+              )}
 
               {/* Inner Double Gold Frame */}
-              <div className="border border-amber-300/80 rounded-xl sm:rounded-2xl p-3 sm:p-5 text-center relative z-10 bg-white/40 backdrop-blur-xs">
+              <div className={`rounded-xl sm:rounded-2xl p-3 sm:p-5 text-center relative z-10 backdrop-blur-xs ${
+                wedding.eventType === 'halloween' || theme.id === 'midnight-haunt'
+                  ? 'border border-orange-500/40 bg-[#160c24]/90'
+                  : 'border border-amber-300/80 bg-white/40'
+              }`}>
                 
                 {/* Monogram Wax Seal Crest */}
                 <div 
@@ -249,19 +274,25 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                   }}
                 >
                   <span className="font-serif italic text-[10px] sm:text-xs font-bold tracking-wider">
-                    {wedding.coupleInitials || 'É'}
+                    {wedding.eventType === 'halloween' ? '💀' : (wedding.coupleInitials || 'É')}
                   </span>
                 </div>
 
-                <span className="text-[8px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em] uppercase font-mono font-bold text-amber-900 block">
-                  {wedding.headline || 'PLEASE JOIN US FOR THE WEDDING OF'}
+                <span className={`text-[8px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em] uppercase font-mono font-bold block ${
+                  wedding.eventType === 'halloween' || theme.id === 'midnight-haunt' ? 'text-orange-400 drop-shadow-[0_1px_4px_rgba(234,88,12,0.8)]' : 'text-amber-900'
+                }`}>
+                  {wedding.headline || (wedding.eventType === 'halloween' ? 'BY DECREE OF THE WITCHING HOUR GATHERING' : 'PLEASE JOIN US FOR THE WEDDING OF')}
                 </span>
 
-                {/* Romantic Calligraphy Script */}
+                {/* Romantic / Gothic Calligraphy Script */}
                 <div className="my-2 space-y-0.5">
                   <h2 
-                    className="font-script text-3xl sm:text-5xl font-bold leading-tight drop-shadow-xs"
-                    style={(wedding.stationery || theme.stationery)?.foilFinish !== 'none' 
+                    className={`font-script text-3xl sm:text-5xl font-bold leading-tight drop-shadow-xs ${
+                      wedding.eventType === 'halloween' ? 'text-orange-200' : ''
+                    }`}
+                    style={(wedding.eventType === 'halloween' || theme.id === 'midnight-haunt')
+                      ? { color: '#ffedd5', textShadow: '0 0 16px rgba(234,88,12,0.9), 0 0 30px rgba(185,28,28,0.7)' }
+                      : (wedding.stationery || theme.stationery)?.foilFinish !== 'none' 
                       ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle 
                       : { color: '#1c1917' }}
                   >
@@ -269,10 +300,16 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                   </h2>
                   {wedding.coupleName2 && (
                     <>
-                      <span className="font-serif italic text-sm sm:text-lg text-amber-900 font-bold block my-0.5">&</span>
+                      <span className={`font-serif italic text-sm sm:text-lg font-bold block my-0.5 ${
+                        wedding.eventType === 'halloween' ? 'text-purple-300' : 'text-amber-900'
+                      }`}>&</span>
                       <h2 
-                        className="font-script text-3xl sm:text-5xl font-bold leading-tight drop-shadow-xs"
-                        style={(wedding.stationery || theme.stationery)?.foilFinish !== 'none' 
+                        className={`font-script text-3xl sm:text-5xl font-bold leading-tight drop-shadow-xs ${
+                          wedding.eventType === 'halloween' ? 'text-purple-200' : ''
+                        }`}
+                        style={(wedding.eventType === 'halloween' || theme.id === 'midnight-haunt')
+                          ? { color: '#f3e8ff', textShadow: '0 0 16px rgba(192,132,252,0.9), 0 0 30px rgba(126,34,206,0.7)' }
+                          : (wedding.stationery || theme.stationery)?.foilFinish !== 'none' 
                           ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle 
                           : { color: '#1c1917' }}
                       >
@@ -283,14 +320,24 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                 </div>
 
                 {/* Formal Venue & Date Info */}
-                <div className="mt-2.5 sm:mt-3 pt-2.5 sm:pt-3 border-t border-amber-200/80 text-[11px] sm:text-xs font-serif text-stone-800 space-y-0.5">
-                  <div className="font-bold text-stone-900 text-xs sm:text-sm tracking-wider">
+                <div className={`mt-2.5 sm:mt-3 pt-2.5 sm:pt-3 border-t text-[11px] sm:text-xs font-serif space-y-0.5 ${
+                  wedding.eventType === 'halloween' || theme.id === 'midnight-haunt'
+                    ? 'border-purple-900/60 text-stone-200'
+                    : 'border-amber-200/80 text-stone-800'
+                }`}>
+                  <div className={`font-bold text-xs sm:text-sm tracking-wider ${
+                    wedding.eventType === 'halloween' ? 'text-orange-300' : 'text-stone-900'
+                  }`}>
                     {wedding.weddingDate} at {wedding.weddingTime}
                   </div>
-                  <div className="text-[10px] sm:text-xs text-stone-700 font-medium">
+                  <div className={`text-[10px] sm:text-xs font-medium ${
+                    wedding.eventType === 'halloween' ? 'text-purple-300' : 'text-stone-700'
+                  }`}>
                     {wedding.venueName}
                   </div>
-                  <div className="text-[9px] sm:text-[11px] text-stone-500 font-sans">
+                  <div className={`text-[9px] sm:text-[11px] font-sans ${
+                    wedding.eventType === 'halloween' ? 'text-stone-400' : 'text-stone-500'
+                  }`}>
                     {wedding.venueAddress}, {wedding.cityState}
                   </div>
 
@@ -299,7 +346,9 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                       href={wedding.mapsUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] text-amber-900 font-semibold underline hover:text-amber-700 mt-1.5 font-sans"
+                      className={`inline-flex items-center gap-1 text-[11px] font-semibold underline mt-1.5 font-sans ${
+                        wedding.eventType === 'halloween' ? 'text-orange-400 hover:text-orange-300' : 'text-amber-900 hover:text-amber-700'
+                      }`}
                     >
                       <Navigation size={11} />
                       <span>Open Venue in Google Maps</span>

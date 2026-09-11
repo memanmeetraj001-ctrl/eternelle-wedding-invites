@@ -46,6 +46,29 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
   const [demoRsvpSubmitted, setDemoRsvpSubmitted] = useState(false);
   const [selectedGalleryIdx, setSelectedGalleryIdx] = useState<number | null>(null);
 
+  // Global Horror Music Player State
+  const [isHorrorMusicPlaying, setIsHorrorMusicPlaying] = useState(false);
+  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/10/30/audio_2d8dfbf59c.mp3?filename=horror-background-atmosphere-126231.mp3');
+    audio.loop = true;
+    setAudioElement(audio);
+    return () => {
+      audio.pause();
+    };
+  }, []);
+
+  const toggleHorrorAudio = () => {
+    if (!audioElement) return;
+    if (isHorrorMusicPlaying) {
+      audioElement.pause();
+      setIsHorrorMusicPlaying(false);
+    } else {
+      audioElement.play().then(() => setIsHorrorMusicPlaying(true)).catch(() => {});
+    }
+  };
+
   // Live Countdown to All Hallows' Eve (Oct 31, 2026 Midnight)
   const [timeLeft, setTimeLeft] = useState({ days: 48, hours: 14, minutes: 32, seconds: 45 });
 
@@ -85,9 +108,9 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
       description: 'Vintage gothic damask liner, raven postage stamp, and interactive 3D wax seal unboxing.',
     },
     {
-      title: 'Wicked Potion & Cocktail Bar',
-      tagline: 'Dry Ice Cauldron Cocktails & Bites',
-      image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80',
+      title: 'Wicked Potion & Skull Bar',
+      tagline: 'Dry Ice Cauldron Cocktails & Dark Alchemy',
+      image: 'https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=1200&q=80',
       tag: 'Spooky Menus',
       description: 'Interactive cocktail cards with custom glassware icons, secret recipes, and mocktail notes.',
     },
@@ -225,6 +248,33 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Horror Music Player Toggle Button */}
+          <button
+            onClick={toggleHorrorAudio}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer backdrop-blur-md border ${
+              isHorrorMusicPlaying
+                ? 'bg-orange-500/20 text-orange-300 border-orange-500/50 shadow-lg shadow-orange-950/60'
+                : 'bg-stone-900/80 text-stone-400 border-stone-700 hover:text-white'
+            }`}
+          >
+            {isHorrorMusicPlaying ? (
+              <>
+                <Music size={13} className="text-orange-400 animate-spin" />
+                <span className="hidden sm:inline font-mono text-[11px]">Horror Soundtrack ON</span>
+                <span className="flex items-center gap-0.5 ml-0.5">
+                  <span className="w-1 h-2 bg-orange-500 rounded-full animate-pulse" />
+                  <span className="w-1 h-3 bg-purple-500 rounded-full animate-pulse delay-75" />
+                  <span className="w-1 h-1.5 bg-orange-400 rounded-full animate-pulse delay-150" />
+                </span>
+              </>
+            ) : (
+              <>
+                <Music size={13} className="text-stone-400" />
+                <span className="hidden sm:inline font-mono text-[11px]">Play Horror Music</span>
+              </>
+            )}
+          </button>
+
           <button
             onClick={() => onStartCreating('halloween')}
             className="px-4 py-1.5 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 hover:brightness-110 text-black text-xs font-bold shadow-md shadow-orange-950/40 transition-all flex items-center gap-1.5"

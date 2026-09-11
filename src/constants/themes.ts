@@ -584,8 +584,8 @@ export const SAMPLE_HALLOWEEN_PARTY_DATA: WeddingData = {
     },
     {
       id: 'p-4',
-      url: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80',
-      caption: 'Alchemist cauldron potion bar featuring dry-ice elixirs & smoked bourbon',
+      url: 'https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=1200&q=80',
+      caption: 'Alchemist cauldron potion bar featuring dry-ice elixirs, skulls & dark alchemy',
       dateTag: 'Potion Cellar',
     },
     {

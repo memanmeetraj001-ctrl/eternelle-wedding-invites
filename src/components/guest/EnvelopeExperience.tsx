@@ -17,6 +17,50 @@ interface EnvelopeExperienceProps {
   onReset?: () => void;
 }
 
+// Haunted Horror Web Audio Synthesizer (Instant Spine-chilling Bell & Creaking Seal)
+const playSpookySoundEffect = () => {
+  try {
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    
+    // Low sinister cathedral gong
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(110, ctx.currentTime); // A2 low pitch
+    osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 2.2);
+    
+    // Low pass filter for dark dungeon resonance
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(260, ctx.currentTime);
+    
+    gain.gain.setValueAtTime(0.45, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+    
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start();
+    osc.stop(ctx.currentTime + 2.5);
+
+    // Eerie high dissonant whistle
+    const highOsc = ctx.createOscillator();
+    const highGain = ctx.createGain();
+    highOsc.type = 'sine';
+    highOsc.frequency.setValueAtTime(880, ctx.currentTime);
+    highOsc.frequency.linearRampToValueAtTime(740, ctx.currentTime + 1.2);
+    highGain.gain.setValueAtTime(0.08, ctx.currentTime);
+    highGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+    highOsc.connect(highGain);
+    highGain.connect(ctx.destination);
+    highOsc.start();
+    highOsc.stop(ctx.currentTime + 1.5);
+  } catch {}
+};
+
 export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   wedding,
   theme,
@@ -38,7 +82,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   const currentFoil = FOIL_FINISH_OPTIONS[stationery.foilFinish] || FOIL_FINISH_OPTIONS['gold'];
   
   const isHalloween = wedding.eventType === 'halloween' || theme.id === 'midnight-haunt';
-  const postmarkCity = stationery.postmarkCity || (isHalloween ? 'SALEM MANOR · ALL HALLOWS\' EVE' : (wedding.cityState ? wedding.cityState.split(',')[0].toUpperCase() : 'PARIS') + ' · AIRMAIL');
+  const postmarkCity = stationery.postmarkCity || (isHalloween ? 'SALEM WITCH COVEN · CONDEMNED 1692' : (wedding.cityState ? wedding.cityState.split(',')[0].toUpperCase() : 'PARIS') + ' · AIRMAIL');
 
   // Background Audio Setup
   useEffect(() => {
@@ -81,6 +125,11 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     setTilt({ x: 0, y: 0 });
     setStage('opening');
 
+    // Play spooky sound effect if Halloween
+    if (isHalloween) {
+      playSpookySoundEffect();
+    }
+
     // Play music if enabled
     if (wedding.musicEnabled && audioElement && !isMusicPlaying) {
       audioElement.play().then(() => setIsMusicPlaying(true)).catch(() => {});
@@ -89,11 +138,11 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     // Sparkle Spooky or Romantic Confetti Burst
     try {
       confetti({
-        particleCount: isHalloween ? 90 : 75,
-        spread: 80,
+        particleCount: isHalloween ? 100 : 75,
+        spread: 85,
         origin: { y: 0.6 },
         colors: isHalloween 
-          ? ['#ea580c', '#c2410c', '#7e22ce', '#9333ea', '#1c1917', '#f59e0b']
+          ? ['#991b1b', '#ea580c', '#c2410c', '#7e22ce', '#000000', '#f59e0b', '#dc2626']
           : [theme.waxSealBg, currentFoil.sampleHex, '#10b981', '#fdf2f4', '#ffffff'],
         disableForReducedMotion: true,
       });
@@ -228,7 +277,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             transform: `rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
             transformStyle: 'preserve-3d',
             boxShadow: isHalloween
-              ? '0 30px 60px -15px rgba(0, 0, 0, 0.95), 0 0 35px -5px rgba(234, 88, 12, 0.25)'
+              ? '0 30px 70px -10px rgba(0, 0, 0, 0.98), 0 0 45px 5px rgba(220, 38, 38, 0.35), 0 0 20px 2px rgba(234, 88, 12, 0.3)'
               : '0 30px 60px -15px rgba(0, 0, 0, 0.85), 0 10px 25px -5px rgba(0, 0, 0, 0.6)',
           }}
         >
@@ -241,64 +290,85 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             }`}
             style={{
               background: currentLiner.patternCss,
-              border: isHalloween ? '2px solid rgba(234, 88, 12, 0.8)' : `2px solid ${currentFoil.sampleHex}`,
+              border: isHalloween ? '2px solid rgba(234, 88, 12, 0.85)' : `2px solid ${currentFoil.sampleHex}`,
               zIndex: 10,
             }}
           >
-            {/* Fine Cotton Linen / Gothic Velvet Card Core */}
+            {/* Fine Cotton Linen / Gothic Charred Parchment Card Core */}
             <div 
               className="rounded-xl p-3 sm:p-5 text-center relative z-10 flex flex-col justify-between h-full shadow-inner overflow-hidden"
               style={{
-                backgroundColor: isHalloween ? '#0d0914' : '#FAF7F0',
-                border: isHalloween ? '1px solid rgba(234, 88, 12, 0.4)' : `1px solid ${currentFoil.sampleHex}99`,
-                color: isHalloween ? '#f5e8ff' : '#2A1810',
+                backgroundColor: isHalloween ? '#08040b' : '#FAF7F0',
+                border: isHalloween ? '1px solid rgba(220, 38, 38, 0.5)' : `1px solid ${currentFoil.sampleHex}99`,
+                color: isHalloween ? '#faf5ff' : '#2A1810',
               }}
             >
-              {/* Botanical Floral Corner Accents */}
-              <div className="absolute top-0 right-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden">
-                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
-              </div>
-              <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
-                <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
-              </div>
+              {/* Halloween Spiderweb Overlays or Floral Accents */}
+              {isHalloween ? (
+                <>
+                  {/* Top-Right Spiderweb */}
+                  <svg viewBox="0 0 100 100" className="absolute top-0 right-0 w-20 sm:w-28 h-20 sm:h-28 opacity-40 pointer-events-none text-purple-400 stroke-current fill-none">
+                    <path d="M0,0 L100,100 M100,0 L0,100 M100,50 L0,50 M50,0 L50,100" strokeWidth="0.5" strokeOpacity="0.4" />
+                    <path d="M100,0 Q60,60 0,100 M100,20 Q65,65 20,100 M100,40 Q70,70 40,100 M100,60 Q80,80 60,100" strokeWidth="1" />
+                    <circle cx="85" cy="85" r="3" fill="#ea580c" />
+                  </svg>
+                  {/* Bottom-Left Spiderweb */}
+                  <svg viewBox="0 0 100 100" className="absolute bottom-0 left-0 w-20 sm:w-28 h-20 sm:h-28 opacity-40 pointer-events-none text-orange-500 stroke-current fill-none rotate-180">
+                    <path d="M0,0 L100,100 M100,0 L0,100 M100,50 L0,50 M50,0 L50,100" strokeWidth="0.5" strokeOpacity="0.4" />
+                    <path d="M100,0 Q60,60 0,100 M100,20 Q65,65 20,100 M100,40 Q70,70 40,100 M100,60 Q80,80 60,100" strokeWidth="1" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  <div className="absolute top-0 right-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden">
+                    <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 opacity-20 pointer-events-none overflow-hidden rotate-180">
+                    <img src={theme.illustrationUrl} alt="corner art" className="w-full h-full object-cover scale-150" />
+                  </div>
+                </>
+              )}
 
               {/* Inner Frame */}
               <div 
                 className={`rounded-lg p-2 sm:p-3.5 text-center relative z-10 backdrop-blur-xs h-full flex flex-col justify-between ${
                   isHalloween 
-                    ? 'border border-orange-500/40 bg-[#160f24]/90 shadow-2xl' 
+                    ? 'border border-orange-500/50 bg-[#12081c]/95 shadow-2xl shadow-orange-950/50' 
                     : 'border border-amber-300/80 bg-white/50'
                 }`}
               >
                 
-                {/* Monogram Crest with Foil Accent */}
+                {/* Monogram Crest with Foil / Spooky Skull Accent */}
                 <div>
                   <div 
-                    className="w-6 h-6 sm:w-8 sm:h-8 mx-auto rounded-full border flex items-center justify-center mb-0.5 shadow-xs"
+                    className={`w-7 h-7 sm:w-9 sm:h-9 mx-auto rounded-full border flex items-center justify-center mb-1 shadow-lg ${
+                      isHalloween ? 'animate-pulse' : 'shadow-xs'
+                    }`}
                     style={{ 
-                      backgroundColor: theme.waxSealBg, 
+                      backgroundColor: isHalloween ? '#7f1d1d' : theme.waxSealBg, 
                       borderColor: isHalloween ? '#ea580c' : currentFoil.sampleHex,
-                      color: theme.waxSealColor 
+                      color: isHalloween ? '#fef08a' : theme.waxSealColor,
+                      boxShadow: isHalloween ? '0 0 15px rgba(220, 38, 38, 0.8), inset 0 2px 4px rgba(255,255,255,0.3)' : undefined
                     }}
                   >
-                    <span className="font-serif italic text-[10px] sm:text-xs font-bold">
-                      {isHalloween ? '🦇' : (wedding.coupleInitials || 'É')}
+                    <span className="text-xs sm:text-sm font-bold">
+                      {isHalloween ? '💀' : (wedding.coupleInitials || 'É')}
                     </span>
                   </div>
 
                   <span className={`text-[7px] sm:text-[9px] tracking-[0.2em] sm:tracking-[0.3em] font-mono uppercase font-bold block ${
-                    isHalloween ? 'text-orange-400' : 'text-amber-900'
+                    isHalloween ? 'text-orange-400 drop-shadow-[0_1px_4px_rgba(234,88,12,0.8)]' : 'text-amber-900'
                   }`}>
-                    {wedding.headline || (isHalloween ? 'YOU ARE CORDIALLY INVITED TO THE ANNUAL' : 'PLEASE JOIN US FOR THE WEDDING OF')}
+                    {wedding.headline || (isHalloween ? 'BY DECREE OF THE WITCHING HOUR GATHERING' : 'PLEASE JOIN US FOR THE WEDDING OF')}
                   </span>
 
-                  {/* Honoree or Couple Names Calligraphy with Metallic Foil */}
+                  {/* Honoree or Couple Names Calligraphy with Metallic Foil / Demonic Glow */}
                   <div className="my-1 space-y-0.5">
                     <h2 
                       className={`font-script text-2xl sm:text-4xl font-bold leading-tight drop-shadow-xs ${
                         isHalloween ? 'text-orange-200' : ''
                       }`}
-                      style={!isHalloween && stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : isHalloween ? { color: '#fed7aa', textShadow: '0 0 12px rgba(234,88,12,0.6)' } : { color: '#1c1917' }}
+                      style={!isHalloween && stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : isHalloween ? { color: '#ffedd5', textShadow: '0 0 16px rgba(234,88,12,0.9), 0 0 30px rgba(185,28,28,0.7)' } : { color: '#1c1917' }}
                     >
                       {wedding.coupleName1 || wedding.honoreeName || (isHalloween ? 'Lord Lucien & Lady Morgana' : 'Celebration')}
                     </h2>
@@ -311,7 +381,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                           className={`font-script text-2xl sm:text-4xl font-bold leading-tight drop-shadow-xs ${
                             isHalloween ? 'text-purple-200' : ''
                           }`}
-                          style={!isHalloween && stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : isHalloween ? { color: '#e9d5ff', textShadow: '0 0 12px rgba(192,132,252,0.6)' } : { color: '#1c1917' }}
+                          style={!isHalloween && stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : isHalloween ? { color: '#f3e8ff', textShadow: '0 0 16px rgba(192,132,252,0.9), 0 0 30px rgba(126,34,206,0.7)' } : { color: '#1c1917' }}
                         >
                           {wedding.coupleName2}
                         </h2>
@@ -323,7 +393,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                 {/* Date & Venue */}
                 <div className={`pt-1 border-t text-[10px] sm:text-xs font-serif space-y-0 ${
                   isHalloween 
-                    ? 'border-purple-900/60 text-stone-300' 
+                    ? 'border-purple-900/80 text-stone-200' 
                     : 'border-amber-200/80 text-stone-800'
                 }`}>
                   <div className={`font-bold tracking-wider text-[10px] sm:text-xs ${
@@ -351,18 +421,20 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                     onOpen();
                   }}
                   className={`mt-1 w-full py-1.5 sm:py-2 px-2.5 sm:px-4 rounded-xl text-[9px] sm:text-xs font-serif font-bold tracking-wider uppercase text-white shadow-md flex items-center justify-center gap-1.5 transition-all hover:brightness-110 active:scale-98 cursor-pointer ${
-                    isHalloween ? 'bg-gradient-to-r from-orange-600 to-purple-700 hover:from-orange-500 hover:to-purple-600' : ''
+                    isHalloween 
+                      ? 'bg-gradient-to-r from-red-700 via-orange-600 to-purple-800 hover:from-red-600 hover:to-purple-700 shadow-red-950/80' 
+                      : ''
                   }`}
                   style={!isHalloween ? {
                     backgroundColor: theme.waxSealBg,
                     border: `1px solid ${theme.waxSealBorder}`,
                   } : {
-                    border: '1px solid rgba(234, 88, 12, 0.6)',
-                    boxShadow: '0 4px 15px rgba(234, 88, 12, 0.3)',
+                    border: '1px solid rgba(234, 88, 12, 0.7)',
+                    boxShadow: '0 4px 18px rgba(220, 38, 38, 0.5)',
                   }}
                 >
-                  <Sparkles size={11} />
-                  <span>{isHalloween ? 'Unfold Masquerade Suite & RSVP' : 'Unfold Full Suite & RSVP'}</span>
+                  <Sparkles size={11} className={isHalloween ? "text-yellow-300 animate-spin" : ""} />
+                  <span>{isHalloween ? '🔥 Unfold Masquerade Suite & RSVP 🩸' : 'Unfold Full Suite & RSVP'}</span>
                   <ArrowRight size={11} />
                 </button>
 
@@ -374,45 +446,53 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           <div
             className="absolute top-0 inset-x-0 h-1/2 rounded-t-2xl p-3 sm:p-4 origin-top transition-transform duration-[1750ms] ease-in-out shadow-2xl overflow-hidden will-change-transform"
             style={{
-              backgroundColor: isHalloween ? '#09060f' : (theme.envelopeColor || '#064e3b'),
-              borderTop: isHalloween ? '1px solid rgba(234, 88, 12, 0.6)' : `1px solid ${currentFoil.sampleHex}99`,
-              borderLeft: isHalloween ? '1px solid rgba(234, 88, 12, 0.6)' : `1px solid ${currentFoil.sampleHex}99`,
-              borderRight: isHalloween ? '1px solid rgba(234, 88, 12, 0.6)' : `1px solid ${currentFoil.sampleHex}99`,
+              backgroundColor: isHalloween ? '#08030b' : (theme.envelopeColor || '#064e3b'),
+              borderTop: isHalloween ? '2px solid rgba(234, 88, 12, 0.8)' : `1px solid ${currentFoil.sampleHex}99`,
+              borderLeft: isHalloween ? '2px solid rgba(234, 88, 12, 0.8)' : `1px solid ${currentFoil.sampleHex}99`,
+              borderRight: isHalloween ? '2px solid rgba(234, 88, 12, 0.8)' : `1px solid ${currentFoil.sampleHex}99`,
               transform: isRibbonOpen ? 'rotateX(130deg)' : 'rotateX(0deg)',
               transformStyle: 'preserve-3d',
               zIndex: 20,
             }}
           >
+            {/* Top Flap Spiderweb SVG watermark for Halloween */}
+            {isHalloween && (
+              <svg viewBox="0 0 100 100" className="absolute top-0 left-0 w-16 h-16 opacity-30 pointer-events-none text-purple-400 stroke-current fill-none">
+                <path d="M0,0 L100,100 M100,0 L0,100 M100,50 L0,50 M50,0 L50,100" strokeWidth="0.5" strokeOpacity="0.5" />
+                <path d="M100,0 Q60,60 0,100 M100,20 Q65,65 20,100 M100,40 Q70,70 40,100" strokeWidth="1" />
+              </svg>
+            )}
+
             <div className={`absolute inset-2 sm:inset-3 rounded-t-xl border pointer-events-none ${
-              isHalloween ? 'border-orange-500/20' : 'border-amber-300/30'
+              isHalloween ? 'border-orange-500/30' : 'border-amber-300/30'
             }`} />
             
             {/* Vintage Postal Stamp & Cancellation Postmark (Top-Right) */}
             <div className="absolute top-2 sm:top-2.5 right-2 sm:right-2.5 z-20 flex items-center gap-1 pointer-events-none">
               {/* Circular Postal Cancellation Stamp */}
               <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border text-[6px] font-mono uppercase flex flex-col items-center justify-center text-center p-0.5 rotate-[-12deg] shadow-xs ${
-                isHalloween ? 'border-orange-500/60 text-orange-300/90' : 'border-amber-300/60 text-amber-200/80'
+                isHalloween ? 'border-red-500/80 text-red-300/90 shadow-red-950/80' : 'border-amber-300/60 text-amber-200/80'
               }`}>
                 <span className="font-bold tracking-tight text-[5px] sm:text-[6px] leading-tight line-clamp-1">{postmarkCity}</span>
                 <span className={`text-[5px] border-y my-0.5 px-0.5 font-bold ${
-                  isHalloween ? 'border-orange-500/40 text-orange-400' : 'border-amber-300/40 text-amber-300'
+                  isHalloween ? 'border-red-500/50 text-orange-400' : 'border-amber-300/40 text-amber-300'
                 }`}>
                   {wedding.weddingDate?.split('-')[0] || (isHalloween ? '1692' : '2027')}
                 </span>
-                <span className="tracking-tighter text-[4px] sm:text-[5px]">{isHalloween ? 'HAUNT' : 'POSTAL'}</span>
+                <span className="tracking-tighter text-[4px] sm:text-[5px]">{isHalloween ? 'CONDEMNED' : 'POSTAL'}</span>
               </div>
 
               {/* Scalloped Vintage Stamp */}
               <div 
                 className={`w-10 h-13 sm:w-12 sm:h-15 p-1 shadow-lg border relative overflow-hidden flex flex-col justify-between rounded-xs ${
-                  isHalloween ? 'bg-[#150d22] border-orange-500/80 shadow-orange-950/60' : 'bg-[#FFFDF7] border-amber-400/80'
+                  isHalloween ? 'bg-[#150a22] border-orange-500/90 shadow-orange-950/80' : 'bg-[#FFFDF7] border-amber-400/80'
                 }`}
                 style={{
-                  boxShadow: isHalloween ? '0 4px 15px rgba(0,0,0,0.8), 0 0 10px rgba(234,88,12,0.3)' : '0 4px 10px rgba(0,0,0,0.5)',
+                  boxShadow: isHalloween ? '0 4px 18px rgba(0,0,0,0.95), 0 0 12px rgba(234,88,12,0.4)' : '0 4px 10px rgba(0,0,0,0.5)',
                 }}
               >
                 <div className={`h-6 sm:h-7 w-full overflow-hidden rounded-xs border ${
-                  isHalloween ? 'bg-[#09060f] border-orange-500/40' : 'bg-stone-900 border-amber-400/40'
+                  isHalloween ? 'bg-[#06020a] border-orange-500/50' : 'bg-stone-900 border-amber-400/40'
                 }`}>
                   <img src={currentStamp.imageUrl} alt={currentStamp.name} className="w-full h-full object-cover brightness-95" />
                 </div>
@@ -431,9 +511,9 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
 
             <div className="h-full flex items-center justify-start pl-2">
               <span className={`text-[8px] sm:text-[10px] font-mono tracking-[0.25em] sm:tracking-[0.3em] uppercase font-bold drop-shadow ${
-                isHalloween ? 'text-orange-400' : 'text-amber-200/90'
+                isHalloween ? 'text-orange-400 drop-shadow-[0_0_8px_rgba(234,88,12,0.8)]' : 'text-amber-200/90'
               }`}>
-                {isHalloween ? 'SALEM COUTURE' : 'ÉTERNEL COUTURE'}
+                {isHalloween ? '⚠ SALEM WITCH TRIAL' : 'ÉTERNEL COUTURE'}
               </span>
             </div>
           </div>
@@ -442,63 +522,85 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           <div
             className="absolute bottom-0 inset-x-0 h-1/2 rounded-b-2xl p-3 sm:p-4 origin-bottom transition-transform duration-[1750ms] ease-in-out shadow-2xl overflow-hidden will-change-transform"
             style={{
-              backgroundColor: isHalloween ? '#09060f' : (theme.envelopeColor || '#064e3b'),
-              borderBottom: isHalloween ? '1px solid rgba(234, 88, 12, 0.6)' : `1px solid ${currentFoil.sampleHex}99`,
-              borderLeft: isHalloween ? '1px solid rgba(234, 88, 12, 0.6)' : `1px solid ${currentFoil.sampleHex}99`,
-              borderRight: isHalloween ? '1px solid rgba(234, 88, 12, 0.6)' : `1px solid ${currentFoil.sampleHex}99`,
+              backgroundColor: isHalloween ? '#08030b' : (theme.envelopeColor || '#064e3b'),
+              borderBottom: isHalloween ? '2px solid rgba(234, 88, 12, 0.8)' : `1px solid ${currentFoil.sampleHex}99`,
+              borderLeft: isHalloween ? '2px solid rgba(234, 88, 12, 0.8)' : `1px solid ${currentFoil.sampleHex}99`,
+              borderRight: isHalloween ? '2px solid rgba(234, 88, 12, 0.8)' : `1px solid ${currentFoil.sampleHex}99`,
               transform: isRibbonOpen ? 'rotateX(-130deg)' : 'rotateX(0deg)',
               transformStyle: 'preserve-3d',
               zIndex: 20,
             }}
           >
             <div className={`absolute inset-2 sm:inset-3 rounded-b-xl border pointer-events-none ${
-              isHalloween ? 'border-orange-500/20' : 'border-amber-300/30'
+              isHalloween ? 'border-orange-500/30' : 'border-amber-300/30'
             }`} />
             <div className="h-full flex items-center justify-center text-center">
               <span className={`text-[7px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.25em] uppercase font-medium ${
-                isHalloween ? 'text-orange-400/90' : 'text-amber-300/80'
+                isHalloween ? 'text-orange-400/90 drop-shadow-[0_0_6px_rgba(234,88,12,0.8)]' : 'text-amber-300/80'
               }`}>
-                {isHalloween ? 'TAP TO BREAK SEAL & UNTIE' : 'TAP TO UNTIE RIBBON'}
+                {isHalloween ? '🩸 BREAK BLOOD SEAL AT YOUR OWN PERIL' : 'TAP TO UNTIE RIBBON'}
               </span>
             </div>
           </div>
 
-          {/* ==================== 4. SATIN RIBBON BELLYBAND & BOW CLASP ==================== */}
+          {/* ==================== 4. SATIN RIBBON BELLYBAND & BOW / DRIPPING WAX CLASP ==================== */}
           <div
-            className="absolute top-1/2 inset-x-0 -translate-y-1/2 h-9 sm:h-11 shadow-2xl flex items-center justify-center transition-all duration-[1250ms] ease-out"
+            className="absolute top-1/2 inset-x-0 -translate-y-1/2 h-10 sm:h-12 shadow-2xl flex items-center justify-center transition-all duration-[1250ms] ease-out"
             style={{
               background: isHalloween
-                ? 'linear-gradient(90deg, #450a0a 0%, #7f1d1d 20%, #c2410c 45%, #ea580c 50%, #c2410c 55%, #7f1d1d 80%, #450a0a 100%)'
+                ? 'linear-gradient(90deg, #180000 0%, #7f1d1d 20%, #dc2626 45%, #ea580c 50%, #dc2626 55%, #7f1d1d 80%, #180000 100%)'
                 : 'linear-gradient(90deg, #b45309 0%, #f59e0b 30%, #fef3c7 50%, #f59e0b 70%, #b45309 100%)',
-              borderTop: isHalloween ? '1px solid rgba(234, 88, 12, 0.8)' : '1px solid rgba(254, 240, 138, 0.8)',
-              borderBottom: isHalloween ? '1px solid rgba(127, 29, 29, 0.9)' : '1px solid rgba(180, 83, 9, 0.8)',
+              borderTop: isHalloween ? '1px solid rgba(234, 88, 12, 0.9)' : '1px solid rgba(254, 240, 138, 0.8)',
+              borderBottom: isHalloween ? '1px solid rgba(153, 27, 27, 0.9)' : '1px solid rgba(180, 83, 9, 0.8)',
               transform: isRibbonOpen ? 'translateY(-50%) scaleX(0)' : 'translateY(-50%) scaleX(1)',
               opacity: isRibbonOpen ? 0 : 1,
               zIndex: 30,
               boxShadow: isHalloween 
-                ? '0 8px 25px rgba(0,0,0,0.9), 0 0 15px rgba(234,88,12,0.4), inset 0 1px 2px rgba(255,255,255,0.4)'
+                ? '0 10px 30px rgba(0,0,0,0.95), 0 0 20px rgba(220,38,38,0.6), inset 0 1px 3px rgba(255,255,255,0.4)'
                 : '0 8px 20px -2px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.6)',
             }}
           >
-            {/* Ornate Gold / Blood-Orange Bow & Monogram Clasp */}
-            <div
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 flex items-center justify-center shadow-2xl relative transition-transform duration-300 group-hover:scale-110 active:scale-95"
-              style={{
-                backgroundColor: theme.waxSealBg,
-                borderColor: isHalloween ? '#ea580c' : currentFoil.sampleHex,
-                boxShadow: `0 6px 16px -2px ${theme.waxSealBg}cc, inset 0 2px 4px rgba(255,255,255,0.4)`,
-              }}
-            >
-              <div className="text-center">
-                <span className="text-sm sm:text-base block leading-none">
-                  {isHalloween ? '🦇' : '🎀'}
-                </span>
-                <span className={`font-serif italic font-bold text-[8px] sm:text-[9px] block -mt-0.5 ${
-                  isHalloween ? 'text-orange-200' : 'text-amber-200'
-                }`}>
-                  {wedding.coupleInitials || (isHalloween ? 'HAUNT' : 'É')}
-                </span>
+            {/* Ornate Wax Clasp with Dripping Blood */}
+            <div className="relative">
+              <div
+                className={`w-11 h-11 sm:w-13 sm:h-13 rounded-full border-2 flex items-center justify-center shadow-2xl relative transition-transform duration-300 group-hover:scale-115 active:scale-95 ${
+                  isHalloween ? 'animate-pulse' : ''
+                }`}
+                style={{
+                  backgroundColor: isHalloween ? '#991b1b' : theme.waxSealBg,
+                  borderColor: isHalloween ? '#ea580c' : currentFoil.sampleHex,
+                  boxShadow: isHalloween
+                    ? '0 0 20px rgba(220, 38, 38, 0.9), inset 0 2px 5px rgba(255,255,255,0.5)'
+                    : `0 6px 16px -2px ${theme.waxSealBg}cc, inset 0 2px 4px rgba(255,255,255,0.4)`,
+                }}
+              >
+                <div className="text-center">
+                  <span className="text-base sm:text-lg block leading-none filter drop-shadow-[0_0_8px_rgba(239,68,68,0.9)]">
+                    {isHalloween ? '💀' : '🎀'}
+                  </span>
+                  <span className={`font-serif italic font-bold text-[8px] sm:text-[9px] block -mt-0.5 ${
+                    isHalloween ? 'text-yellow-200 tracking-wider' : 'text-amber-200'
+                  }`}>
+                    {wedding.coupleInitials || (isHalloween ? 'HAUNT' : 'É')}
+                  </span>
+                </div>
               </div>
+
+              {/* Dripping Blood Droplets Under Seal for Halloween */}
+              {isHalloween && (
+                <svg 
+                  viewBox="0 0 100 40" 
+                  className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-16 h-7 pointer-events-none filter drop-shadow-[0_2px_6px_rgba(153,27,27,0.95)] z-40"
+                >
+                  <path 
+                    d="M15,0 C15,10 12,20 16,24 C19,27 22,23 23,18 C24,10 26,0 26,0 M42,0 C42,14 38,28 44,35 C48,39 53,33 54,26 C55,14 56,0 56,0 M74,0 C74,10 71,21 76,26 C79,29 82,24 83,18 C84,10 85,0 85,0" 
+                    fill="#991b1b" 
+                  />
+                  <circle cx="48.5" cy="36" r="3" fill="#dc2626" />
+                  <circle cx="19" cy="25" r="2" fill="#dc2626" />
+                  <circle cx="79" cy="27" r="2" fill="#dc2626" />
+                </svg>
+              )}
             </div>
           </div>
 
@@ -514,14 +616,14 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           >
             <div className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full backdrop-blur-md border text-xs font-sans font-bold tracking-widest uppercase shadow-xl transition-all group-hover:scale-105 ${
               isHalloween 
-                ? 'bg-orange-600/30 hover:bg-orange-600/40 border-orange-500/60 text-orange-200 group-hover:shadow-orange-500/30' 
+                ? 'bg-gradient-to-r from-red-800 via-orange-600 to-red-800 hover:from-red-700 hover:to-orange-500 border-orange-500/80 text-amber-100 shadow-red-950/90 group-hover:shadow-red-600/50' 
                 : 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-400/50 text-amber-200 group-hover:shadow-amber-500/20'
             }`}>
-              <Sparkles size={14} className={isHalloween ? "text-orange-400" : "text-amber-400"} />
-              <span>{isHalloween ? '🦇 Tap to Break Seal & Untie Ribbon' : 'Tap to Untie Silk Ribbon'}</span>
+              <Sparkles size={14} className={isHalloween ? "text-yellow-300 animate-pulse" : "text-amber-400"} />
+              <span>{isHalloween ? '🦇 Tap to Break Blood Seal & Enter' : 'Tap to Untie Silk Ribbon'}</span>
             </div>
             <p className="font-serif italic text-xs text-stone-300/80 font-medium mt-1.5">
-              {isHalloween ? 'Dare to unveil your gothic masquerade invitation' : 'Unveil your couture wedding invitation'}
+              {isHalloween ? 'Dare to break the seal and unveil your gothic invitation' : 'Unveil your couture wedding invitation'}
             </p>
           </div>
         ) : isFullyOpen ? (
@@ -529,7 +631,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             <button
               onClick={onOpen}
               className={`px-8 py-3 rounded-full font-serif text-sm font-bold tracking-widest uppercase text-white shadow-2xl flex items-center gap-2 hover:brightness-110 active:scale-98 transition-all cursor-pointer ${
-                isHalloween ? 'bg-gradient-to-r from-orange-600 to-purple-700 border border-orange-500/60 shadow-orange-950/60' : ''
+                isHalloween ? 'bg-gradient-to-r from-red-700 via-orange-600 to-purple-800 border border-orange-500/80 shadow-red-950/80' : ''
               }`}
               style={!isHalloween ? {
                 backgroundColor: theme.waxSealBg,
