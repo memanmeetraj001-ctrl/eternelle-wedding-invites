@@ -16,6 +16,8 @@ import { BrandLogo } from '../common/BrandLogo';
 import { EnvelopeExperience } from '../guest/EnvelopeExperience';
 import { GumroadOverlayButton } from '../common/GumroadOverlayButton';
 
+import { LegalDocType } from '../legal/LegalModal';
+
 interface LandingPageProps {
   wedding: WeddingData;
   theme: ThemeConfig;
@@ -25,6 +27,8 @@ interface LandingPageProps {
   onOpenCheckout: (plan: 'pro' | 'lifetime') => void;
   onSelectTheme: (themeId: ThemeId) => void;
   onOpenHalloween?: () => void;
+  onOpenLegal: (doc: LegalDocType) => void;
+  onOpenCookieSettings?: () => void;
 }
 
 export function LandingPage({
@@ -36,6 +40,8 @@ export function LandingPage({
   onOpenCheckout,
   onSelectTheme,
   onOpenHalloween,
+  onOpenLegal,
+  onOpenCookieSettings,
 }: LandingPageProps) {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [selectedPresetId, setSelectedPresetId] = useState<ThemeId>(wedding.themeId || 'olive-burgundy');
@@ -1192,28 +1198,188 @@ export function LandingPage({
         </div>
       </section>
 
-      {/* 14. LUXURY FOOTER */}
-      <footer className="w-full border-t border-stone-300 bg-[#EFE9E0] py-12 px-4 sm:px-6 text-center text-xs text-stone-700">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <BrandLogo size="sm" showText={false} />
-            <span className="font-serif text-sm tracking-widest text-stone-950 font-bold">
-              ÉTERNELLE
-            </span>
-          </div>
-          
-          <div className="flex flex-wrap items-center justify-center gap-6 text-[11px] text-stone-800 font-semibold">
-            <button onClick={() => scrollToSection('milestones')} className="hover:text-rose-700 transition-colors cursor-pointer">Milestones</button>
-            <button onClick={() => scrollToSection('stationery')} className="hover:text-rose-700 transition-colors cursor-pointer">Stationery</button>
-            <button onClick={() => scrollToSection('features')} className="hover:text-rose-700 transition-colors cursor-pointer">Features</button>
-            <button onClick={() => scrollToSection('demo')} className="hover:text-rose-700 transition-colors cursor-pointer">Live Demo</button>
-            <button onClick={() => scrollToSection('pricing')} className="hover:text-rose-700 transition-colors cursor-pointer">Pricing</button>
-            <button onClick={() => onOpenCheckout('lifetime')} className="hover:text-rose-700 transition-colors cursor-pointer">Creator Licensing</button>
+      {/* 14. LUXURY FOOTER & TRUST CENTER */}
+      <footer className="w-full border-t border-stone-300 bg-[#EFE9E0] py-14 px-4 sm:px-8 text-xs text-stone-700">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-8 mb-12 text-left">
+            
+            {/* Column 1: Brand & Commitment */}
+            <div className="col-span-2 sm:col-span-2 md:col-span-1 space-y-3">
+              <div className="flex items-center gap-2.5">
+                <BrandLogo size="sm" showText={false} />
+                <span className="font-serif text-sm tracking-widest text-stone-950 font-bold">
+                  ÉTERNELLE
+                </span>
+              </div>
+              <p className="text-[11px] text-stone-600 leading-relaxed">
+                Couture 3D digital invitations & event websites for life's most unforgettable milestone celebrations.
+              </p>
+              <div className="pt-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono bg-stone-200/80 text-stone-800 font-bold border border-stone-300">
+                  <ShieldCheck size={12} className="text-emerald-700" />
+                  100% Ad-Free & Private
+                </span>
+              </div>
+            </div>
+
+            {/* Column 2: Event Collections */}
+            <div className="space-y-2.5">
+              <h4 className="font-serif text-xs uppercase tracking-widest text-stone-950 font-bold">
+                Collections
+              </h4>
+              <ul className="space-y-1.5 text-[11px] text-stone-600">
+                <li>
+                  <button onClick={() => { setSelectedEventType('wedding'); scrollToSection('milestones'); }} className="hover:text-rose-700 transition-colors">
+                    Wedding & Reception
+                  </button>
+                </li>
+                <li>
+                  {onOpenHalloween ? (
+                    <button onClick={onOpenHalloween} className="hover:text-orange-700 transition-colors font-medium text-orange-950">
+                      🎃 Halloween Masquerade
+                    </button>
+                  ) : (
+                    <button onClick={() => { setSelectedEventType('halloween'); scrollToSection('milestones'); }} className="hover:text-rose-700 transition-colors">
+                      Halloween & Gothic
+                    </button>
+                  )}
+                </li>
+                <li>
+                  <button onClick={() => { setSelectedEventType('birthday'); scrollToSection('milestones'); }} className="hover:text-rose-700 transition-colors">
+                    Milestone Birthdays
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { setSelectedEventType('engagement'); scrollToSection('milestones'); }} className="hover:text-rose-700 transition-colors">
+                    Engagement Soirées
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { setSelectedEventType('gala'); scrollToSection('milestones'); }} className="hover:text-rose-700 transition-colors">
+                    Charity Galas
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 3: Atelier Experience */}
+            <div className="space-y-2.5">
+              <h4 className="font-serif text-xs uppercase tracking-widest text-stone-950 font-bold">
+                Experience
+              </h4>
+              <ul className="space-y-1.5 text-[11px] text-stone-600">
+                <li>
+                  <button onClick={() => scrollToSection('stationery')} className="hover:text-rose-700 transition-colors">
+                    Stationery Suite Atelier
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('demo')} className="hover:text-rose-700 transition-colors">
+                    3D Wax Seal Unboxing
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('checkin')} className="hover:text-rose-700 transition-colors">
+                    Live Door QR Check-In
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('features')} className="hover:text-rose-700 transition-colors">
+                    1-Click Calendar Sync
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => onOpenCheckout('lifetime')} className="hover:text-rose-700 transition-colors">
+                    Creator Commercial License
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 4: Trust & Legal Center */}
+            <div className="space-y-2.5">
+              <h4 className="font-serif text-xs uppercase tracking-widest text-stone-950 font-bold">
+                Trust & Legal
+              </h4>
+              <ul className="space-y-1.5 text-[11px] text-stone-600">
+                <li>
+                  <button onClick={() => onOpenLegal('privacy')} className="hover:text-stone-950 font-medium transition-colors text-left flex items-center gap-1">
+                    <span>Privacy Policy</span>
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => onOpenLegal('terms')} className="hover:text-stone-950 font-medium transition-colors text-left">
+                    Terms of Usage
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => onOpenLegal('cookies')} className="hover:text-stone-950 font-medium transition-colors text-left">
+                    Cookie Policy
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => onOpenLegal('refund')} className="hover:text-stone-950 font-medium transition-colors text-left">
+                    Refund & Guarantee
+                  </button>
+                </li>
+                <li>
+                  {onOpenCookieSettings && (
+                    <button 
+                      onClick={onOpenCookieSettings} 
+                      className="text-stone-700 hover:text-stone-950 underline underline-offset-2 transition-colors text-left font-semibold"
+                    >
+                      Cookie Preferences
+                    </button>
+                  )}
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 5: Concierge & Support */}
+            <div className="space-y-2.5">
+              <h4 className="font-serif text-xs uppercase tracking-widest text-stone-950 font-bold">
+                Concierge Desk
+              </h4>
+              <ul className="space-y-1.5 text-[11px] text-stone-600">
+                <li>
+                  <button onClick={() => onOpenLegal('contact')} className="hover:text-stone-950 font-medium transition-colors text-left">
+                    Host Support Desk
+                  </button>
+                </li>
+                <li>
+                  <a href="mailto:support@eternelleweddinginvites.online" className="hover:text-stone-950 transition-colors font-mono">
+                    support@eternelleweddinginvites.online
+                  </a>
+                </li>
+                <li>
+                  <button onClick={() => onOpenAuth('signin')} className="hover:text-rose-700 transition-colors">
+                    Host Sign In
+                  </button>
+                </li>
+                <li>
+                  <button onClick={onOpenStudio} className="text-rose-800 hover:text-rose-950 font-bold transition-colors">
+                    Create Free Suite →
+                  </button>
+                </li>
+              </ul>
+            </div>
+
           </div>
 
-          <p className="text-[11px] text-stone-700 font-medium">
-            © {new Date().getFullYear()} Éternelle Luxury Event Technologies. All rights reserved.
-          </p>
+          <div className="pt-8 border-t border-stone-300 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-600">
+            <p>
+              © {new Date().getFullYear()} Éternelle Luxury Event Technologies. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4 text-stone-500">
+              <button onClick={() => onOpenLegal('privacy')} className="hover:text-stone-900 transition-colors">Privacy</button>
+              <span>•</span>
+              <button onClick={() => onOpenLegal('terms')} className="hover:text-stone-900 transition-colors">Terms</button>
+              <span>•</span>
+              <button onClick={() => onOpenLegal('cookies')} className="hover:text-stone-900 transition-colors">Cookies</button>
+              <span>•</span>
+              <button onClick={() => onOpenLegal('refund')} className="hover:text-stone-900 transition-colors">14-Day Guarantee</button>
+            </div>
+          </div>
         </div>
       </footer>
 

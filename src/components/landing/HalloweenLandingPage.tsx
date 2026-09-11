@@ -5,17 +5,22 @@ import {
   Clock, GlassWater, Award, Skull, Moon, Ghost
 } from 'lucide-react';
 import { EventType } from '../../types/invitation';
+import { LegalDocType } from '../legal/LegalModal';
 
 interface HalloweenLandingPageProps {
   onStartCreating: (eventType?: EventType) => void;
   onPreviewSample: () => void;
   onNavigateHome: () => void;
+  onOpenLegal?: (doc: LegalDocType) => void;
+  onOpenCookieSettings?: () => void;
 }
 
 export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
   onStartCreating,
   onPreviewSample,
   onNavigateHome,
+  onOpenLegal,
+  onOpenCookieSettings,
 }) => {
   const [copiedPinTag, setCopiedPinTag] = useState(false);
   const [activePinIndex, setActivePinIndex] = useState(0);
@@ -325,11 +330,30 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
 
           <div className="mt-12 pt-8 border-t border-stone-900 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-400 gap-4">
             <p>© 2026 Éternelle Digital Invitations. Gothic & Halloween Atelier Edition.</p>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-stone-400">
+              {onOpenLegal && (
+                <>
+                  <button onClick={() => onOpenLegal('privacy')} className="hover:text-orange-300 transition-colors">Privacy Policy</button>
+                  <span>•</span>
+                  <button onClick={() => onOpenLegal('terms')} className="hover:text-orange-300 transition-colors">Terms of Usage</button>
+                  <span>•</span>
+                  <button onClick={() => onOpenLegal('cookies')} className="hover:text-orange-300 transition-colors">Cookie Policy</button>
+                  <span>•</span>
+                  <button onClick={() => onOpenLegal('refund')} className="hover:text-orange-300 transition-colors">Refund Policy</button>
+                  <span>•</span>
+                </>
+              )}
+              {onOpenCookieSettings && (
+                <button onClick={onOpenCookieSettings} className="text-orange-400 hover:text-white transition-colors underline underline-offset-2">
+                  Cookie Preferences
+                </button>
+              )}
+            </div>
             <button 
               onClick={onNavigateHome}
               className="text-orange-400 hover:text-white transition-colors underline underline-offset-4"
             >
-              Explore Wedding & Other Milestone Collections
+              Explore All Celebrations →
             </button>
           </div>
         </div>

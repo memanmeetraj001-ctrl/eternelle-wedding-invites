@@ -20,6 +20,8 @@ import { AuthModal } from './components/auth/AuthModal';
 import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
 import { GumroadCheckoutModal } from './components/billing/GumroadCheckoutModal';
 import { MasterAdminPanel } from './components/admin/MasterAdminPanel';
+import { LegalModal, LegalDocType } from './components/legal/LegalModal';
+import { CookieBanner } from './components/legal/CookieBanner';
 import { 
   initializeStorage, 
   getWeddingBySlug, 
@@ -144,6 +146,26 @@ export function App() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutSelectedPlan, setCheckoutSelectedPlan] = useState<'pro' | 'lifetime'>('pro');
   const [purchaseNotification, setPurchaseNotification] = useState<string | null>(null);
+  const [legalModalDoc, setLegalModalDoc] = useState<LegalDocType | null>(() => {
+    if (typeof window !== 'undefined') {
+      const search = window.location.search;
+      const path = window.location.pathname.toLowerCase();
+      if (search.includes('legal=privacy') || path.includes('/privacy')) return 'privacy';
+      if (search.includes('legal=terms') || path.includes('/terms')) return 'terms';
+      if (search.includes('legal=cookies') || path.includes('/cookies')) return 'cookies';
+      if (search.includes('legal=refund') || path.includes('/refund')) return 'refund';
+      if (search.includes('legal=contact') || path.includes('/contact')) return 'contact';
+    }
+    return null;
+  });
+  const [cookieSettingsKey, setCookieSettingsKey] = useState(0);
+
+  const handleOpenCookieSettings = () => {
+    try {
+      localStorage.removeItem('eternelle_cookie_consent_v1');
+    } catch {}
+    setCookieSettingsKey((prev) => prev + 1);
+  };
 
   // 1. Initial backend synchronization (session verification & wedding data)
   useEffect(() => {
@@ -682,6 +704,8 @@ export function App() {
             onOpenCheckout={handleOpenCheckout}
             onSelectTheme={(themeId) => handleUpdateWedding({ ...wedding, themeId })}
             onOpenHalloween={() => setViewMode('halloween')}
+            onOpenLegal={(doc) => setLegalModalDoc(doc)}
+            onOpenCookieSettings={handleOpenCookieSettings}
           />
         )}
 
@@ -719,6 +743,8 @@ export function App() {
               setViewMode('guest');
             }}
             onNavigateHome={() => setViewMode('landing')}
+            onOpenLegal={(doc) => setLegalModalDoc(doc)}
+            onOpenCookieSettings={handleOpenCookieSettings}
           />
         )}
 
@@ -768,6 +794,19 @@ export function App() {
         onClose={() => setIsCheckoutOpen(false)}
         selectedPlan={checkoutSelectedPlan}
         onSuccess={handleCheckoutSuccess}
+      />
+
+      {/* Comprehensive Legal & Trust Center Modal */}
+      <LegalModal
+        isOpen={!!legalModalDoc}
+        onClose={() => setLegalModalDoc(null)}
+        initialTab={legalModalDoc || 'privacy'}
+      />
+
+      {/* Global GDPR/ePrivacy Cookie Consent Banner */}
+      <CookieBanner
+        key={cookieSettingsKey}
+        onOpenLegal={(doc) => setLegalModalDoc(doc)}
       />
 
     </div>
