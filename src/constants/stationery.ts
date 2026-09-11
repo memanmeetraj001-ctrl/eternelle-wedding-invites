@@ -77,6 +77,13 @@ export const ENVELOPE_LINER_OPTIONS: Record<EnvelopeLinerId, EnvelopeLinerOption
     previewGradient: 'from-[#fbf5ee] via-[#ecd5c8] to-[#9c4d5c]',
     patternCss: `radial-gradient(circle at 25% 25%, rgba(190,90,110,0.2) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(100,140,90,0.15) 0%, transparent 50%), linear-gradient(135deg, #fffbf6 0%, #f9ece4 100%)`,
   },
+  'haunted-gothic': {
+    id: 'haunted-gothic',
+    name: 'Midnight Gothic Bats & Damask',
+    tagline: 'Intricate Victorian baroque gothic damask with gilded bats on velvet noir',
+    previewGradient: 'from-[#1b0e27] via-[#28133b] to-[#ea580c]',
+    patternCss: `radial-gradient(circle at 50% 50%, rgba(234,88,12,0.18) 0%, transparent 60%), repeating-linear-gradient(45deg, rgba(168,85,247,0.12) 0, rgba(168,85,247,0.12) 1px, transparent 0, transparent 20px), repeating-linear-gradient(-45deg, rgba(234,88,12,0.1) 0, rgba(234,88,12,0.1) 1px, transparent 0, transparent 20px), linear-gradient(135deg, #100619 0%, #08020d 100%)`,
+  },
 };
 
 export const STAMP_STYLE_OPTIONS: Record<StampStyleId, StampStyleOption> = {
@@ -124,6 +131,15 @@ export const STAMP_STYLE_OPTIONS: Record<StampStyleId, StampStyleOption> = {
     badge: 'Custom Wax',
     imageUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=300&q=80',
     accentColor: '#8a2438',
+  },
+  'gothic-raven': {
+    id: 'gothic-raven',
+    name: 'Midnight Raven & Moon',
+    denom: 'HALLOWEEN PARCEL · 1.31',
+    subtitle: 'Antique intaglio raven under crescent moon',
+    badge: 'Spooky Airmail',
+    imageUrl: 'https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=300&q=80',
+    accentColor: '#ea580c',
   },
 };
 

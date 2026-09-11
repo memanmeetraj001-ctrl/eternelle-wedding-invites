@@ -23,7 +23,9 @@ export const SaveTheDateStudio: React.FC<SaveTheDateStudioProps> = ({ wedding, t
     ? `${wedding.coupleName1} & ${wedding.coupleName2}` 
     : wedding.coupleName1;
 
-  const eventLabel = wedding.eventType === 'birthday' 
+  const eventLabel = wedding.eventType === 'halloween'
+    ? 'Halloween party & gothic masquerade'
+    : wedding.eventType === 'birthday' 
     ? 'birthday celebration' 
     : wedding.eventType === 'engagement' 
     ? 'engagement party' 
@@ -37,13 +39,17 @@ export const SaveTheDateStudio: React.FC<SaveTheDateStudioProps> = ({ wedding, t
 
   const shareTitle = `${coupleOrHonoree} — ${wedding.headline || 'Celebration Invitation'}`;
   
-  const whatsappMessage = wedding.eventType === 'birthday'
+  const whatsappMessage = wedding.eventType === 'halloween'
+    ? `🎃 Enter if you dare! You're invited to ${wedding.coupleName1 || 'our Halloween Party'} on ${wedding.weddingDate} at ${wedding.venueName}. Open your 3D gothic invitation, view the witching hour schedule & RSVP: ${destinationUrl}`
+    : wedding.eventType === 'birthday'
     ? `You're invited! 🎂 Join us to celebrate ${wedding.coupleName1}'s birthday on ${wedding.weddingDate} at ${wedding.venueName}. Open the digital invitation & RSVP here: ${destinationUrl}`
     : wedding.eventType === 'gala'
     ? `You are cordially invited to ${wedding.coupleName1} on ${wedding.weddingDate} at ${wedding.venueName}. View the full program & RSVP: ${destinationUrl}`
     : `We are getting married! 💕 ${wedding.coupleName1} & ${wedding.coupleName2} invite you to celebrate on ${wedding.weddingDate} at ${wedding.venueName}. Open our 3D digital invitation & RSVP here: ${destinationUrl}`;
 
-  const socialCaption = wedding.eventType === 'birthday'
+  const socialCaption = wedding.eventType === 'halloween'
+    ? `Enter if you dare... 🦇✨ You're cordially invited to ${wedding.coupleName1 || 'The Midnight Masquerade'} on ${wedding.weddingDate}. Tap the link in bio to open your 3D digital envelope, costume contest details & potion bar menu! 🎃🕯️ #halloweenparty #gothicaesthetic #halloweeninvitation #costumeparty #halloweenaesthetic #midnightmasquerade #halloweenpins`
+    : wedding.eventType === 'birthday'
     ? `It's a celebration! 🎂 Join us for ${wedding.coupleName1}'s milestone birthday on ${wedding.weddingDate}. Tap the link in bio for full details, itinerary & RSVP! ✨ #birthdaycelebration #milestone #${(wedding.coupleName1 || 'birthday').toLowerCase().replace(/\s+/g, '')}`
     : `We said YES! 💍 Join us for the wedding of ${coupleOrHonoree} on ${wedding.weddingDate}. Tap the link in our bio to view the animated envelope, schedule & RSVP! ✨ #weddinginvitation #savethedate #${(wedding.coupleName1 || 'wedding').toLowerCase().replace(/\s+/g, '')}and${(wedding.coupleName2 || 'celebration').toLowerCase().replace(/\s+/g, '')}`;
 

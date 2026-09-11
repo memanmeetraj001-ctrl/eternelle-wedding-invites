@@ -12,6 +12,7 @@ import { GUMROAD_CONFIG } from './constants/gumroad';
 import { detectGumroadRedirect } from './utils/gumroadVerify';
 import { BrandLogo } from './components/common/BrandLogo';
 import { LandingPage } from './components/landing/LandingPage';
+import { HalloweenLandingPage } from './components/landing/HalloweenLandingPage';
 import { MainDashboard } from './components/dashboard/MainDashboard';
 import { GuestInvitationView } from './components/guest/GuestInvitationView';
 import { RSVPModal } from './components/guest/RSVPModal';
@@ -43,7 +44,7 @@ import {
   apiSubmitRSVP
 } from './utils/api';
 
-export type AppViewMode = 'landing' | 'dashboard' | 'guest' | 'admin';
+export type AppViewMode = 'landing' | 'halloween' | 'dashboard' | 'guest' | 'admin';
 
 export function App() {
   // Initialize storage seeds
@@ -61,6 +62,11 @@ export function App() {
     // Admin Route Detection
     if (path === '/admin' || path.startsWith('/admin/') || search.includes('view=admin')) {
       return { view: 'admin' };
+    }
+
+    // Halloween Landing Page Route: /halloween or ?view=halloween or ?event=halloween
+    if (path === '/halloween' || path.startsWith('/halloween') || search.includes('view=halloween') || search.includes('event=halloween')) {
+      return { view: 'halloween' };
     }
 
     // Guest Invite Slug Detection: /invite/:slug or /w/:slug or ?invite=:slug
@@ -125,6 +131,7 @@ export function App() {
   const [viewMode, setViewMode] = useState<AppViewMode>(() => {
     if (initialRoute.view === 'guest') return 'guest';
     if (initialRoute.view === 'admin') return 'admin';
+    if (initialRoute.view === 'halloween') return 'halloween';
     // If user is already logged in, take them to dashboard only if on landing root
     return user ? 'dashboard' : 'landing';
   });
@@ -674,6 +681,44 @@ export function App() {
             onOpenAuth={handleOpenAuth}
             onOpenCheckout={handleOpenCheckout}
             onSelectTheme={(themeId) => handleUpdateWedding({ ...wedding, themeId })}
+            onOpenHalloween={() => setViewMode('halloween')}
+          />
+        )}
+
+        {viewMode === 'halloween' && (
+          <HalloweenLandingPage
+            onStartCreating={(eventType) => {
+              handleUpdateWedding({
+                ...wedding,
+                eventType: 'halloween',
+                themeId: 'midnight-haunt',
+                headline: 'YOU ARE CORDIALLY INVITED TO THE ANNUAL',
+                subtitleIntro: 'ENTER IF YOU DARE',
+                storyTitle: 'A Night of Wicked Glamour & Haunts',
+              });
+              if (user) {
+                setViewMode('dashboard');
+              } else {
+                setIsOnboardingOpen(true);
+              }
+            }}
+            onPreviewSample={() => {
+              handleUpdateWedding({
+                ...wedding,
+                eventType: 'halloween',
+                themeId: 'midnight-haunt',
+                coupleName1: 'Salem Manor',
+                headline: 'THE ANNUAL MIDNIGHT GOTHIC MASQUERADE',
+                subtitleIntro: 'ENTER IF YOU DARE',
+                venueName: 'The Blackwood Gothic Estate',
+                venueAddress: '13 Ravenswood Way, Salem',
+                cityState: 'Massachusetts',
+                weddingDate: '2026-10-31',
+                weddingTime: '8:00 PM - Late',
+              });
+              setViewMode('guest');
+            }}
+            onNavigateHome={() => setViewMode('landing')}
           />
         )}
 

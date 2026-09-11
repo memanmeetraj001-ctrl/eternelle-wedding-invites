@@ -24,6 +24,7 @@ interface LandingPageProps {
   onOpenAuth: (tab?: 'signin' | 'signup') => void;
   onOpenCheckout: (plan: 'pro' | 'lifetime') => void;
   onSelectTheme: (themeId: ThemeId) => void;
+  onOpenHalloween?: () => void;
 }
 
 export function LandingPage({
@@ -34,6 +35,7 @@ export function LandingPage({
   onOpenAuth,
   onOpenCheckout,
   onSelectTheme,
+  onOpenHalloween,
 }: LandingPageProps) {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [selectedPresetId, setSelectedPresetId] = useState<ThemeId>(wedding.themeId || 'olive-burgundy');
@@ -77,11 +79,11 @@ export function LandingPage({
   const faqs = [
     {
       q: 'Is Éternelle free to start for my celebration?',
-      a: 'Yes! Our Free Starter plan includes 1 full event suite across any of our 7 event categories, the 3D animated wax seal reveal, custom envelope liners, vintage postage stamps, Google Maps schedule, and up to 20 guest RSVPs with zero expiration date and no credit card required.'
+      a: 'Yes! Our Free Starter plan includes 1 full event suite across any of our 8 event categories (including our new Halloween & Gothic Masquerade edition), the 3D animated wax seal reveal, custom envelope liners, vintage postage stamps, Google Maps schedule, and up to 20 guest RSVPs with zero expiration date and no credit card required.'
     },
     {
       q: 'What types of life milestone events are supported?',
-      a: 'Éternelle includes curated presets for Weddings, Milestone Birthdays, Engagements, Anniversaries, Baby Showers, Charity Galas, and Custom Celebrations. Each category comes with tailored headline templates, custom modular blocks, and matching designer color palettes.'
+      a: 'Éternelle includes curated presets for Weddings, Halloween & Gothic Masquerades, Milestone Birthdays, Engagements, Anniversaries, Baby Showers, Charity Galas, and Custom Celebrations. Each category comes with tailored headline templates, custom modular blocks, and matching designer color palettes.'
     },
     {
       q: 'How do my guests open and experience the digital invitation?',
@@ -97,7 +99,7 @@ export function LandingPage({
     },
     {
       q: 'Can I customize envelope liners, postage stamps, and metallic foil finishes?',
-      a: 'Yes! Our Luxury Stationery Atelier includes 6 high-resolution envelope liners (Botanical Watercolor, Golden Deco, Parisian Marble, Constellation, Rose Water Garden, Minimalist Cream), 5 vintage postage stamps with authentic dated cancellation postmarks, and 5 metallic foil typography styles (24K Gold, Rose Gold, Platinum Silver, Emerald Jewel, Matte Letterpress).'
+      a: 'Yes! Our Luxury Stationery Atelier includes 7 high-resolution envelope liners (including Midnight Gothic Damask), 6 vintage postage stamps (including Midnight Raven & Moon), and 5 metallic foil typography styles.'
     },
     {
       q: 'How do I track meal choices, allergies, plus-ones, and custom survey questions?',
@@ -113,19 +115,21 @@ export function LandingPage({
     <div className="w-full flex flex-col items-center bg-[#FAF7F2] text-stone-900 font-sans min-h-screen">
       
       {/* 1. TOP ANNOUNCEMENT BANNER */}
-      <div className="w-full bg-gradient-to-r from-rose-100 via-amber-50 to-rose-100 border-b border-rose-200/80 py-2.5 px-4 text-center text-xs text-rose-950 flex items-center justify-center gap-2">
-        <span className="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-900 font-bold text-[10px] tracking-wider uppercase border border-rose-300">
-          ✨ New: 7 Milestone Event Presets & Live Door Check-In
+      <div className="w-full bg-gradient-to-r from-purple-950 via-stone-900 to-orange-950 border-b border-orange-900/50 py-2.5 px-4 text-center text-xs text-orange-200 flex flex-wrap items-center justify-center gap-2">
+        <span className="px-2.5 py-0.5 rounded-full bg-orange-500 text-black font-bold text-[10px] tracking-wider uppercase">
+          🎃 Seasonal Special
         </span>
-        <span className="font-semibold hidden sm:inline text-stone-800">
-          Join 4,800+ hosts creating couture digital invitations for weddings, birthdays, and galas.
+        <span className="font-semibold text-stone-200">
+          Halloween Gothic Masquerade & Pinterest Pin Suite is now live!
         </span>
-        <button 
-          onClick={onOpenStudio}
-          className="underline font-bold hover:text-rose-700 text-rose-900 flex items-center gap-1 ml-1 cursor-pointer"
-        >
-          Design your suite free <ArrowRight size={12} />
-        </button>
+        {onOpenHalloween && (
+          <button 
+            onClick={onOpenHalloween}
+            className="underline font-bold hover:text-white text-orange-400 flex items-center gap-1 ml-1 cursor-pointer"
+          >
+            Explore Halloween Edition →
+          </button>
+        )}
       </div>
 
       {/* 2. SECONDARY SUB-NAVIGATION BAR */}
@@ -141,6 +145,14 @@ export function LandingPage({
             <Sparkles size={12} />
             <span>Interactive Demo</span>
           </button>
+          {onOpenHalloween && (
+            <button 
+              onClick={onOpenHalloween} 
+              className="text-orange-800 hover:text-orange-950 transition-colors whitespace-nowrap flex items-center gap-1 font-bold bg-orange-100 px-2 py-0.5 rounded-full border border-orange-300"
+            >
+              <span>🎃 Halloween</span>
+            </button>
+          )}
           <button onClick={() => scrollToSection('features')} className="hover:text-rose-600 transition-colors whitespace-nowrap cursor-pointer">
             Features
           </button>
