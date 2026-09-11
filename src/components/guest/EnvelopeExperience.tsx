@@ -220,7 +220,13 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   onOpen,
   onReset,
 }) => {
-  const [stage, setStage] = useState<'sealed' | 'opening' | 'opened'>('sealed');
+  const [stage, setStage] = useState<'sealed' | 'opening' | 'opened'>(isOpen ? 'opened' : 'sealed');
+
+  useEffect(() => {
+    if (isOpen) {
+      setStage('opened');
+    }
+  }, [isOpen]);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
   
@@ -533,8 +539,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                 top: '6%',
                 background: '#FBF9F5',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.7), inset 0 0 0 1px #e2dcd2, inset 0 0 15px rgba(212,175,55,0.15)',
-                transform: isFlapOpen ? 'translateY(-56%)' : 'translateY(0%)',
-                zIndex: 10,
+                transform: isFlapOpen ? 'translateY(-54%)' : 'translateY(0%)',
+                zIndex: isFlapOpen ? 25 : 10,
               }}
             >
               {/* Cathedral Intaglio Vector Art */}
@@ -601,7 +607,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                 clipPath: 'polygon(0 0, 100% 0, 50% 59%)',
                 background: 'linear-gradient(180deg, #1b1827 0%, #110e1a 55%, #08060d 100%)',
                 transform: isFlapOpen ? 'rotateX(175deg)' : 'rotateX(0deg)',
-                zIndex: isFlapOpen ? 15 : 30,
+                backfaceVisibility: 'hidden',
+                zIndex: isFlapOpen ? 12 : 30,
                 filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.9))',
               }}
             >

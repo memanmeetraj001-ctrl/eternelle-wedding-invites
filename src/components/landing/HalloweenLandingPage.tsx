@@ -419,17 +419,30 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
           </div>
 
           {/* Interactive Envelope Canvas Card */}
-          <div className="relative rounded-3xl p-4 sm:p-8 bg-gradient-to-b from-[#140f20] to-[#0a0710] border border-orange-900/40 shadow-2xl shadow-purple-950/40 overflow-hidden flex flex-col items-center">
+          <div className="relative rounded-3xl p-4 sm:p-8 pt-10 sm:pt-14 bg-gradient-to-b from-[#140f20] to-[#0a0710] border border-orange-900/40 shadow-2xl shadow-purple-950/40 overflow-visible flex flex-col items-center">
             
             {/* Live Envelope Component */}
-            <div className="w-full max-w-md my-4">
+            <div className="w-full max-w-md my-4 flex flex-col items-center">
               <EnvelopeExperience
                 wedding={SAMPLE_HALLOWEEN_PARTY_DATA}
                 theme={activeGothicTheme}
                 isOpen={demoEnvelopeOpened}
-                onOpen={() => setDemoEnvelopeOpened(true)}
+                onOpen={() => {
+                  setDemoEnvelopeOpened(true);
+                  if (onPreviewSample) {
+                    onPreviewSample();
+                  }
+                }}
                 onReset={() => setDemoEnvelopeOpened(false)}
               />
+              <button
+                onClick={() => {
+                  if (onPreviewSample) onPreviewSample();
+                }}
+                className="mt-3 text-xs font-serif italic text-orange-300/80 hover:text-orange-200 underline underline-offset-4 flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <span>View Full Halloween Guest Micro-Site Experience →</span>
+              </button>
             </div>
 
             {/* Quick Guest RSVP Simulation Form */}
