@@ -54,12 +54,46 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
     const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/10/30/audio_2d8dfbf59c.mp3?filename=horror-background-atmosphere-126231.mp3');
     audio.loop = true;
     setAudioElement(audio);
+
+    // Attempt autoplay immediately
+    const startAudio = () => {
+      audio.play().then(() => {
+        setIsHorrorMusicPlaying(true);
+      }).catch(() => {});
+    };
+
+    startAudio();
+
+    // Fallback on first user gesture anywhere
+    const onUserInteraction = () => {
+      audio.play().then(() => {
+        setIsHorrorMusicPlaying(true);
+        cleanup();
+      }).catch(() => {});
+    };
+
+    const cleanup = () => {
+      window.removeEventListener('click', onUserInteraction);
+      window.removeEventListener('pointerdown', onUserInteraction);
+      window.removeEventListener('touchstart', onUserInteraction);
+      window.removeEventListener('keydown', onUserInteraction);
+      window.removeEventListener('scroll', onUserInteraction);
+    };
+
+    window.addEventListener('click', onUserInteraction, { once: true });
+    window.addEventListener('pointerdown', onUserInteraction, { once: true });
+    window.addEventListener('touchstart', onUserInteraction, { once: true });
+    window.addEventListener('keydown', onUserInteraction, { once: true });
+    window.addEventListener('scroll', onUserInteraction, { once: true });
+
     return () => {
       audio.pause();
+      cleanup();
     };
   }, []);
 
-  const toggleHorrorAudio = () => {
+  const toggleHorrorAudio = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     if (!audioElement) return;
     if (isHorrorMusicPlaying) {
       audioElement.pause();
@@ -117,7 +151,7 @@ export const HalloweenLandingPage: React.FC<HalloweenLandingPageProps> = ({
     {
       title: 'Venetian Skull Masquerade',
       tagline: 'Costume Categories & Live QR Door Check-in',
-      image: 'https://images.unsplash.com/photo-1572945550744-570423e8e773?auto=format&fit=crop&w=1200&q=80',
+      image: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=1200&q=80',
       tag: 'Guest Experience',
       description: 'Announce dress codes, costume award tiers, and scan guests at the manor door in real time.',
     },

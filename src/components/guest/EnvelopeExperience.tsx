@@ -90,8 +90,33 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       const audio = new Audio(wedding.backgroundMusicUrl);
       audio.loop = true;
       setAudioElement(audio);
+
+      // Attempt immediate play
+      audio.play().then(() => {
+        setIsMusicPlaying(true);
+      }).catch(() => {});
+
+      // Fallback on first gesture
+      const onUserGesture = () => {
+        audio.play().then(() => {
+          setIsMusicPlaying(true);
+          cleanup();
+        }).catch(() => {});
+      };
+
+      const cleanup = () => {
+        window.removeEventListener('click', onUserGesture);
+        window.removeEventListener('pointerdown', onUserGesture);
+        window.removeEventListener('touchstart', onUserGesture);
+      };
+
+      window.addEventListener('click', onUserGesture, { once: true });
+      window.addEventListener('pointerdown', onUserGesture, { once: true });
+      window.addEventListener('touchstart', onUserGesture, { once: true });
+
       return () => {
         audio.pause();
+        cleanup();
       };
     }
   }, [wedding.musicEnabled, wedding.backgroundMusicUrl]);

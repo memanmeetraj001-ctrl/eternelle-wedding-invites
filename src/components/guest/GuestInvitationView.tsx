@@ -55,10 +55,35 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
       const audio = new Audio(wedding.backgroundMusicUrl);
       audio.loop = true;
       setAudioElement(audio);
+
+      // Attempt immediate play
+      audio.play().then(() => {
+        setIsPlayingMusic(true);
+      }).catch(() => {});
+
+      // Fallback on first user gesture
+      const onUserGesture = () => {
+        audio.play().then(() => {
+          setIsPlayingMusic(true);
+          cleanup();
+        }).catch(() => {});
+      };
+
+      const cleanup = () => {
+        window.removeEventListener('click', onUserGesture);
+        window.removeEventListener('pointerdown', onUserGesture);
+        window.removeEventListener('touchstart', onUserGesture);
+      };
+
+      window.addEventListener('click', onUserGesture, { once: true });
+      window.addEventListener('pointerdown', onUserGesture, { once: true });
+      window.addEventListener('touchstart', onUserGesture, { once: true });
+
       return () => {
         audio.pause();
         audio.src = '';
         setIsPlayingMusic(false);
+        cleanup();
       };
     } else {
       setAudioElement(null);

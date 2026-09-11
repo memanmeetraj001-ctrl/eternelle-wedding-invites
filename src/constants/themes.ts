@@ -572,8 +572,8 @@ export const SAMPLE_HALLOWEEN_PARTY_DATA: WeddingData = {
     },
     {
       id: 'p-2',
-      url: 'https://images.unsplash.com/photo-1572945550744-570423e8e773?auto=format&fit=crop&w=1200&q=80',
-      caption: 'Venetian skull masquerade masks & velvet attire for the Grand Promenade',
+      url: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=1200&q=80',
+      caption: 'Venetian skull masquerade & glowing candlelit Jack-o’-Lanterns for the Grand Promenade',
       dateTag: 'Costume Showcase',
     },
     {
