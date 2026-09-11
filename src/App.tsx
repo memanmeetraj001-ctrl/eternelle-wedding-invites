@@ -300,8 +300,9 @@ export function App() {
       window.history.replaceState({}, '', window.location.pathname);
 
       setEtsyVIPAuth({ plan, voucher });
-      setIsOnboardingOpen(true);
-      setIsAuthModalOpen(false);
+      setAuthInitialTab('signup');
+      setIsAuthModalOpen(true);
+      setIsOnboardingOpen(false);
     }
   }, []);
 
