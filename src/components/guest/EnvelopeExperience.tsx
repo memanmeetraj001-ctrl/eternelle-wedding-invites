@@ -384,7 +384,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       `}</style>
 
       {/* 1. Top Audio & Re-seal Bar */}
-      <div className="w-full max-w-md flex items-center justify-between mb-3 z-40 px-2 h-9">
+      <div className="w-full max-w-md md:max-w-xl lg:max-w-2xl flex items-center justify-between mb-3 z-40 px-2 h-9">
         <div>
           {wedding.musicEnabled && wedding.backgroundMusicUrl && (
             <button
@@ -435,10 +435,10 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
       {/* 2. HALLOWEEN: GOTHIC VELVET CATHEDRAL V-FLAP UNBOXING (Matches Reference) */}
       {/* ========================================================================= */}
       {isHalloween ? (
-        <div className="relative w-full max-w-[360px] sm:max-w-[400px] flex flex-col items-center">
+        <div className="relative w-full max-w-[360px] sm:max-w-[440px] md:max-w-[540px] lg:max-w-[620px] flex flex-col items-center">
           
           {/* Atmospheric Gothic Backdrop Frame */}
-          <div className="absolute -inset-6 pointer-events-none overflow-hidden rounded-3xl z-0">
+          <div className="absolute -inset-6 sm:-inset-10 lg:-inset-16 pointer-events-none overflow-hidden rounded-3xl z-0">
             {/* Ambient Candle Glows */}
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-amber-600/10 blur-3xl animate-candle-glow"></div>
             <div className="absolute top-1/3 left-4 w-32 h-32 rounded-full bg-amber-500/15 blur-2xl animate-candle-glow"></div>
@@ -509,7 +509,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={stage === 'sealed' ? handleUnbox : undefined}
-            className={`relative w-[310px] sm:w-[350px] h-[230px] sm:h-[260px] z-20 transition-transform duration-300 ease-out ${
+            className={`relative w-[310px] sm:w-[350px] md:w-[420px] lg:w-[480px] h-[230px] sm:h-[260px] md:h-[310px] lg:h-[355px] z-20 transition-transform duration-300 ease-out ${
               stage === 'sealed' ? 'cursor-pointer group' : ''
             }`}
             style={{
@@ -532,7 +532,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             {/* 2. THE INNER CARD WITH GOTHIC CATHEDRAL ETCHING (Slides upward on open) */}
             <div 
               onClick={isFullyOpen ? onOpen : undefined}
-              className={`absolute left-[8%] w-[84%] h-[88%] rounded-xl transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) overflow-hidden flex flex-col justify-between p-3.5 text-center ${
+              className={`absolute left-[8%] w-[84%] h-[88%] rounded-xl transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) overflow-hidden flex flex-col justify-between p-3.5 sm:p-4 md:p-5 text-center ${
                 isFullyOpen ? 'cursor-pointer hover:scale-[1.01] shadow-2xl' : ''
               }`}
               style={{
@@ -545,19 +545,19 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             >
               {/* Cathedral Intaglio Vector Art */}
               <div className="flex-1 flex flex-col items-center justify-center">
-                <div className="w-full h-34 sm:h-38 flex items-center justify-center mt-0.5">
+                <div className="w-full h-34 sm:h-38 md:h-46 lg:h-52 flex items-center justify-center mt-0.5">
                   <GothicCathedralEtching />
                 </div>
 
                 {/* Event Summons Inscription */}
                 <div className="mt-1 space-y-0.5">
-                  <span className="text-[7px] sm:text-[8px] font-mono tracking-[0.25em] text-[#8c7456] uppercase font-bold block">
+                  <span className="text-[7px] sm:text-[8px] md:text-[9px] lg:text-[10px] font-mono tracking-[0.25em] text-[#8c7456] uppercase font-bold block">
                     {wedding.subtitleIntro || 'THE WITCHING HOUR SUMMONS'}
                   </span>
-                  <h3 className="font-serif text-xs sm:text-sm font-bold text-[#1a1410] tracking-wider uppercase">
+                  <h3 className="font-serif text-xs sm:text-sm md:text-base font-bold text-[#1a1410] tracking-wider uppercase">
                     {wedding.coupleName1 || 'Lord Lucien & Lady Morgana'}
                   </h3>
-                  <p className="text-[8px] sm:text-[9px] font-serif italic text-[#5c4a38]">
+                  <p className="text-[8px] sm:text-[9px] md:text-[11px] font-serif italic text-[#5c4a38]">
                     {wedding.weddingDate} · {wedding.venueName}
                   </p>
                 </div>
@@ -661,17 +661,17 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         /* ========================================================================= */
         /* 3. WEDDING / CLASSIC: COUTURE SILK RIBBON & LINER UNBOXING STAGE          */
         /* ========================================================================= */
-        <div className="w-full max-w-md flex flex-col items-center">
+        <div className="w-full max-w-md md:max-w-xl lg:max-w-2xl flex flex-col items-center">
           
           {/* Header Intro Text */}
-          <div className="text-center mb-3 sm:mb-5 max-w-md h-16 sm:h-20 flex flex-col justify-center transition-opacity duration-500 px-2">
-            <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-[0.25em] sm:tracking-[0.35em] uppercase block drop-shadow-md text-amber-300/90">
+          <div className="text-center mb-3 sm:mb-5 max-w-md md:max-w-xl h-16 sm:h-20 flex flex-col justify-center transition-opacity duration-500 px-2">
+            <span className="text-[8px] sm:text-[10px] md:text-xs font-mono font-bold tracking-[0.25em] sm:tracking-[0.35em] uppercase block drop-shadow-md text-amber-300/90">
               {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
             </span>
-            <h1 className="font-script text-3xl sm:text-5xl font-bold mt-0.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight tracking-wide text-amber-100">
+            <h1 className="font-script text-3xl sm:text-5xl md:text-6xl font-bold mt-0.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight tracking-wide text-amber-100">
               {wedding.coupleName1} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
             </h1>
-            <p className="text-[10px] sm:text-xs font-serif italic text-stone-300/90 tracking-wide mt-0.5">
+            <p className="text-[10px] sm:text-xs md:text-sm font-serif italic text-stone-300/90 tracking-wide mt-0.5">
               Request the honour of your presence at their celebration
             </p>
           </div>
@@ -681,7 +681,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={stage === 'sealed' ? handleUnbox : undefined}
-            className={`relative w-full max-w-[340px] sm:max-w-[420px] aspect-[4/3] ${
+            className={`relative w-full max-w-[340px] sm:max-w-[420px] md:max-w-[480px] lg:max-w-[540px] aspect-[4/3] ${
               stage === 'sealed' ? 'cursor-pointer group' : ''
             }`}
             style={{

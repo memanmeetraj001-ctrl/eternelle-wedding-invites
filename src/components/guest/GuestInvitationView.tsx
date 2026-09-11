@@ -179,10 +179,10 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
         </div>
       ) : (
         /* 2. UNFURLED LUXURY WEDDING MICRO-SITE */
-        <div className="w-full max-w-lg mx-auto min-h-screen flex flex-col pb-28 animate-fadeIn">
+        <div className="w-full max-w-lg lg:max-w-6xl xl:max-w-7xl mx-auto min-h-screen flex flex-col pb-28 animate-fadeIn px-2 sm:px-4 lg:px-8">
           
           {/* Top Return-to-Envelope & Quick Bar */}
-          <header className="sticky top-0 z-40 w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-black/85 backdrop-blur-md border-b border-white/10 flex items-center justify-between shadow-lg gap-2">
+          <header className="sticky top-0 z-40 w-full px-3 sm:px-6 py-2.5 sm:py-3 bg-black/85 backdrop-blur-md border-b border-white/10 flex items-center justify-between shadow-lg gap-2 rounded-b-2xl">
             <button
               onClick={() => setIsEnvelopeOpen(false)}
               className="flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-[10px] sm:text-xs text-stone-200 transition-colors cursor-pointer shrink-0"
@@ -224,8 +224,11 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
             </div>
           </header>
 
-          {/* Hero Floral Banner & Formal Monogram Suite */}
-          <section className="p-3 sm:p-4 space-y-3.5">
+          {/* Responsive Desktop & Mobile Grid Container */}
+          <section className="p-2 sm:p-4 lg:p-0 w-full lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start pt-3 sm:pt-5">
+
+            {/* LEFT COLUMN: HERO ARTWORK, FORMAL DECREE & COUNTDOWN (Sticky on Desktop) */}
+            <div className="lg:col-span-5 xl:col-span-5 space-y-3.5 sm:space-y-5 lg:sticky lg:top-20">
             
             {/* Top Artwork Banner (Botanical Floral Watercolor) */}
             <div className="relative w-full h-36 sm:h-52 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-stone-700/60 group">
@@ -483,7 +486,11 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               </div>
             </div>
 
-            {/* Navigation Tabs - 5 Interactive Wedding Card Sections */}
+            </div>
+
+            {/* RIGHT COLUMN: INTERACTIVE TABS & DETAILS */}
+            <div className="lg:col-span-7 xl:col-span-7 space-y-3.5 sm:space-y-5 mt-4 lg:mt-0">
+              {/* Navigation Tabs - Interactive Sections */}
             {/* Dynamic Navigation Tabs based on enabled Modular Blocks */}
             <div className="flex rounded-xl sm:rounded-2xl bg-black/60 p-1 border border-stone-800 text-[11px] sm:text-xs font-sans overflow-x-auto scrollbar-none gap-1 shadow-xl">
               {enabledBlocks.map((block) => {
@@ -853,6 +860,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 
             {/* Bottom RSVP Sticky Bar */}
             <div className="pt-4 pb-2 text-center">
+
               <button
                 onClick={onOpenRSVP}
                 className="w-full py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-serif text-xs sm:text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-xl hover:brightness-110 active:scale-98 cursor-pointer"
@@ -870,6 +878,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               </p>
             </div>
 
+            </div>
           </section>
 
           {/* Floating Ambient Music Audio Controller */}
