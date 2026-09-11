@@ -131,7 +131,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
 
                 <h3 className="font-serif text-lg text-stone-950 font-semibold">3. Data Retention & Erasure</h3>
                 <p className="text-stone-700">
-                  Hosts retain 100% ownership of their event data. You may export your complete guest list and RSVP records as CSV at any time, or permanently delete your account and all associated media from our servers via your host settings or by emailing our privacy desk at <span className="font-mono text-stone-900 font-semibold">privacy@eternelleweddinginvites.online</span>.
+                  Hosts retain 100% ownership of their event data. You may export your complete guest list and RSVP records as CSV at any time, or permanently delete your account and all associated media from our servers via your host settings or by emailing our privacy desk at <span className="font-mono text-stone-900 font-semibold">support@eternelleweddinginvites.online</span>.
                 </p>
 
                 <h3 className="font-serif text-lg text-stone-950 font-semibold">4. Security & Encryption</h3>
@@ -276,7 +276,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
               <div className="space-y-4 text-xs sm:text-sm">
                 <h3 className="font-serif text-lg text-stone-950 font-semibold">How to Request a Refund</h3>
                 <p className="text-stone-700">
-                  Simply email <span className="font-mono text-stone-900 font-semibold">billing@eternelleweddinginvites.online</span> with your Gumroad order receipt number or account email. Refunds are processed immediately through Gumroad/Stripe back to your original payment method within 3–5 business days.
+                  Simply email <span className="font-mono text-stone-900 font-semibold">support@eternelleweddinginvites.online</span> with your Gumroad order receipt number or account email. Refunds are processed immediately through Gumroad/Stripe back to your original payment method within 3–5 business days.
                 </p>
 
                 <h3 className="font-serif text-lg text-stone-950 font-semibold">No Recurring Charges</h3>
@@ -329,10 +329,10 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                     Data protection officer, GDPR data export inquiries, and erasure requests.
                   </p>
                   <a 
-                    href="mailto:privacy@eternelleweddinginvites.online"
+                    href="mailto:support@eternelleweddinginvites.online"
                     className="text-xs font-mono font-bold text-purple-900 hover:text-purple-700 underline"
                   >
-                    privacy@eternelleweddinginvites.online
+                    support@eternelleweddinginvites.online
                   </a>
                 </div>
               </div>
