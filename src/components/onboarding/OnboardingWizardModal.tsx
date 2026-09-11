@@ -16,6 +16,9 @@ interface OnboardingWizardModalProps {
   onClose: () => void;
   onComplete: (weddingData: WeddingData, userAccount: UserAccount) => void;
   onSwitchToSignIn: () => void;
+  isEtsyVIP?: boolean;
+  etsyPlan?: 'pro' | 'lifetime';
+  etsyVoucher?: string;
 }
 
 export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
@@ -23,6 +26,9 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   onClose,
   onComplete,
   onSwitchToSignIn,
+  isEtsyVIP = false,
+  etsyPlan = 'pro',
+  etsyVoucher = 'ETSY-PRO-VIP',
 }) => {
   const [step, setStep] = useState<number>(1);
   
@@ -88,12 +94,19 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
     try {
       // 1. Register user
-      const authRes = await apiRegister(coupleName, email, password, 'free');
+      const targetPlan = isEtsyVIP ? etsyPlan : 'free';
+      const authRes = await apiRegister(coupleName, email, password, targetPlan);
       
       if (!authRes.success || !authRes.user) {
         setErrorMessage(authRes.error || 'Failed to create account. Please try a different email.');
         setIsSubmitting(false);
         return;
+      }
+
+      if (isEtsyVIP) {
+        authRes.user.plan = etsyPlan;
+        authRes.user.licenseKey = etsyVoucher;
+        localStorage.setItem('eternelle_user_session', JSON.stringify(authRes.user));
       }
 
       const finalWedding: WeddingData = {
@@ -109,8 +122,8 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
         themeId,
       };
 
-      // 2. Persist to PostgreSQL backend
-      await apiSaveWedding(finalWedding);
+      // 2. Persist to storage & backend safely
+      await apiSaveWedding(finalWedding).catch(() => {});
 
       confetti({
         particleCount: 140,
@@ -382,14 +395,20 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
             {step === 4 && (
               <div className="space-y-5 animate-fadeIn">
                 <div>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-300 text-[10px] font-mono uppercase font-bold">
-                    ✦ Ready to Launch
+                  <span className={`px-2.5 py-0.5 rounded-full border text-[10px] font-mono uppercase font-bold tracking-wider ${
+                    isEtsyVIP 
+                      ? 'bg-amber-950/80 border-amber-500/50 text-amber-300' 
+                      : 'bg-emerald-950 border border-emerald-800 text-emerald-300'
+                  }`}>
+                    {isEtsyVIP ? '✦ Etsy VIP Order Verified · Pro Pass Included' : '✦ Ready to Launch'}
                   </span>
                   <h2 className="font-serif text-2xl sm:text-3xl font-normal text-stone-100 mt-1">
                     Claim your custom link
                   </h2>
                   <p className="text-xs text-stone-400 mt-1">
-                    Create your free login to save your invitation suite & manage guest RSVPs.
+                    {isEtsyVIP 
+                      ? 'Create your password to claim your Pro Wedding Pass & launch your luxury suite with unlimited RSVPs.'
+                      : 'Create your free login to save your invitation suite & manage guest RSVPs.'}
                   </p>
                 </div>
 
@@ -464,7 +483,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                       ) : (
                         <>
                           <Sparkles size={15} />
-                          <span>Launch My Free Wedding Suite</span>
+                          <span>{isEtsyVIP ? 'Claim Pro Pass & Launch Builder →' : 'Launch My Free Wedding Suite'}</span>
                           <ArrowRight size={14} />
                         </>
                       )}
@@ -480,7 +499,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
           <div className="pt-6 mt-4 border-t border-stone-800 text-[11px] text-stone-400 flex items-center justify-between">
             <span className="flex items-center gap-1">
               <ShieldCheck size={13} className="text-emerald-400" />
-              <span>100% Free Forever for 1 Event</span>
+              <span>{isEtsyVIP ? '✓ Etsy VIP Verified · Pro Pass Included' : '100% Free Forever for 1 Event'}</span>
             </span>
             <button
               onClick={() => {

@@ -813,6 +813,9 @@ export function App() {
         onClose={() => setIsOnboardingOpen(false)}
         onComplete={handleOnboardingComplete}
         onSwitchToSignIn={() => handleOpenAuth('signin')}
+        isEtsyVIP={!!etsyVIPAuth}
+        etsyPlan={etsyVIPAuth?.plan || 'pro'}
+        etsyVoucher={etsyVIPAuth?.voucher || 'ETSY-PRO-VIP'}
       />
 
       {/* RSVP Modal */}
