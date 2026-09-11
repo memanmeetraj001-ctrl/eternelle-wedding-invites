@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { WeddingData, RSVPRecord, ThemeId } from './types/invitation';
-import { INITIAL_WEDDING_DATA, INITIAL_RSVPS, THEME_PRESETS } from './constants/themes';
+import { INITIAL_WEDDING_DATA, INITIAL_RSVPS, THEME_PRESETS, SAMPLE_HALLOWEEN_PARTY_DATA } from './constants/themes';
 import { GUMROAD_CONFIG } from './constants/gumroad';
 import { detectGumroadRedirect } from './utils/gumroadVerify';
 import { BrandLogo } from './components/common/BrandLogo';
@@ -713,12 +713,8 @@ export function App() {
           <HalloweenLandingPage
             onStartCreating={(eventType) => {
               handleUpdateWedding({
-                ...wedding,
-                eventType: 'halloween',
-                themeId: 'midnight-haunt',
-                headline: 'YOU ARE CORDIALLY INVITED TO THE ANNUAL',
-                subtitleIntro: 'ENTER IF YOU DARE',
-                storyTitle: 'A Night of Wicked Glamour & Haunts',
+                ...SAMPLE_HALLOWEEN_PARTY_DATA,
+                id: wedding?.id || SAMPLE_HALLOWEEN_PARTY_DATA.id,
               });
               if (user) {
                 setViewMode('dashboard');
@@ -727,19 +723,7 @@ export function App() {
               }
             }}
             onPreviewSample={() => {
-              handleUpdateWedding({
-                ...wedding,
-                eventType: 'halloween',
-                themeId: 'midnight-haunt',
-                coupleName1: 'Salem Manor',
-                headline: 'THE ANNUAL MIDNIGHT GOTHIC MASQUERADE',
-                subtitleIntro: 'ENTER IF YOU DARE',
-                venueName: 'The Blackwood Gothic Estate',
-                venueAddress: '13 Ravenswood Way, Salem',
-                cityState: 'Massachusetts',
-                weddingDate: '2026-10-31',
-                weddingTime: '8:00 PM - Late',
-              });
+              handleUpdateWedding(SAMPLE_HALLOWEEN_PARTY_DATA);
               setViewMode('guest');
             }}
             onNavigateHome={() => setViewMode('landing')}
