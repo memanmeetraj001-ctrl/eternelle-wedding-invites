@@ -281,6 +281,51 @@ export function App() {
     }
   }, []);
 
+  // 5b. Detect Etsy VIP Purchase Link & Voucher Code Activation
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const isEtsy = 
+      params.get('access') === 'etsy_vip' || 
+      params.get('etsy') === 'pro' || 
+      params.get('etsy') === 'true' || 
+      params.get('source') === 'etsy' ||
+      params.get('voucher')?.toUpperCase().startsWith('ETSY');
+
+    if (isEtsy) {
+      const voucher = params.get('voucher') || params.get('order') || 'ETSY-PRO-VIP';
+      const plan: 'pro' | 'lifetime' = params.get('plan') === 'lifetime' ? 'lifetime' : 'pro';
+      const email = params.get('email') || user?.email || 'client@eternelleweddinginvites.online';
+
+      const updatedUser: UserAccount = {
+        id: user?.id || `usr_etsy_${Date.now().toString().slice(-6)}`,
+        name: user?.name || 'Etsy VIP Client',
+        email,
+        role: user?.role || 'user',
+        plan,
+        licenseKey: voucher,
+        createdAt: user?.createdAt || new Date().toISOString(),
+        weddingSlug: wedding.slug,
+      };
+
+      setUser(updatedUser);
+      saveUser(updatedUser);
+      localStorage.setItem('eternelle_user_session', JSON.stringify(updatedUser));
+
+      confetti({
+        particleCount: 180,
+        spread: 100,
+        origin: { y: 0.4 },
+        colors: ['#d4af37', '#e11d48', '#ffffff', '#e2d5c3'],
+      });
+
+      setPurchaseNotification(`🎉 Welcome from Etsy! Your ${plan === 'lifetime' ? 'Lifetime Creator Pass' : 'Pro Wedding Pass'} is active with Unlimited RSVPs & All Luxury Features Unlocked.`);
+      setViewMode('dashboard');
+
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [wedding.slug]);
+
   // 6. Listen to Gumroad JS Overlay PostMessage
   useEffect(() => {
     const handleGumroadMessage = (event: MessageEvent) => {
@@ -435,6 +480,17 @@ export function App() {
     });
 
     setPurchaseNotification(`🎉 ${plan === 'lifetime' ? 'Lifetime Creator Deal' : 'Pro Wedding Pass'} successfully unlocked!`);
+  };
+
+  const handleRedeemVoucher = (code: string): boolean => {
+    const clean = code.trim();
+    if (!clean || clean.length < 4) return false;
+
+    const isLifetime = clean.toLowerCase().includes('life') || clean.toLowerCase().includes('79');
+    const plan: 'pro' | 'lifetime' = isLifetime ? 'lifetime' : 'pro';
+
+    handleCheckoutSuccess(plan, clean.toUpperCase());
+    return true;
   };
 
   const handleUpdateWedding = (updated: WeddingData) => {
@@ -742,6 +798,7 @@ export function App() {
             user={user}
             onOpenGuestPreview={() => setViewMode('guest')}
             onOpenCheckout={handleOpenCheckout}
+            onRedeemVoucher={handleRedeemVoucher}
             onSignOut={handleSignOut}
           />
         )}

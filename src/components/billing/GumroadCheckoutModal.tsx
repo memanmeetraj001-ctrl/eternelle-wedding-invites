@@ -13,10 +13,26 @@ export const GumroadCheckoutModal: React.FC<GumroadCheckoutModalProps> = ({
   isOpen,
   onClose,
   selectedPlan,
+  onSuccess,
 }) => {
   const [plan, setPlan] = useState<'pro' | 'lifetime'>(selectedPlan);
+  const [showVoucher, setShowVoucher] = useState(false);
+  const [voucherInput, setVoucherInput] = useState('');
+  const [voucherError, setVoucherError] = useState('');
 
   if (!isOpen) return null;
+
+  const handleRedeem = () => {
+    const clean = voucherInput.trim();
+    if (!clean || clean.length < 4) {
+      setVoucherError('Please enter a valid Etsy Order # or voucher code.');
+      return;
+    }
+    const isLifetime = clean.toLowerCase().includes('life') || clean.toLowerCase().includes('79');
+    const targetPlan = isLifetime ? 'lifetime' : plan;
+    onSuccess(targetPlan, clean.toUpperCase());
+    onClose();
+  };
 
   const price = plan === 'lifetime' ? '$79' : '$19';
   const originalPrice = plan === 'lifetime' ? '$199' : '$39';
@@ -133,6 +149,40 @@ export const GumroadCheckoutModal: React.FC<GumroadCheckoutModalProps> = ({
             <span>Pay {price} & Unlock Instantly</span>
             <ExternalLink size={14} />
           </GumroadOverlayButton>
+        </div>
+
+        {/* Etsy / Voucher Code Redemption */}
+        <div className="mt-4 pt-4 border-t border-stone-800 text-left">
+          <button
+            type="button"
+            onClick={() => setShowVoucher(prev => !prev)}
+            className="text-[11px] text-amber-400 hover:text-amber-300 transition-colors flex items-center justify-between w-full cursor-pointer"
+          >
+            <span className="font-medium">Purchased on Etsy or have a Voucher?</span>
+            <span className="font-mono text-xs">{showVoucher ? '−' : '+'}</span>
+          </button>
+          
+          {showVoucher && (
+            <div className="mt-2.5">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={voucherInput}
+                  onChange={(e) => setVoucherInput(e.target.value)}
+                  placeholder="e.g. ETSY-PRO-VIP or Order ID"
+                  className="flex-1 bg-stone-950 border border-stone-700 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-amber-500"
+                />
+                <button
+                  type="button"
+                  onClick={handleRedeem}
+                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold transition-all shrink-0 cursor-pointer"
+                >
+                  Redeem
+                </button>
+              </div>
+              {voucherError && <p className="text-[11px] text-rose-400 mt-1.5">{voucherError}</p>}
+            </div>
+          )}
         </div>
 
         <div className="mt-5 text-center text-[11px] text-stone-500 flex items-center justify-center gap-3">

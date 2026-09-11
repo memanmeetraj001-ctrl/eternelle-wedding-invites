@@ -22,6 +22,7 @@ interface MainDashboardProps {
   user: { name: string; email: string; plan: 'free' | 'pro' | 'lifetime'; licenseKey?: string } | null;
   onOpenGuestPreview: () => void;
   onOpenCheckout: (plan: 'pro' | 'lifetime') => void;
+  onRedeemVoucher?: (code: string) => boolean;
   onSignOut: () => void;
 }
 
@@ -36,11 +37,15 @@ export function MainDashboard({
   user,
   onOpenGuestPreview,
   onOpenCheckout,
+  onRedeemVoucher,
   onSignOut,
 }: MainDashboardProps) {
   const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedText, setCopiedText] = useState(false);
+  const [showEtsyRedeem, setShowEtsyRedeem] = useState(false);
+  const [etsyCode, setEtsyCode] = useState('');
+  const [etsyError, setEtsyError] = useState('');
 
   const activeTheme = THEME_PRESETS[wedding.themeId] || THEME_PRESETS['olive-burgundy'];
   const gumroadStore = 'https://manmeetraj6.gumroad.com';
@@ -234,12 +239,58 @@ export function MainDashboard({
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => onOpenCheckout('pro')}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white text-xs font-bold shadow-md hover:opacity-95 whitespace-nowrap transition-all"
-                >
-                  Unlock Pro Pass ($19)
-                </button>
+                <div className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => onOpenCheckout('pro')}
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white text-xs font-bold shadow-md hover:opacity-95 whitespace-nowrap transition-all cursor-pointer"
+                  >
+                    Unlock Pro Pass ($19)
+                  </button>
+                  <button
+                    onClick={() => setShowEtsyRedeem(prev => !prev)}
+                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white hover:bg-stone-50 text-stone-700 text-xs font-semibold border border-stone-300 shadow-xs whitespace-nowrap transition-all cursor-pointer"
+                  >
+                    Purchased on Etsy?
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Expandable Etsy Voucher Box */}
+            {showEtsyRedeem && plan === 'free' && (
+              <div className="bg-amber-50/80 border border-amber-300 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+                <div className="text-left w-full sm:w-auto">
+                  <h4 className="text-xs font-bold font-serif text-stone-900 flex items-center gap-1.5">
+                    <Sparkles size={14} className="text-amber-600" />
+                    <span>Redeem Etsy Order or VIP Pass</span>
+                  </h4>
+                  <p className="text-[11px] text-stone-600 mt-0.5">
+                    Enter your Etsy Order # or VIP Code from your download PDF to unlock Pro instantly.
+                  </p>
+                  {etsyError && <p className="text-[11px] text-rose-600 mt-1 font-medium">{etsyError}</p>}
+                </div>
+                <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                  <input
+                    type="text"
+                    value={etsyCode}
+                    onChange={(e) => setEtsyCode(e.target.value)}
+                    placeholder="e.g. ETSY-PRO-VIP"
+                    className="px-3 py-2 rounded-xl bg-white border border-stone-300 text-xs text-stone-900 focus:outline-none focus:border-amber-500 w-full sm:w-52"
+                  />
+                  <button
+                    onClick={() => {
+                      if (onRedeemVoucher && onRedeemVoucher(etsyCode)) {
+                        setEtsyError('');
+                        setShowEtsyRedeem(false);
+                      } else {
+                        setEtsyError('Please enter a valid Etsy Order # (minimum 4 characters).');
+                      }
+                    }}
+                    className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold transition-all shrink-0 cursor-pointer shadow-xs"
+                  >
+                    Activate Pro
+                  </button>
+                </div>
               </div>
             )}
 
