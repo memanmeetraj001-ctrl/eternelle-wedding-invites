@@ -163,8 +163,8 @@ export const THEME_PRESETS: Record<ThemeId, ThemeConfig> = {
     badgeText: '#fdba74',
     bgGradient: 'from-[#050407] via-[#140b22] to-[#040205]',
     illustrationUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
-    musicTrackUrl: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792cb.mp3?filename=wedding-grand-piano-123719.mp3',
-    musicTitle: 'Danse Macabre & Gothic Organ Waltz',
+    musicTrackUrl: 'https://cdn.pixabay.com/download/audio/2022/10/30/audio_2d8dfbf59c.mp3?filename=horror-background-atmosphere-126231.mp3',
+    musicTitle: 'Danse Macabre & Haunted Cathedral Atmosphere',
     stationery: {
       linerId: 'haunted-gothic',
       stampId: 'gothic-raven',
@@ -384,7 +384,7 @@ export const SAMPLE_HALLOWEEN_PARTY_DATA: WeddingData = {
   transportInfo: 'On All Hallows’ Eve, complimentary guest shuttles will depart from Salem Central Station every 30 minutes. Valet carriage parking is also available at the manor gates.',
   giftRegistryUrl: '',
   musicEnabled: true,
-  backgroundMusicUrl: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792cb.mp3?filename=wedding-grand-piano-123719.mp3',
+  backgroundMusicUrl: 'https://cdn.pixabay.com/download/audio/2022/10/30/audio_2d8dfbf59c.mp3?filename=horror-background-atmosphere-126231.mp3',
   rsvpSurvey: {
     allowPlusOnes: true,
     maxPlusOnes: 2,
