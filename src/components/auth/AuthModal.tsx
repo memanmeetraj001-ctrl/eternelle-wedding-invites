@@ -9,6 +9,9 @@ interface AuthModalProps {
   onClose: () => void;
   onLogin: (userData: UserAccount) => void;
   initialTab?: 'signin' | 'signup';
+  isEtsyVIP?: boolean;
+  etsyPlan?: 'pro' | 'lifetime';
+  etsyVoucher?: string;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({
@@ -16,6 +19,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   onLogin,
   initialTab = 'signup',
+  isEtsyVIP = false,
+  etsyPlan = 'pro',
+  etsyVoucher = 'ETSY-PRO-VIP',
 }) => {
   const [tab, setTab] = useState<'signin' | 'signup'>(initialTab === 'signin' ? 'signin' : 'signup');
   const [name, setName] = useState('');
@@ -36,8 +42,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
     try {
       if (tab === 'signup') {
-        const res = await apiRegister(name, email, password, 'free');
+        const targetPlan = isEtsyVIP ? etsyPlan : 'free';
+        const res = await apiRegister(name, email, password, targetPlan);
         if (res.success && res.user) {
+          if (isEtsyVIP) {
+            res.user.plan = etsyPlan;
+            res.user.licenseKey = etsyVoucher;
+            localStorage.setItem('eternelle_user_session', JSON.stringify(res.user));
+          }
           onLogin(res.user);
           onClose();
         } else {
@@ -46,6 +58,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       } else {
         const res = await apiLogin(email, password);
         if (res.success && res.user) {
+          if (isEtsyVIP) {
+            res.user.plan = etsyPlan;
+            res.user.licenseKey = etsyVoucher;
+            localStorage.setItem('eternelle_user_session', JSON.stringify(res.user));
+          }
           onLogin(res.user);
           onClose();
         } else {
@@ -87,11 +104,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <div className="flex justify-center mb-3">
             <BrandLogo size="lg" showText={false} />
           </div>
+
+          {isEtsyVIP && (
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-semibold mb-2 shadow-xs">
+              <Sparkles size={13} className="text-amber-400" />
+              <span>Etsy Order Verified · Pro Pass Included</span>
+            </div>
+          )}
+
           <h3 className="font-serif text-2xl text-amber-50 font-normal">
-            Welcome to Éternelle
+            {isEtsyVIP ? 'Claim Your Pro Wedding Pass' : 'Welcome to Éternelle'}
           </h3>
-          <p className="text-xs text-stone-400 mt-0.5">
-            Luxury Interactive Wedding Invitations & Micro-Sites
+          <p className="text-xs text-stone-400 mt-1 max-w-xs mx-auto">
+            {isEtsyVIP 
+              ? 'Create your permanent account with your email so you can save, edit, and access your invitations from any device.' 
+              : 'Luxury Interactive Wedding Invitations & Micro-Sites'}
           </p>
         </div>
 
@@ -107,7 +134,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               tab === 'signup' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-stone-200'
             )}
           >
-            Create Free Account
+            {isEtsyVIP ? 'Create Pro Account' : 'Create Free Account'}
           </button>
           <button
             type="button"
@@ -119,7 +146,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               tab === 'signin' ? 'bg-amber-950/70 text-amber-200 border border-amber-600/40 shadow' : 'text-stone-400 hover:text-stone-200'
             )}
           >
-            Sign In
+            {isEtsyVIP ? 'Sign In & Upgrade' : 'Sign In'}
           </button>
         </div>
 
@@ -199,7 +226,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             ) : (
               <>
                 <Sparkles size={14} />
-                <span>{tab === 'signup' ? 'Start Free (1 Event Included)' : 'Sign In To Dashboard'}</span>
+                <span>
+                  {tab === 'signup' 
+                    ? (isEtsyVIP ? 'Claim Pro Pass & Launch Builder →' : 'Start Free (1 Event Included)') 
+                    : (isEtsyVIP ? 'Sign In & Activate Pro Pass →' : 'Sign In To Dashboard')}
+                </span>
                 <ArrowRight size={14} />
               </>
             )}

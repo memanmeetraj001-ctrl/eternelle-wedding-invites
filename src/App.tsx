@@ -143,6 +143,7 @@ export function App() {
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState<'signin' | 'signup'>('signup');
+  const [etsyVIPAuth, setEtsyVIPAuth] = useState<{ plan: 'pro' | 'lifetime'; voucher: string } | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutSelectedPlan, setCheckoutSelectedPlan] = useState<'pro' | 'lifetime'>('pro');
   const [purchaseNotification, setPurchaseNotification] = useState<string | null>(null);
@@ -295,36 +296,38 @@ export function App() {
     if (isEtsy) {
       const voucher = params.get('voucher') || params.get('order') || 'ETSY-PRO-VIP';
       const plan: 'pro' | 'lifetime' = params.get('plan') === 'lifetime' ? 'lifetime' : 'pro';
-      const email = params.get('email') || user?.email || 'client@eternelleweddinginvites.online';
-
-      const updatedUser: UserAccount = {
-        id: user?.id || `usr_etsy_${Date.now().toString().slice(-6)}`,
-        name: user?.name || 'Etsy VIP Client',
-        email,
-        role: user?.role || 'user',
-        plan,
-        licenseKey: voucher,
-        createdAt: user?.createdAt || new Date().toISOString(),
-        weddingSlug: wedding.slug,
-      };
-
-      setUser(updatedUser);
-      saveUser(updatedUser);
-      localStorage.setItem('eternelle_user_session', JSON.stringify(updatedUser));
-
-      confetti({
-        particleCount: 180,
-        spread: 100,
-        origin: { y: 0.4 },
-        colors: ['#d4af37', '#e11d48', '#ffffff', '#e2d5c3'],
-      });
-
-      setPurchaseNotification(`🎉 Welcome from Etsy! Your ${plan === 'lifetime' ? 'Lifetime Creator Pass' : 'Pro Wedding Pass'} is active with Unlimited RSVPs & All Luxury Features Unlocked.`);
-      setViewMode('dashboard');
 
       window.history.replaceState({}, '', window.location.pathname);
+
+      if (user) {
+        // User already has an existing account! Upgrade their plan directly.
+        const updatedUser: UserAccount = {
+          ...user,
+          plan,
+          licenseKey: voucher,
+        };
+
+        setUser(updatedUser);
+        saveUser(updatedUser);
+        localStorage.setItem('eternelle_user_session', JSON.stringify(updatedUser));
+
+        confetti({
+          particleCount: 180,
+          spread: 100,
+          origin: { y: 0.4 },
+          colors: ['#d4af37', '#e11d48', '#ffffff', '#e2d5c3'],
+        });
+
+        setPurchaseNotification(`🎉 Welcome from Etsy! Your ${plan === 'lifetime' ? 'Lifetime Creator Pass' : 'Pro Wedding Pass'} is active with Unlimited RSVPs & All Luxury Features Unlocked.`);
+        setViewMode('dashboard');
+      } else {
+        // Buyer does NOT have an account yet! Prompt them to create their real ID and password.
+        setEtsyVIPAuth({ plan, voucher });
+        setAuthInitialTab('signup');
+        setIsAuthModalOpen(true);
+      }
     }
-  }, [wedding.slug]);
+  }, [user, wedding.slug]);
 
   // 6. Listen to Gumroad JS Overlay PostMessage
   useEffect(() => {
@@ -824,9 +827,27 @@ export function App() {
       {/* Auth Modal */}
       <AuthModal
         isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onLogin={handleUserLogin}
+        onClose={() => {
+          setIsAuthModalOpen(false);
+          setEtsyVIPAuth(null);
+        }}
+        onLogin={(newUser) => {
+          handleUserLogin(newUser);
+          if (etsyVIPAuth) {
+            confetti({
+              particleCount: 180,
+              spread: 100,
+              origin: { y: 0.4 },
+              colors: ['#d4af37', '#e11d48', '#ffffff', '#e2d5c3'],
+            });
+            setPurchaseNotification(`🎉 Congratulations! Your account has been created with the Pro Wedding Pass (Unlimited RSVPs unlocked).`);
+            setEtsyVIPAuth(null);
+          }
+        }}
         initialTab={authInitialTab}
+        isEtsyVIP={!!etsyVIPAuth}
+        etsyPlan={etsyVIPAuth?.plan || 'pro'}
+        etsyVoucher={etsyVIPAuth?.voucher || 'ETSY-PRO-VIP'}
       />
 
       {/* Gumroad Checkout Modal */}
