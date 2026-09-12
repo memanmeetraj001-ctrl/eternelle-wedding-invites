@@ -6,7 +6,7 @@ import {
   Flame, Gift, Eye, Palette, CheckCheck, HelpCircle, MessageSquare,
   Lock, Share2, Layers, Sliders, QrCode, UserCheck, CalendarPlus,
   Mail, Utensils, GlassWater, Wine, Cake, PartyPopper, Briefcase,
-  Printer, SmartphoneNfc
+  Printer, SmartphoneNfc, Menu, X
 } from 'lucide-react';
 import { WeddingData, ThemeConfig, ThemeId, RSVPRecord, EventType } from '../../types/invitation';
 import confetti from 'canvas-confetti';
@@ -58,6 +58,7 @@ export function LandingPage({
   const [demoRsvpSubmitted, setDemoRsvpSubmitted] = useState(false);
   const [demoGuestName, setDemoGuestName] = useState('');
   const [demoMeal, setDemoMeal] = useState('Filet Mignon & Truffle Jus');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const selectedPreset = THEME_PRESETS[selectedPresetId] || THEME_PRESETS['olive-burgundy'];
   const activeEventPreset = EVENT_CATEGORY_PRESETS[selectedEventType] || EVENT_CATEGORY_PRESETS.wedding;
@@ -183,9 +184,11 @@ export function LandingPage({
           {onOpenHackathon && (
             <button 
               onClick={onOpenHackathon} 
-              className="text-cyan-900 hover:text-cyan-950 transition-colors whitespace-nowrap flex items-center gap-1 font-bold bg-cyan-100 px-2.5 py-0.5 rounded-full border border-cyan-300 shadow-xs cursor-pointer"
+              className="text-cyan-900 hover:text-cyan-950 transition-colors whitespace-nowrap flex items-center gap-1.5 font-bold bg-gradient-to-r from-cyan-100 to-blue-100 px-3 py-1 rounded-full border border-cyan-400 shadow-xs cursor-pointer hover:border-cyan-500"
             >
-              <span>⚡ Hackathons</span>
+              <span className="text-xs">⚡</span>
+              <span>Hackathon Page</span>
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500 text-slate-950 font-mono font-black uppercase">Campus</span>
             </button>
           )}
           <button onClick={() => scrollToSection('features')} className="hover:text-rose-600 transition-colors whitespace-nowrap cursor-pointer">
@@ -205,12 +208,216 @@ export function LandingPage({
         <div className="flex items-center gap-2">
           <button
             onClick={onOpenStudio}
-            className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white text-[11px] font-bold shadow-md shadow-rose-500/20 transition-all whitespace-nowrap cursor-pointer"
+            className="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white text-[11px] font-bold shadow-md shadow-rose-500/20 transition-all whitespace-nowrap cursor-pointer"
           >
             Create Free Event
           </button>
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-stone-100 border border-stone-300 text-stone-800 text-[11px] font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+            title="Open Sliding Menu"
+          >
+            <Menu size={14} />
+            <span>Menu</span>
+          </button>
         </div>
       </nav>
+
+      {/* SLIDE-OUT / SLIDING MENU DRAWER */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity" 
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Sliding Panel */}
+          <div className="relative w-full max-w-sm bg-[#FAF7F2] h-full shadow-2xl border-l border-stone-300 z-10 flex flex-col justify-between overflow-y-auto animate-fadeIn">
+            <div>
+              {/* Drawer Header */}
+              <div className="p-5 border-b border-stone-200 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-10">
+                <div className="flex items-center gap-2.5">
+                  <BrandLogo size="sm" showText={false} />
+                  <div>
+                    <span className="font-serif text-sm tracking-widest font-bold text-stone-950 block">ÉTERNELLE</span>
+                    <span className="text-[10px] text-stone-500 font-mono">Luxury Event Technology</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-600 hover:text-stone-950 transition-colors cursor-pointer"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Special Experience Landing Pages Section */}
+              <div className="p-5 border-b border-stone-200 bg-amber-50/30">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-stone-500 font-bold block mb-3">
+                  Featured Experience Editions
+                </span>
+                
+                <div className="space-y-2.5">
+                  {/* Hackathon Landing Page Button */}
+                  {onOpenHackathon && (
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        onOpenHackathon();
+                      }}
+                      className="w-full p-3.5 rounded-2xl bg-gradient-to-br from-cyan-950 via-slate-900 to-slate-950 border-2 border-cyan-400 text-left flex items-center justify-between group hover:border-cyan-300 transition-all shadow-md shadow-cyan-950/20 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">⚡</span>
+                        <div>
+                          <div className="font-mono text-xs font-black text-cyan-300 flex items-center gap-1.5">
+                            <span>Hackathon Campus Suite</span>
+                            <span className="px-1.5 py-0.2 rounded bg-cyan-400 text-slate-950 text-[9px] font-black uppercase">Live</span>
+                          </div>
+                          <p className="text-[11px] text-slate-300 font-sans mt-0.5">
+                            48H countdown, Devpost bounties &amp; 3D unboxing
+                          </p>
+                        </div>
+                      </div>
+                      <ArrowRight size={16} className="text-cyan-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                    </button>
+                  )}
+
+                  {/* Halloween Landing Page Button */}
+                  {onOpenHalloween && (
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        onOpenHalloween();
+                      }}
+                      className="w-full p-3.5 rounded-2xl bg-gradient-to-br from-orange-950 via-stone-900 to-purple-950 border border-orange-500/40 text-left flex items-center justify-between group hover:border-orange-400 transition-all shadow-sm cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">🎃</span>
+                        <div>
+                          <div className="font-serif text-xs font-bold text-orange-200 flex items-center gap-1.5">
+                            <span>Halloween Gothic Masquerade</span>
+                            <span className="px-1.5 py-0.2 rounded bg-orange-500/30 text-orange-200 text-[9px] uppercase border border-orange-500/50">Seasonal</span>
+                          </div>
+                          <p className="text-[11px] text-stone-300 font-sans mt-0.5">
+                            Potion bars, gothic wax seals &amp; horror audio
+                          </p>
+                        </div>
+                      </div>
+                      <ArrowRight size={16} className="text-orange-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                    </button>
+                  )}
+
+                  {/* Kids Party Landing Page Button */}
+                  {onOpenKidsParty && (
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        onOpenKidsParty();
+                      }}
+                      className="w-full p-3.5 rounded-2xl bg-gradient-to-br from-teal-950 via-stone-900 to-cyan-950 border border-teal-500/40 text-left flex items-center justify-between group hover:border-teal-400 transition-all shadow-sm cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">🧜‍♀️</span>
+                        <div>
+                          <div className="font-serif text-xs font-bold text-teal-200 flex items-center gap-1.5">
+                            <span>Kids &amp; Mermaid Hub</span>
+                            <span className="px-1.5 py-0.2 rounded bg-teal-500/30 text-teal-200 text-[9px] uppercase border border-teal-500/50">Popular</span>
+                          </div>
+                          <p className="text-[11px] text-stone-300 font-sans mt-0.5">
+                            Iridescent scales, ocean music &amp; pool RSVP
+                          </p>
+                        </div>
+                      </div>
+                      <ArrowRight size={16} className="text-teal-400 group-hover:translate-x-1 transition-transform shrink-0" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Navigation Jump Links */}
+              <div className="p-5 space-y-1 text-xs font-medium text-stone-700">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-stone-500 font-bold block mb-2">
+                  Atelier Navigation
+                </span>
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); scrollToSection('milestones'); }}
+                  className="w-full py-2 px-3 rounded-xl hover:bg-stone-200/60 text-left flex items-center justify-between transition-colors"
+                >
+                  <span>Milestone Categories</span>
+                  <span className="text-stone-400 font-mono text-[10px]">#milestones</span>
+                </button>
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); scrollToSection('stationery'); }}
+                  className="w-full py-2 px-3 rounded-xl hover:bg-stone-200/60 text-left flex items-center justify-between transition-colors"
+                >
+                  <span>Luxury Stationery Suite</span>
+                  <span className="text-stone-400 font-mono text-[10px]">#stationery</span>
+                </button>
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); scrollToSection('demo'); }}
+                  className="w-full py-2 px-3 rounded-xl hover:bg-rose-50 text-left flex items-center justify-between text-rose-700 font-bold transition-colors"
+                >
+                  <span className="flex items-center gap-1.5"><Sparkles size={13} /> 3D Interactive Demo</span>
+                  <span className="text-rose-400 font-mono text-[10px]">#demo</span>
+                </button>
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); scrollToSection('features'); }}
+                  className="w-full py-2 px-3 rounded-xl hover:bg-stone-200/60 text-left flex items-center justify-between transition-colors"
+                >
+                  <span>Platform Features</span>
+                  <span className="text-stone-400 font-mono text-[10px]">#features</span>
+                </button>
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); scrollToSection('checkin'); }}
+                  className="w-full py-2 px-3 rounded-xl hover:bg-stone-200/60 text-left flex items-center justify-between transition-colors"
+                >
+                  <span>Live Door QR Check-In</span>
+                  <span className="text-stone-400 font-mono text-[10px]">#checkin</span>
+                </button>
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); scrollToSection('pricing'); }}
+                  className="w-full py-2 px-3 rounded-xl hover:bg-rose-50 text-left flex items-center justify-between text-rose-700 font-bold transition-colors"
+                >
+                  <span>Pricing &amp; Licensing</span>
+                  <span className="text-rose-400 font-mono text-[10px]">#pricing</span>
+                </button>
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); scrollToSection('faqs'); }}
+                  className="w-full py-2 px-3 rounded-xl hover:bg-stone-200/60 text-left flex items-center justify-between transition-colors"
+                >
+                  <span>Frequently Asked Questions</span>
+                  <span className="text-stone-400 font-mono text-[10px]">#faqs</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Bottom Actions */}
+            <div className="p-5 border-t border-stone-200 space-y-2.5 bg-white">
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenStudio();
+                }}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 text-white font-bold text-xs shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Sparkles size={14} />
+                <span>Create Free Celebration Suite</span>
+              </button>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenAuth('signin');
+                }}
+                className="w-full py-2.5 rounded-xl border border-stone-300 text-stone-800 hover:bg-stone-50 font-semibold text-xs transition-colors cursor-pointer"
+              >
+                Host Sign In
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 3. HERO SECTION */}
       <section className="w-full max-w-6xl px-4 sm:px-6 pt-14 pb-16 flex flex-col items-center text-center relative overflow-hidden">
@@ -381,7 +588,27 @@ export function LandingPage({
                 className="w-full mb-2.5 py-3 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-amber-400 hover:brightness-105 text-stone-950 font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <span>🧜‍♀️</span>
-                <span>Explore Kids Invitations Hub & Mermaid Suite →</span>
+                <span>Explore Kids Invitations Hub &amp; Mermaid Suite →</span>
+              </button>
+            )}
+
+            {activeEventPreset.type === 'hackathon' && onOpenHackathon && (
+              <button
+                onClick={onOpenHackathon}
+                className="w-full mb-2.5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:brightness-105 text-slate-950 font-mono font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+              >
+                <span>⚡</span>
+                <span>Explore Dedicated Hackathon Campus Landing Page →</span>
+              </button>
+            )}
+
+            {activeEventPreset.type === 'halloween' && onOpenHalloween && (
+              <button
+                onClick={onOpenHalloween}
+                className="w-full mb-2.5 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-purple-600 hover:brightness-105 text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+              >
+                <span>🎃</span>
+                <span>Explore Halloween Gothic Masquerade Suite →</span>
               </button>
             )}
 
@@ -1308,6 +1535,18 @@ export function LandingPage({
                   <button onClick={() => { setSelectedEventType('gala'); scrollToSection('milestones'); }} className="hover:text-rose-700 transition-colors">
                     Charity Galas
                   </button>
+                </li>
+                <li>
+                  {onOpenHackathon ? (
+                    <button onClick={onOpenHackathon} className="hover:text-cyan-700 transition-colors font-medium text-cyan-950 flex items-center gap-1">
+                      <span>⚡ Collegiate Hackathons</span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-100 text-cyan-800 font-bold font-mono">Campus</span>
+                    </button>
+                  ) : (
+                    <button onClick={() => { setSelectedEventType('hackathon'); scrollToSection('milestones'); }} className="hover:text-cyan-700 transition-colors font-medium text-cyan-950">
+                      ⚡ Collegiate Hackathons
+                    </button>
+                  )}
                 </li>
               </ul>
             </div>
