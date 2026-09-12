@@ -413,8 +413,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
               {isMusicPlaying ? (
                 <>
                   <Volume2 size={14} className={isHalloween ? "text-[#d4af37] animate-pulse" : "text-amber-300 animate-pulse"} />
-                  <span className={`text-[11px] font-medium font-serif ${isHalloween ? 'text-amber-200' : 'text-amber-200'}`}>
-                    {isHalloween ? 'Cathedral Organ Playing' : 'Music Playing'}
+                  <span className={`text-[11px] font-medium font-serif ${isHalloween ? 'text-amber-200' : isKidsParty ? 'text-teal-200' : 'text-amber-200'}`}>
+                    {isHalloween ? 'Cathedral Organ Playing' : isKidsParty ? 'Tropical Ocean Music Playing' : 'Music Playing'}
                   </span>
                   <span className="flex items-center gap-0.5 ml-0.5">
                     <span className="w-1 h-2 rounded-full animate-pulse bg-amber-400" />
@@ -426,7 +426,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                 <>
                   <VolumeX size={14} className="text-stone-400" />
                   <span className="text-[11px] text-stone-300 font-medium">
-                    {isHalloween ? 'Horror Music Muted' : 'Music Muted'}
+                    {isHalloween ? 'Horror Music Muted' : isKidsParty ? 'Ocean Music Muted' : 'Music Muted'}
                   </span>
                 </>
               )}
@@ -438,11 +438,11 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           <button
             onClick={handleReplay}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-md border text-stone-200 text-xs font-sans transition-all shadow-lg cursor-pointer ${
-              isHalloween ? 'border-[#c3a573]/40 hover:text-amber-300' : 'border-white/15 hover:text-amber-200'
+              isHalloween ? 'border-[#c3a573]/40 hover:text-amber-300' : isKidsParty ? 'border-teal-400/40 hover:text-teal-200' : 'border-white/15 hover:text-amber-200'
             }`}
           >
             <RotateCcw size={12} />
-            <span>{isHalloween ? 'Re-seal Gothic Envelope' : 'Re-tie Ribbon'}</span>
+            <span>{isHalloween ? 'Re-seal Gothic Envelope' : isKidsParty ? 'Re-seal Mermaid Envelope' : 'Re-tie Ribbon'}</span>
           </button>
         )}
       </div>
@@ -672,6 +672,220 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
             </div>
           </div>
 
+        </div>
+      ) : isKidsParty ? (
+        /* ========================================================================= */
+        /* 2B. MERMAID POOL PARTY: 100% IDENTICAL TO SAMPLE ENVELOPE EXPERIENCE       */
+        /* ========================================================================= */
+        <div className="relative w-full max-w-[340px] sm:max-w-[460px] md:max-w-[560px] lg:max-w-[640px] aspect-[4/3] rounded-3xl overflow-hidden shadow-[0_24px_65px_rgba(8,34,36,0.45)] border border-[#8fd7dc]/60 flex flex-col items-center justify-between p-3 sm:p-5 select-none relative bg-cover bg-center">
+          {/* Exact Flatlay Backdrop with Shells, Starfish, Pearl Garland, Coral & Bubbles */}
+          <div 
+            className="absolute inset-0 z-0 bg-cover bg-center pointer-events-none"
+            style={{
+              backgroundImage: `url('/assets/mermaid/mermaid_flatlay_backdrop_high.png')`,
+              backgroundSize: '100% 100%',
+              backgroundRepeat: 'no-repeat',
+            }}
+          >
+            {/* Animated floating translucent bubbles matching sample */}
+            <div className="absolute top-[34%] left-[28%] w-5 h-5 rounded-full border-2 border-white/80 bg-white/10 shadow-[0_0_8px_rgba(255,255,255,0.4)] animate-bubble-1 pointer-events-none" />
+            <div className="absolute top-[28%] right-[29%] w-6 h-6 rounded-full border-2 border-white/80 bg-white/10 shadow-[0_0_8px_rgba(255,255,255,0.4)] animate-bubble-2 pointer-events-none" />
+            <div className="absolute bottom-[32%] left-[42%] w-4 h-4 rounded-full border-2 border-white/75 bg-white/10 shadow-[0_0_6px_rgba(255,255,255,0.3)] animate-bubble-3 pointer-events-none" />
+            <div className="absolute top-[48%] right-[20%] w-7 h-7 rounded-full border-2 border-white/80 bg-white/10 shadow-[0_0_10px_rgba(255,255,255,0.4)] animate-bubble-1 pointer-events-none" style={{ animationDelay: '1.5s' }} />
+            <div className="absolute top-[39%] left-[19%] w-5 h-5 rounded-full border-2 border-white/75 bg-white/10 shadow-[0_0_6px_rgba(255,255,255,0.3)] animate-bubble-2 pointer-events-none" style={{ animationDelay: '2.5s' }} />
+          </div>
+
+          {/* Interactive Envelope Stage */}
+          <div
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onClick={stage === 'sealed' ? handleUnbox : undefined}
+            className={`relative my-auto w-[270px] sm:w-[350px] md:w-[410px] lg:w-[460px] h-[200px] sm:h-[260px] md:h-[304px] lg:h-[341px] z-20 transition-transform duration-300 ease-out ${
+              stage === 'sealed' ? 'cursor-pointer group' : ''
+            }`}
+            style={{
+              perspective: '1400px',
+              transform: `rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
+              transformStyle: 'preserve-3d',
+            }}
+          >
+            {/* 1. If sealed: The exact pristine sealed envelope with gold trim, seaweed, mermaid tail & embossed seal */}
+            <div 
+              className={`absolute inset-0 rounded-2xl overflow-hidden transition-all duration-700 ${
+                isFlapOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+              }`}
+              style={{
+                boxShadow: '0 16px 36px rgba(7,36,38,0.35)',
+              }}
+            >
+              <img 
+                src="/assets/mermaid/envelope_sealed_high.png" 
+                alt="Mermaid Sealed Envelope"
+                className="w-full h-full object-cover object-center group-hover:scale-[1.015] transition-transform duration-300"
+              />
+            </div>
+
+            {/* 2. When opening / opened: 3D Unboxing Stage */}
+            {isFlapOpen && (
+              <>
+                {/* Envelope Interior Liner Backing (Mermaid Scales & Turquoise Gradient) */}
+                <div 
+                  className="absolute inset-0 rounded-2xl overflow-hidden z-10"
+                  style={{
+                    background: 'radial-gradient(circle at 50% 30%, #3bb6bd 0%, #1a7880 70%, #0d4a4f 100%)',
+                    boxShadow: 'inset 0 0 30px rgba(0,0,0,0.3), 0 16px 36px rgba(7,36,38,0.35)',
+                  }}
+                >
+                  <div 
+                    className="w-full h-full opacity-35"
+                    style={{
+                      backgroundImage: `radial-gradient(circle at 50% 0%, #ffffff 18%, transparent 22%), radial-gradient(circle at 0% 50%, #dfc385 12%, transparent 16%), radial-gradient(circle at 100% 50%, #ffffff 12%, transparent 16%)`,
+                      backgroundSize: '28px 28px',
+                    }}
+                  />
+                </div>
+
+                {/* THE INVITATION CARD (Slides upward from inside pocket) */}
+                <div 
+                  onClick={isFullyOpen ? onOpen : undefined}
+                  className={`absolute left-[5%] w-[90%] h-[88%] rounded-2xl transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) overflow-hidden flex flex-col justify-between p-3.5 sm:p-4 md:p-5 text-center ${
+                    isFullyOpen ? 'cursor-pointer hover:scale-[1.01] shadow-2xl' : ''
+                  }`}
+                  style={{
+                    top: '6%',
+                    background: 'linear-gradient(180deg, #ffffff 0%, #f0fdfa 100%)',
+                    border: '2px solid #dfc385',
+                    boxShadow: '0 12px 36px rgba(11,43,43,0.35), inset 0 0 20px rgba(212,175,55,0.18)',
+                    transform: isFlapOpen ? 'translateY(-56%)' : 'translateY(0%)',
+                    zIndex: isFlapOpen ? 25 : 10,
+                  }}
+                >
+                  <div className="flex-1 flex flex-col items-center justify-between py-0.5">
+                    <div>
+                      <span className="text-[7px] sm:text-[8px] md:text-[9px] font-mono tracking-[0.22em] text-[#0d5c63] uppercase font-bold block mb-1">
+                        {wedding.subtitleIntro || 'DIVE INTO FIVE! SPLISH SPLASH BIRTHDAY BASH'}
+                      </span>
+                      <h3 className="font-serif text-sm sm:text-lg md:text-xl font-bold text-[#0c363a] tracking-wide uppercase leading-tight">
+                        {wedding.coupleName1 || 'Maya Reynolds'}
+                      </h3>
+                      <p className="text-[10px] sm:text-xs font-serif italic text-rose-500 font-semibold mt-0.5">
+                        {wedding.coupleName2 || 'Turning 5!'}
+                      </p>
+                    </div>
+
+                    <div className="my-1 sm:my-2 py-1 px-3 rounded-xl bg-teal-50/90 border border-teal-200/80 text-[9px] sm:text-[11px] text-teal-950 font-medium w-full">
+                      <p className="font-semibold">{wedding.weddingDate} · {wedding.weddingTime || '1:00 PM'}</p>
+                      <p className="text-teal-700 text-[8px] sm:text-[10px] mt-0.5 truncate">{wedding.venueName}</p>
+                    </div>
+
+                    <div className="w-full">
+                      <button 
+                        onClick={onOpen}
+                        className="w-full py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-teal-500 via-cyan-500 to-amber-400 hover:brightness-105 text-teal-950 font-bold text-[10px] sm:text-xs shadow-md flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                      >
+                        <Sparkles size={12} />
+                        <span>View Full Invitation & RSVP →</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Envelope Front Pocket (Lower & Sides with Seaweed + Mermaid Tail artwork) */}
+                <div 
+                  className="absolute inset-0 pointer-events-none z-20 rounded-2xl overflow-hidden"
+                  style={{
+                    filter: 'drop-shadow(0 -4px 10px rgba(7,36,38,0.25))',
+                  }}
+                >
+                  <img 
+                    src="/assets/mermaid/envelope_pocket_high.png" 
+                    alt="Mermaid Envelope Pocket"
+                    className="w-full h-full object-cover object-bottom"
+                  />
+                </div>
+
+                {/* Top Pointed Triangular Flap (Folds open upward in 3D) */}
+                <div 
+                  className="absolute inset-x-0 top-0 h-[61%] origin-top transition-transform duration-[1100ms] cubic-bezier(0.4, 0, 0.2, 1) pointer-events-none"
+                  style={{
+                    transform: isFlapOpen ? 'rotateX(180deg)' : 'rotateX(0deg)',
+                    transformStyle: 'preserve-3d',
+                    zIndex: isFlapOpen ? 12 : 30,
+                  }}
+                >
+                  {/* Front Flap (Mint with gold trim) */}
+                  <div 
+                    className="absolute inset-0"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                    }}
+                  >
+                    <img 
+                      src="/assets/mermaid/envelope_top_flap_high.png" 
+                      alt="Mermaid Top Flap"
+                      className="w-full h-full object-cover object-top"
+                    />
+                  </div>
+
+                  {/* Back of Flap (Reveals iridescent scale liner when flipped up) */}
+                  <div 
+                    className="absolute inset-0 overflow-hidden"
+                    style={{
+                      clipPath: 'polygon(0 0, 100% 0, 50% 100%)',
+                      background: 'linear-gradient(180deg, #3bb6bd 0%, #20878f 70%, #146268 100%)',
+                      borderTop: '2px solid #dfc385',
+                      transform: 'rotateX(180deg)',
+                      backfaceVisibility: 'hidden',
+                    }}
+                  >
+                    <div 
+                      className="w-full h-full opacity-40"
+                      style={{
+                        backgroundImage: `radial-gradient(circle at 50% 0%, #ffffff 18%, transparent 22%), radial-gradient(circle at 0% 50%, #dfc385 12%, transparent 16%), radial-gradient(circle at 100% 50%, #ffffff 12%, transparent 16%)`,
+                        backgroundSize: '24px 24px',
+                      }}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Embossed Pearl Seashell & Starfish Wax Seal (Fades on unbox) */}
+            <div 
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-[900ms] z-40"
+              style={{
+                top: isFlapOpen ? '18%' : '58.7%',
+                transform: isFlapOpen ? 'translate(-50%, -50%) scale(0.7)' : 'translate(-50%, -50%) scale(1)',
+                opacity: isFlapOpen ? 0 : 1,
+                pointerEvents: isFlapOpen ? 'none' : 'auto',
+              }}
+            >
+              <img 
+                src="/assets/mermaid/mermaid_wax_seal_high.png" 
+                alt="Pearl Seashell Wax Seal"
+                className="w-20 sm:w-24 md:w-26 h-20 sm:h-24 md:h-26 drop-shadow-[0_4px_14px_rgba(7,36,38,0.35)] hover:scale-105 transition-transform cursor-pointer active:scale-95"
+                onClick={handleUnbox}
+              />
+            </div>
+          </div>
+
+          {/* Centered Button Below Envelope: 100% SAME AS SAMPLE UPLOADED */}
+          <div className="z-30 mt-auto mb-1 sm:mb-2 flex flex-col items-center">
+            <button 
+              onClick={stage === 'sealed' ? handleUnbox : onOpen}
+              className="px-7 sm:px-9 py-2 sm:py-2.5 rounded-full bg-white hover:bg-teal-50 border-2 border-[#5ec2c8] text-[#135b61] font-sans font-semibold text-xs sm:text-sm tracking-wide transition-all shadow-[0_4px_14px_rgba(94,194,200,0.35)] hover:shadow-[0_6px_20px_rgba(94,194,200,0.5)] flex items-center gap-2 cursor-pointer active:scale-95"
+            >
+              {stage === 'sealed' ? (
+                <span>Tap to Open Envelope</span>
+              ) : (
+                <span className="flex items-center gap-1.5">
+                  <Sparkles size={13} className="text-amber-500" />
+                  <span>Tap to View Details & RSVP →</span>
+                </span>
+              )}
+            </button>
+          </div>
         </div>
       ) : (
         /* ========================================================================= */

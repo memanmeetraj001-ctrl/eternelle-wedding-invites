@@ -164,8 +164,10 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
     }
   };
 
+  const isKidsParty = wedding.eventType === 'kids_party' || theme.id === 'mermaid-lagoon';
+
   return (
-    <div className={`w-full min-h-screen bg-gradient-to-b ${theme.bgGradient} text-stone-100 flex flex-col items-center select-none overflow-x-hidden font-sans`}>
+    <div className={`w-full min-h-screen ${isKidsParty && !isEnvelopeOpen ? 'bg-[#90d2d6]' : `bg-gradient-to-b ${theme.bgGradient}`} text-stone-100 flex flex-col items-center select-none overflow-x-hidden font-sans`}>
       
       {/* 1. 3D ENVELOPE UNBOXING STAGE */}
       {!isEnvelopeOpen ? (
