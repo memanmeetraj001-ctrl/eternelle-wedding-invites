@@ -28,6 +28,7 @@ interface LandingPageProps {
   onSelectTheme: (themeId: ThemeId) => void;
   onOpenHalloween?: () => void;
   onOpenKidsParty?: () => void;
+  onOpenHackathon?: () => void;
   onOpenLegal: (doc: LegalDocType) => void;
   onOpenCookieSettings?: () => void;
 }
@@ -42,6 +43,7 @@ export function LandingPage({
   onSelectTheme,
   onOpenHalloween,
   onOpenKidsParty,
+  onOpenHackathon,
   onOpenLegal,
   onOpenCookieSettings,
 }: LandingPageProps) {
@@ -1324,6 +1326,14 @@ export function LandingPage({
                     Creator Commercial License
                   </button>
                 </li>
+                {onOpenHackathon && (
+                  <li>
+                    <button onClick={onOpenHackathon} className="text-cyan-800 hover:text-cyan-950 font-bold transition-colors flex items-center gap-1.5 text-left">
+                      <span>⚡ University Hackathons</span>
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-800 uppercase font-mono font-bold">Campus</span>
+                    </button>
+                  </li>
+                )}
               </ul>
             </div>
 

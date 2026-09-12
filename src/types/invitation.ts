@@ -1,4 +1,4 @@
-export type ThemeId = 'olive-burgundy' | 'champagne-noir' | 'tuscan-terracotta' | 'dusty-rose' | 'botanical-emerald' | 'midnight-haunt' | 'mermaid-lagoon';
+export type ThemeId = 'olive-burgundy' | 'champagne-noir' | 'tuscan-terracotta' | 'dusty-rose' | 'botanical-emerald' | 'midnight-haunt' | 'mermaid-lagoon' | 'cyber-hackathon';
 
 export interface ColorSwatch {
   name: string;
@@ -13,7 +13,8 @@ export type EnvelopeLinerId =
   | 'art-deco' 
   | 'vintage-floral'
   | 'haunted-gothic'
-  | 'mermaid-tail';
+  | 'mermaid-tail'
+  | 'cyber-circuit';
 
 export type StampStyleId = 
   | 'vintage-rose' 
@@ -22,7 +23,8 @@ export type StampStyleId =
   | 'botanical-olive' 
   | 'monogram-initials'
   | 'gothic-raven'
-  | 'pearl-seashell';
+  | 'pearl-seashell'
+  | 'microchip-hologram';
 
 export type FoilFinishId = 'gold' | 'rose-gold' | 'silver' | 'emerald' | 'none';
 
@@ -118,6 +120,7 @@ export type EventType =
   | 'engagement' 
   | 'birthday' 
   | 'kids_party'
+  | 'hackathon'
   | 'halloween'
   | 'anniversary' 
   | 'baby_shower' 
@@ -182,6 +185,11 @@ export interface WeddingData {
   hostNames?: string;
   ageMilestone?: number | string;
   milestonePun?: string;
+  hackathonTracks?: string[];
+  prizePool?: string;
+  teamFormationEnabled?: boolean;
+  discordUrl?: string;
+  wifiInfo?: string;
   blocks?: EventBlockConfig[];
   rsvpSurvey?: RSVPSurveyConfig;
   stationery?: StationeryConfig;

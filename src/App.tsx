@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { WeddingData, RSVPRecord, ThemeId } from './types/invitation';
-import { INITIAL_WEDDING_DATA, INITIAL_RSVPS, THEME_PRESETS, SAMPLE_HALLOWEEN_PARTY_DATA, SAMPLE_MERMAID_PARTY_DATA } from './constants/themes';
+import { INITIAL_WEDDING_DATA, INITIAL_RSVPS, THEME_PRESETS, SAMPLE_HALLOWEEN_PARTY_DATA, SAMPLE_MERMAID_PARTY_DATA, SAMPLE_HACKATHON_DATA } from './constants/themes';
 import { GUMROAD_CONFIG } from './constants/gumroad';
 import { detectGumroadRedirect } from './utils/gumroadVerify';
 import { BrandLogo } from './components/common/BrandLogo';
@@ -15,6 +15,7 @@ import { LandingPage } from './components/landing/LandingPage';
 import { HalloweenLandingPage } from './components/landing/HalloweenLandingPage';
 import { KidsPartyLandingPage } from './components/landing/KidsPartyLandingPage';
 import { KidsInvitationsHubPage } from './components/landing/KidsInvitationsHubPage';
+import { UniversityHackathonLandingPage } from './components/landing/UniversityHackathonLandingPage';
 import { MainDashboard } from './components/dashboard/MainDashboard';
 import { GuestInvitationView } from './components/guest/GuestInvitationView';
 import { RSVPModal } from './components/guest/RSVPModal';
@@ -48,7 +49,7 @@ import {
   apiSubmitRSVP
 } from './utils/api';
 
-export type AppViewMode = 'landing' | 'halloween' | 'kids_party' | 'dashboard' | 'guest' | 'admin';
+export type AppViewMode = 'landing' | 'halloween' | 'kids_party' | 'hackathon' | 'dashboard' | 'guest' | 'admin';
 
 export function App() {
   // Initialize storage seeds
@@ -76,6 +77,11 @@ export function App() {
     // Kids Invitations Hub / Mermaid Pool Party Route: /kids, /kids-invitations, /kids-party, /mermaid, ?view=kids, ?view=kids_party
     if (path === '/kids' || path.startsWith('/kids/') || path === '/kids-invitations' || path.startsWith('/kids-invitations') || path === '/kids-party' || path.startsWith('/kids-party') || path === '/mermaid' || path.startsWith('/mermaid') || search.includes('view=kids') || search.includes('view=kids_party') || search.includes('view=mermaid') || search.includes('event=kids_party') || search.includes('access=kids_party')) {
       return { view: 'kids_party' };
+    }
+
+    // Collegiate Hackathon Route: /hackathon, /university, /universities, ?view=hackathon, ?event=hackathon
+    if (path === '/hackathon' || path.startsWith('/hackathon') || path === '/university' || path.startsWith('/university') || path === '/universities' || path.startsWith('/universities') || search.includes('view=hackathon') || search.includes('event=hackathon')) {
+      return { view: 'hackathon' };
     }
 
     // Guest Invite Slug Detection: /invite/:slug or /w/:slug or ?invite=:slug
@@ -656,115 +662,117 @@ export function App() {
         </div>
       )}
 
-      {/* TOP HEADER */}
-      <header className="sticky top-0 z-50 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 transition-colors bg-white/95 border-amber-200/70 text-stone-900 shadow-xs">
-        
-        {/* Brand Logo */}
-        <div 
-          onClick={() => setViewMode(user ? 'dashboard' : 'landing')}
-          className="flex items-center gap-3 cursor-pointer group select-none"
-        >
-          <BrandLogo size="md" showText={false} />
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-serif text-lg tracking-widest font-semibold text-stone-900">
-                ÉTERNELLE
-              </span>
-              {user?.plan && (
-                <span className={'px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider ' + (
-                  user.plan === 'lifetime' ? 'bg-rose-100 text-rose-900 border border-rose-300' :
-                  user.plan === 'pro' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
-                  'bg-stone-100 text-stone-700 border border-stone-300'
-                )}>
-                  {user.plan === 'lifetime' ? 'Lifetime Creator' : user.plan === 'pro' ? 'Pro Pass' : 'Free Tier'}
+      {/* TOP HEADER (Hidden in dedicated Hackathon Campus Mode) */}
+      {viewMode !== 'hackathon' && (
+        <header className="sticky top-0 z-50 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 transition-colors bg-white/95 border-amber-200/70 text-stone-900 shadow-xs">
+          
+          {/* Brand Logo */}
+          <div 
+            onClick={() => setViewMode(user ? 'dashboard' : 'landing')}
+            className="flex items-center gap-3 cursor-pointer group select-none"
+          >
+            <BrandLogo size="md" showText={false} />
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-serif text-lg tracking-widest font-semibold text-stone-900">
+                  ÉTERNELLE
                 </span>
-              )}
-            </div>
-            <p className="text-[10px] -mt-0.5 hidden sm:block text-stone-500">
-              Interactive Luxury Wedding Invitations & Micro-Sites
-            </p>
-          </div>
-        </div>
-
-        {/* Center Navigation - ONLY DISPLAYED WHEN LOGGED IN */}
-        {user ? (
-          <div className="flex items-center gap-1 p-1 rounded-2xl border text-xs font-sans overflow-x-auto bg-[#FAF7F2] border-stone-200">
-            <button
-              onClick={() => setViewMode('dashboard')}
-              className={'px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer ' + (
-                viewMode === 'dashboard'
-                  ? 'bg-white text-stone-900 shadow-xs border border-stone-200'
-                  : 'text-stone-600 hover:text-stone-900'
-              )}
-            >
-              <LayoutDashboard size={13} className={viewMode === 'dashboard' ? 'text-amber-700' : ''} />
-              <span>Creator Studio</span>
-            </button>
-
-            <button
-              onClick={() => setViewMode('guest')}
-              className="px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer text-stone-600 hover:text-stone-900"
-            >
-              <Eye size={13} className="text-amber-700" />
-              <span>Preview Live Guest View</span>
-            </button>
-
-            {user.role === 'admin' && (
-              <button
-                onClick={() => setViewMode('admin')}
-                className="px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer text-purple-700 hover:text-purple-900 bg-purple-50 border border-purple-200"
-              >
-                <ShieldAlert size={13} />
-                <span>Admin Panel</span>
-              </button>
-            )}
-          </div>
-        ) : (
-          /* Public Editorial Navigation Links (Landing Page Only) */
-          <div className="hidden md:flex items-center gap-6 text-xs text-stone-600 font-medium">
-            <a href="#features" className="hover:text-rose-600 transition-colors">Features</a>
-            <a href="#demo" className="hover:text-rose-600 transition-colors">3D Demo</a>
-            <a href="#suites" className="hover:text-rose-600 transition-colors">Curated Suites</a>
-            <a href="#pricing" className="hover:text-rose-600 transition-colors">Pricing</a>
-            <a href="#faqs" className="hover:text-rose-600 transition-colors">FAQs</a>
-          </div>
-        )}
-
-        {/* View Switchers & Account Controls */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {user ? (
-            <div className="flex items-center gap-2">
-              <div className="hidden sm:flex flex-col text-right">
-                <span className="text-xs font-semibold text-stone-900">{user.name}</span>
-                <span className="text-[10px] font-mono text-stone-500">{user.email}</span>
+                {user?.plan && (
+                  <span className={'px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider ' + (
+                    user.plan === 'lifetime' ? 'bg-rose-100 text-rose-900 border border-rose-300' :
+                    user.plan === 'pro' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
+                    'bg-stone-100 text-stone-700 border border-stone-300'
+                  )}>
+                    {user.plan === 'lifetime' ? 'Lifetime Creator' : user.plan === 'pro' ? 'Pro Pass' : 'Free Tier'}
+                  </span>
+                )}
               </div>
+              <p className="text-[10px] -mt-0.5 hidden sm:block text-stone-500">
+                Interactive Luxury Wedding Invitations & Micro-Sites
+              </p>
+            </div>
+          </div>
+
+          {/* Center Navigation - ONLY DISPLAYED WHEN LOGGED IN */}
+          {user ? (
+            <div className="flex items-center gap-1 p-1 rounded-2xl border text-xs font-sans overflow-x-auto bg-[#FAF7F2] border-stone-200">
               <button
-                onClick={handleSignOut}
-                className="p-2 rounded-xl border transition-colors cursor-pointer bg-white hover:bg-stone-50 border-stone-200 text-stone-500 hover:text-rose-600 shadow-xs"
-                title="Sign Out"
+                onClick={() => setViewMode('dashboard')}
+                className={'px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer ' + (
+                  viewMode === 'dashboard'
+                    ? 'bg-white text-stone-900 shadow-xs border border-stone-200'
+                    : 'text-stone-600 hover:text-stone-900'
+                )}
               >
-                <LogOut size={14} />
+                <LayoutDashboard size={13} className={viewMode === 'dashboard' ? 'text-amber-700' : ''} />
+                <span>Creator Studio</span>
               </button>
+
+              <button
+                onClick={() => setViewMode('guest')}
+                className="px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer text-stone-600 hover:text-stone-900"
+              >
+                <Eye size={13} className="text-amber-700" />
+                <span>Preview Live Guest View</span>
+              </button>
+
+              {user.role === 'admin' && (
+                <button
+                  onClick={() => setViewMode('admin')}
+                  className="px-3.5 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 transition-all cursor-pointer text-purple-700 hover:text-purple-900 bg-purple-50 border border-purple-200"
+                >
+                  <ShieldAlert size={13} />
+                  <span>Admin Panel</span>
+                </button>
+              )}
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleOpenAuth('signin')}
-                className="px-3.5 py-1.5 rounded-xl text-stone-700 hover:text-stone-950 text-xs font-medium transition-colors cursor-pointer"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => setIsOnboardingOpen(true)}
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white text-xs font-bold shadow-md shadow-rose-500/20 transition-all cursor-pointer flex items-center gap-1.5"
-              >
-                <Sparkles size={13} />
-                <span>Create Free Event</span>
-              </button>
+            /* Public Editorial Navigation Links (Landing Page Only) */
+            <div className="hidden md:flex items-center gap-6 text-xs text-stone-600 font-medium">
+              <a href="#features" className="hover:text-rose-600 transition-colors">Features</a>
+              <a href="#demo" className="hover:text-rose-600 transition-colors">3D Demo</a>
+              <a href="#suites" className="hover:text-rose-600 transition-colors">Curated Suites</a>
+              <a href="#pricing" className="hover:text-rose-600 transition-colors">Pricing</a>
+              <a href="#faqs" className="hover:text-rose-600 transition-colors">FAQs</a>
             </div>
           )}
-        </div>
-      </header>
+
+          {/* View Switchers & Account Controls */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {user ? (
+              <div className="flex items-center gap-2">
+                <div className="hidden sm:flex flex-col text-right">
+                  <span className="text-xs font-semibold text-stone-900">{user.name}</span>
+                  <span className="text-[10px] font-mono text-stone-500">{user.email}</span>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="p-2 rounded-xl border transition-colors cursor-pointer bg-white hover:bg-stone-50 border-stone-200 text-stone-500 hover:text-rose-600 shadow-xs"
+                  title="Sign Out"
+                >
+                  <LogOut size={14} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleOpenAuth('signin')}
+                  className="px-3.5 py-1.5 rounded-xl text-stone-700 hover:text-stone-950 text-xs font-medium transition-colors cursor-pointer"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => setIsOnboardingOpen(true)}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white text-xs font-bold shadow-md shadow-rose-500/20 transition-all cursor-pointer flex items-center gap-1.5"
+                >
+                  <Sparkles size={13} />
+                  <span>Create Free Event</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </header>
+      )}
 
       {/* BODY VIEW ROUTER */}
       <main className="flex-1 flex flex-col items-center">
@@ -785,6 +793,7 @@ export function App() {
             onSelectTheme={(themeId) => handleUpdateWedding({ ...wedding, themeId })}
             onOpenHalloween={() => setViewMode('halloween')}
             onOpenKidsParty={() => setViewMode('kids_party')}
+            onOpenHackathon={() => setViewMode('hackathon')}
             onOpenLegal={(doc) => setLegalModalDoc(doc)}
             onOpenCookieSettings={handleOpenCookieSettings}
           />
@@ -833,6 +842,28 @@ export function App() {
             onNavigateHome={() => setViewMode('landing')}
             onOpenLegal={(doc) => setLegalModalDoc(doc)}
             onOpenCookieSettings={handleOpenCookieSettings}
+          />
+        )}
+
+        {viewMode === 'hackathon' && (
+          <UniversityHackathonLandingPage
+            onStartCreating={(eventType) => {
+              handleUpdateWedding({
+                ...SAMPLE_HACKATHON_DATA,
+                id: wedding?.id || SAMPLE_HACKATHON_DATA.id,
+              });
+              if (user) {
+                setViewMode('dashboard');
+              } else {
+                setIsOnboardingOpen(true);
+              }
+            }}
+            onPreviewSample={() => {
+              handleUpdateWedding(SAMPLE_HACKATHON_DATA);
+              setViewMode('guest');
+            }}
+            onNavigateHome={() => setViewMode('landing')}
+            onOpenLegal={(doc) => setLegalModalDoc(doc)}
           />
         )}
 
