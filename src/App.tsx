@@ -14,6 +14,7 @@ import { BrandLogo } from './components/common/BrandLogo';
 import { LandingPage } from './components/landing/LandingPage';
 import { HalloweenLandingPage } from './components/landing/HalloweenLandingPage';
 import { KidsPartyLandingPage } from './components/landing/KidsPartyLandingPage';
+import { KidsInvitationsHubPage } from './components/landing/KidsInvitationsHubPage';
 import { MainDashboard } from './components/dashboard/MainDashboard';
 import { GuestInvitationView } from './components/guest/GuestInvitationView';
 import { RSVPModal } from './components/guest/RSVPModal';
@@ -72,8 +73,8 @@ export function App() {
       return { view: 'halloween' };
     }
 
-    // Kids Party / Mermaid Pool Party Route: /kids-party, /mermaid, ?view=kids_party, ?event=kids_party
-    if (path === '/kids-party' || path.startsWith('/kids-party') || path === '/mermaid' || path.startsWith('/mermaid') || search.includes('view=kids_party') || search.includes('view=mermaid') || search.includes('event=kids_party') || search.includes('access=kids_party')) {
+    // Kids Invitations Hub / Mermaid Pool Party Route: /kids, /kids-invitations, /kids-party, /mermaid, ?view=kids, ?view=kids_party
+    if (path === '/kids' || path.startsWith('/kids/') || path === '/kids-invitations' || path.startsWith('/kids-invitations') || path === '/kids-party' || path.startsWith('/kids-party') || path === '/mermaid' || path.startsWith('/mermaid') || search.includes('view=kids') || search.includes('view=kids_party') || search.includes('view=mermaid') || search.includes('event=kids_party') || search.includes('access=kids_party')) {
       return { view: 'kids_party' };
     }
 
@@ -149,6 +150,7 @@ export function App() {
     if (initialRoute.view === 'guest') return 'guest';
     if (initialRoute.view === 'admin') return 'admin';
     if (initialRoute.view === 'halloween') return 'halloween';
+    if (initialRoute.view === 'kids_party') return 'kids_party';
     if (isEtsyFromURL) return 'landing';
     // If user is already logged in, take them to dashboard only if on landing root
     return user ? 'dashboard' : 'landing';
@@ -812,7 +814,7 @@ export function App() {
         )}
 
         {viewMode === 'kids_party' && (
-          <KidsPartyLandingPage
+          <KidsInvitationsHubPage
             onStartCreating={(eventType) => {
               handleUpdateWedding({
                 ...SAMPLE_MERMAID_PARTY_DATA,

@@ -180,6 +180,8 @@ export interface WeddingData {
   eventTitle?: string;
   honoreeName?: string;
   hostNames?: string;
+  ageMilestone?: number | string;
+  milestonePun?: string;
   blocks?: EventBlockConfig[];
   rsvpSurvey?: RSVPSurveyConfig;
   stationery?: StationeryConfig;

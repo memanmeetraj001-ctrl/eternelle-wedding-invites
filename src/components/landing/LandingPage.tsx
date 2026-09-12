@@ -161,6 +161,14 @@ export function LandingPage({
               <span>🎃 Halloween</span>
             </button>
           )}
+          {onOpenKidsParty && (
+            <button 
+              onClick={onOpenKidsParty} 
+              className="text-teal-900 hover:text-teal-950 transition-colors whitespace-nowrap flex items-center gap-1 font-bold bg-teal-100 px-2.5 py-0.5 rounded-full border border-teal-300 shadow-xs cursor-pointer"
+            >
+              <span>🧜‍♀️ Kids Invitations</span>
+            </button>
+          )}
           <button onClick={() => scrollToSection('features')} className="hover:text-rose-600 transition-colors whitespace-nowrap cursor-pointer">
             Features
           </button>
@@ -354,7 +362,7 @@ export function LandingPage({
                 className="w-full mb-2.5 py-3 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-amber-400 hover:brightness-105 text-stone-950 font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <span>🧜‍♀️</span>
-                <span>Launch Dedicated Splish Splash Pool Party Page →</span>
+                <span>Explore Kids Invitations Hub & Mermaid Suite (#1 Etsy Best-Seller) →</span>
               </button>
             )}
 

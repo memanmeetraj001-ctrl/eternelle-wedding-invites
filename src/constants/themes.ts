@@ -631,17 +631,86 @@ export const SAMPLE_HALLOWEEN_PARTY_DATA: WeddingData = {
   ],
 };
 
+export interface MermaidAgeMilestone {
+  age: number;
+  pun: string;
+  headline: string;
+  subtitle: string;
+  bannerTag: string;
+}
+
+export const MERMAID_AGE_MILESTONES: Record<number, MermaidAgeMilestone> = {
+  1: {
+    age: 1,
+    pun: 'Sweet One Under The Sea',
+    headline: 'OUR LITTLE MERMAID IS TURNING ONE!',
+    subtitle: 'MAKE A SPLASH TO CELEBRATE OUR SWEET ONE',
+    bannerTag: 'First Birthday Milestone',
+  },
+  2: {
+    age: 2,
+    pun: 'Two Cool By The Pool',
+    headline: 'SPLISH SPLASH! OUR MERMAID IS TURNING TWO!',
+    subtitle: 'JOIN US FOR SUNSHINE & WATER PLAY',
+    bannerTag: 'Toddler Splash Party',
+  },
+  3: {
+    age: 3,
+    pun: 'Three Wishes Under The Sea',
+    headline: 'MAGICAL SEASHELLS & THREE BIRTHDAY WISHES!',
+    subtitle: 'JOIN OUR MERMAID COVE CELEBRATION',
+    bannerTag: 'Magical 3rd Birthday',
+  },
+  4: {
+    age: 4,
+    pun: 'Fin-tastic Four',
+    headline: 'OUR LITTLE MERMAID IS FIN-TASTIC FOUR!',
+    subtitle: 'SWIM ON OVER FOR A MERMAID BIRTHDAY FIESTA',
+    bannerTag: 'Fin-tastic 4th Celebration',
+  },
+  5: {
+    age: 5,
+    pun: 'Dive Into Five',
+    headline: 'DIVE INTO FIVE! SPLISH SPLASH BIRTHDAY BASH',
+    subtitle: 'GRAB YOUR MERMAID TAILS & TOWELS FOR',
+    bannerTag: 'Etsy #1 Best Seller Trend',
+  },
+  6: {
+    age: 6,
+    pun: 'Seven Seas Six',
+    headline: 'MAKING WAVES AS SHE TURNS SIX!',
+    subtitle: 'JOIN US FOR A SPARKLING MERMAID SPLASH PARTY',
+    bannerTag: 'Sensational 6th Birthday',
+  },
+  7: {
+    age: 7,
+    pun: 'Lucky Seven Ocean Adventure',
+    headline: 'SEVEN WONDERS OF THE SEA! TURNING SEVEN',
+    subtitle: 'JOIN OUR MERMAID LAGOON TREASURE HUNT',
+    bannerTag: 'Lucky 7th Adventure',
+  },
+  8: {
+    age: 8,
+    pun: 'Eight & Fin-tastic',
+    headline: 'CELEBRATING EIGHT MAGICAL OCEANS OF FUN',
+    subtitle: 'DIVE DEEP FOR AN UNFORGETTABLE MERMAID GALA',
+    bannerTag: 'Great 8th Gala',
+  },
+};
+
 export const SAMPLE_MERMAID_PARTY_DATA: WeddingData = {
   id: 'mermaid-sample-001',
   slug: 'maya-mermaid-pool-party',
   eventType: 'kids_party',
-  eventTitle: 'Splish Splash! Mermaid Pool Party',
+  eventTitle: 'Dive Into Five! Mermaid Birthday & Pool Party',
   honoreeName: 'Maya',
   coupleName1: 'Maya Reynolds',
-  coupleName2: 'Turning 6!',
+  coupleName2: 'Turning 5!',
   coupleInitials: 'MAYA',
-  subtitleIntro: 'GRAB YOUR SWIMSUIT & TOWEL FOR',
-  headline: 'SPLISH SPLASH! JOIN US FOR A MERMAID POOL PARTY CELEBRATING',
+  ageMilestone: 5,
+  milestonePun: 'Dive Into Five',
+  subtitleIntro: 'GRAB YOUR MERMAID TAILS & TOWELS FOR',
+  headline: 'DIVE INTO FIVE! SPLISH SPLASH BIRTHDAY BASH CELEBRATING',
   weddingDate: '2026-07-18',
   weddingTime: '1:00 PM - 4:30 PM',
   venueName: 'The Reynolds Backyard Resort & Pool',
@@ -656,7 +725,7 @@ export const SAMPLE_MERMAID_PARTY_DATA: WeddingData = {
     postmarkCity: 'CORAL BAY · POOL SUITE',
     foilFinish: 'gold',
   },
-  storyTitle: 'A Magical Splish Splash Mermaid Adventure!',
+  storyTitle: 'A Magical "Dive Into Five" Mermaid Adventure!',
   storyText: 'Dive into an afternoon of swimming, poolside games, underwater treasure hunts, and mermaid cupcakes! We will have certified lifeguards on duty, fun pool floats, glitter sunscreen, and plenty of mermaid magic for all our little swimmers and families.',
   transportInfo: 'Street parking is readily available along Coral Reef Way. Please bring swimsuits, flip flops, and goggles! Towels, sunscreen, and pool floats are fully provided.',
   giftRegistryUrl: '',
@@ -798,18 +867,30 @@ export const SAMPLE_MERMAID_PARTY_DATA: WeddingData = {
   photos: [
     {
       id: 'p-1',
+      url: '/etsy-photos/etsy_mermaid_invite_card.jpg',
+      caption: 'Official "Dive Into Five" Mermaid Invitation Stationery Card',
+      dateTag: 'Etsy #1 Best-Seller Style',
+    },
+    {
+      id: 'p-2',
+      url: '/etsy-photos/etsy_mermaid_multidevice_mockup.jpg',
+      caption: 'Interactive 3D Smartphone & Tablet Guest Unboxing',
+      dateTag: 'Digital Experience',
+    },
+    {
+      id: 'p-3',
       url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
       caption: 'Sunlit turquoise waters & summer pool day vibes',
       dateTag: 'Laguna Beach Pool',
     },
     {
-      id: 'p-2',
+      id: 'p-4',
       url: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=80',
       caption: 'Mermaid magic & summer poolside smiles',
-      dateTag: 'Maya turns 6!',
+      dateTag: 'Maya turns 5!',
     },
     {
-      id: 'p-3',
+      id: 'p-5',
       url: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800&q=80',
       caption: 'Colorful party balloons & poolside games',
       dateTag: 'Splish Splash Fun',
