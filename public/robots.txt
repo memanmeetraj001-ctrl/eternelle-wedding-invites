@@ -1,6 +1,26 @@
-# Robots.txt for Éternelle — https://eternelleweddinginvites.online
+ï»¿# Robots.txt for Ã‰ternelle â€” https://eternelleweddinginvites.online
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api/
 
-# Direct Google & Pinterest Search Crawlers to XML Sitemap
+# Allowed Crawlers for Google, Bing, Pinterest, Apple, Social Previews
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /assets/
+Allow: /etsy-photos/
+
+User-agent: Pinterestbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+# Direct Google & Search Crawlers to XML Sitemap
 Sitemap: https://eternelleweddinginvites.online/sitemap.xml

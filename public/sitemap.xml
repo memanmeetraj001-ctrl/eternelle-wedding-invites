@@ -1,48 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+        http://www.google.com/schemas/sitemap-image/1.1
+        http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
+
+  <!-- 1. Main Luxury Digital Wedding Invitations Homepage -->
   <url>
     <loc>https://eternelleweddinginvites.online/</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.00</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</image:loc>
+      <image:title>Éternelle Luxury Interactive Digital Wedding Invitations</image:title>
+      <image:caption>Couture-grade 3D interactive wedding suites with wax seal unboxing and live RSVP tracking</image:caption>
+    </image:image>
   </url>
+
+  <!-- 2. Dedicated Collegiate Hackathon & ACM Chapter Portal -->
   <url>
-    <loc>https://eternelleweddinginvites.online/#features</loc>
-    <lastmod>2026-09-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://eternelleweddinginvites.online/#demo</loc>
-    <lastmod>2026-09-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://eternelleweddinginvites.online/#suites</loc>
-    <lastmod>2026-09-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://eternelleweddinginvites.online/#pricing</loc>
-    <lastmod>2026-09-09</lastmod>
+    <loc>https://eternelleweddinginvites.online/hackathon</loc>
+    <lastmod>2026-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</image:loc>
+      <image:title>Collegiate Hackathon Digital Passes &amp; Door Scanner</image:title>
+      <image:caption>3D holographic microchip seal unboxing and offline-ready door check-in scanner app</image:caption>
+    </image:image>
   </url>
+
+  <!-- 3. University Hackathon Portal Alias -->
   <url>
-    <loc>https://eternelleweddinginvites.online/#faqs</loc>
-    <lastmod>2026-09-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.70</priority>
+    <loc>https://eternelleweddinginvites.online/university</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
   </url>
+
+  <!-- 4. Dedicated Gothic Masquerade & Halloween Party Edition -->
+  <url>
+    <loc>https://eternelleweddinginvites.online/halloween</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</image:loc>
+      <image:title>Gothic Masquerade &amp; Halloween Party Digital Invitations</image:title>
+      <image:caption>3D antique wax seal unboxing with cathedral organ soundscapes and costume RSVP tracking</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 5. Kids Birthday & Mermaid Lagoon Party Suite -->
+  <url>
+    <loc>https://eternelleweddinginvites.online/kids</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</image:loc>
+      <image:title>Mermaid Lagoon &amp; Kids Birthday Party Invitations</image:title>
+      <image:caption>Interactive seashell wax seals and poolside dietary RSVP tracking</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 6. Sample Live Suite Demo: Classic Luxury Wedding -->
   <url>
     <loc>https://eternelleweddinginvites.online/invite/alex-sarah</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- 7. Sample Live Suite Demo: Gothic Masquerade Halloween -->
+  <url>
+    <loc>https://eternelleweddinginvites.online/invite/lucien-morgana</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- 8. Privacy & GDPR Compliance Policy -->
+  <url>
+    <loc>https://eternelleweddinginvites.online/privacy.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
   </url>
 </urlset>

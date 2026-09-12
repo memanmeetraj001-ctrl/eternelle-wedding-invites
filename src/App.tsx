@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { 
   Smartphone, Monitor, Sparkles, Heart, Palette, 
   BarChart3, Share2, Layers, CheckCircle2,
@@ -12,19 +12,22 @@ import { GUMROAD_CONFIG } from './constants/gumroad';
 import { detectGumroadRedirect } from './utils/gumroadVerify';
 import { BrandLogo } from './components/common/BrandLogo';
 import { LandingPage } from './components/landing/LandingPage';
-import { HalloweenLandingPage } from './components/landing/HalloweenLandingPage';
-import { KidsPartyLandingPage } from './components/landing/KidsPartyLandingPage';
-import { KidsInvitationsHubPage } from './components/landing/KidsInvitationsHubPage';
-import { HackathonLandingPage } from './components/landing/HackathonLandingPage';
-import { MainDashboard } from './components/dashboard/MainDashboard';
 import { GuestInvitationView } from './components/guest/GuestInvitationView';
 import { RSVPModal } from './components/guest/RSVPModal';
 import { AuthModal } from './components/auth/AuthModal';
-import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
-import { GumroadCheckoutModal } from './components/billing/GumroadCheckoutModal';
-import { MasterAdminPanel } from './components/admin/MasterAdminPanel';
 import { LegalModal, LegalDocType } from './components/legal/LegalModal';
 import { CookieBanner } from './components/legal/CookieBanner';
+import { updatePageSEO } from './utils/seo';
+
+// Lazy-loaded secondary pages & modals for fast Core Web Vitals
+const HalloweenLandingPage = lazy(() => import('./components/landing/HalloweenLandingPage').then(m => ({ default: m.HalloweenLandingPage })));
+const KidsInvitationsHubPage = lazy(() => import('./components/landing/KidsInvitationsHubPage').then(m => ({ default: m.KidsInvitationsHubPage })));
+const HackathonLandingPage = lazy(() => import('./components/landing/HackathonLandingPage').then(m => ({ default: m.HackathonLandingPage })));
+const HackathonOnboardingModal = lazy(() => import('./components/onboarding/HackathonOnboardingModal').then(m => ({ default: m.HackathonOnboardingModal })));
+const OnboardingWizardModal = lazy(() => import('./components/onboarding/OnboardingWizardModal').then(m => ({ default: m.OnboardingWizardModal })));
+const MainDashboard = lazy(() => import('./components/dashboard/MainDashboard').then(m => ({ default: m.MainDashboard })));
+const MasterAdminPanel = lazy(() => import('./components/admin/MasterAdminPanel').then(m => ({ default: m.MasterAdminPanel })));
+const GumroadCheckoutModal = lazy(() => import('./components/billing/GumroadCheckoutModal').then(m => ({ default: m.GumroadCheckoutModal })));
 import { 
   initializeStorage, 
   getWeddingBySlug, 
@@ -157,6 +160,7 @@ export function App() {
     if (initialRoute.view === 'admin') return 'admin';
     if (initialRoute.view === 'halloween') return 'halloween';
     if (initialRoute.view === 'kids_party') return 'kids_party';
+    if (initialRoute.view === 'hackathon') return 'hackathon';
     if (isEtsyFromURL) return 'landing';
     // If user is already logged in, take them to dashboard only if on landing root
     return user ? 'dashboard' : 'landing';
@@ -164,6 +168,7 @@ export function App() {
 
   const [isMobileFrame, setIsMobileFrame] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [isHackathonOnboardingOpen, setIsHackathonOnboardingOpen] = useState(false);
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(() => !!isEtsyFromURL);
   const [authInitialTab, setAuthInitialTab] = useState<'signin' | 'signup'>('signup');
@@ -206,6 +211,49 @@ export function App() {
     } catch {}
     setCookieSettingsKey((prev) => prev + 1);
   };
+
+  // 0. Dynamic SEO updates & HTML5 History synchronization
+  useEffect(() => {
+    updatePageSEO(
+      viewMode,
+      initialRoute.slug ? { 
+        slug: initialRoute.slug, 
+        title: wedding?.coupleName1 ? `${wedding.coupleName1} & ${wedding.coupleName2}` : undefined 
+      } : undefined
+    );
+
+    // Sync browser address bar with viewMode if not matching
+    if (typeof window !== 'undefined') {
+      let targetPath = '/';
+      if (viewMode === 'halloween') targetPath = '/halloween';
+      else if (viewMode === 'hackathon') targetPath = '/hackathon';
+      else if (viewMode === 'kids_party') targetPath = '/kids';
+      else if (viewMode === 'admin') targetPath = '/admin';
+      else if (viewMode === 'dashboard') targetPath = '/dashboard';
+      else if (viewMode === 'guest' && wedding?.slug) targetPath = `/invite/${wedding.slug}`;
+
+      if (window.location.pathname !== targetPath && !window.location.search.includes('view=')) {
+        window.history.pushState({ view: viewMode }, '', targetPath);
+      }
+    }
+  }, [viewMode, initialRoute.slug, wedding?.coupleName1, wedding?.coupleName2, wedding?.slug]);
+
+  // Popstate listener for browser Back / Forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      if (path === '/admin') setViewMode('admin');
+      else if (path === '/halloween') setViewMode('halloween');
+      else if (path === '/hackathon' || path === '/university' || path === '/universities') setViewMode('hackathon');
+      else if (path === '/kids' || path === '/kids-party' || path === '/kids-invitations' || path === '/mermaid') setViewMode('kids_party');
+      else if (path === '/dashboard') setViewMode('dashboard');
+      else if (path.startsWith('/invite/') || path.startsWith('/w/')) setViewMode('guest');
+      else setViewMode('landing');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // 1. Initial backend synchronization (session verification & wedding data)
   useEffect(() => {
@@ -799,102 +847,117 @@ export function App() {
           />
         )}
 
-        {viewMode === 'halloween' && (
-          <HalloweenLandingPage
-            onStartCreating={(eventType) => {
-              handleUpdateWedding({
-                ...SAMPLE_HALLOWEEN_PARTY_DATA,
-                id: wedding?.id || SAMPLE_HALLOWEEN_PARTY_DATA.id,
-              });
-              if (user) {
-                setViewMode('dashboard');
-              } else {
-                setIsOnboardingOpen(true);
-              }
-            }}
-            onPreviewSample={() => {
-              handleUpdateWedding(SAMPLE_HALLOWEEN_PARTY_DATA);
-              setViewMode('guest');
-            }}
-            onNavigateHome={() => setViewMode('landing')}
-            onOpenLegal={(doc) => setLegalModalDoc(doc)}
-            onOpenCookieSettings={handleOpenCookieSettings}
-          />
-        )}
+        <Suspense fallback={<div className="w-full min-h-[60vh] flex items-center justify-center font-mono text-xs text-stone-400">Loading module...</div>}>
+          {viewMode === 'halloween' && (
+            <HalloweenLandingPage
+              onStartCreating={(eventType) => {
+                handleUpdateWedding({
+                  ...SAMPLE_HALLOWEEN_PARTY_DATA,
+                  id: wedding?.id || SAMPLE_HALLOWEEN_PARTY_DATA.id,
+                });
+                if (user) {
+                  setViewMode('dashboard');
+                } else {
+                  setIsOnboardingOpen(true);
+                }
+              }}
+              onPreviewSample={() => {
+                handleUpdateWedding(SAMPLE_HALLOWEEN_PARTY_DATA);
+                setViewMode('guest');
+              }}
+              onNavigateHome={() => setViewMode('landing')}
+              onOpenLegal={(doc) => setLegalModalDoc(doc)}
+              onOpenCookieSettings={handleOpenCookieSettings}
+            />
+          )}
 
-        {viewMode === 'kids_party' && (
-          <KidsInvitationsHubPage
-            onStartCreating={(eventType) => {
-              handleUpdateWedding({
-                ...SAMPLE_MERMAID_PARTY_DATA,
-                id: wedding?.id || SAMPLE_MERMAID_PARTY_DATA.id,
-              });
-              if (user) {
-                setViewMode('dashboard');
-              } else {
-                setIsOnboardingOpen(true);
-              }
-            }}
-            onPreviewSample={() => {
-              handleUpdateWedding(SAMPLE_MERMAID_PARTY_DATA);
-              setViewMode('guest');
-            }}
-            onNavigateHome={() => setViewMode('landing')}
-            onOpenLegal={(doc) => setLegalModalDoc(doc)}
-            onOpenCookieSettings={handleOpenCookieSettings}
-          />
-        )}
+          {viewMode === 'kids_party' && (
+            <KidsInvitationsHubPage
+              onStartCreating={(eventType) => {
+                handleUpdateWedding({
+                  ...SAMPLE_MERMAID_PARTY_DATA,
+                  id: wedding?.id || SAMPLE_MERMAID_PARTY_DATA.id,
+                });
+                if (user) {
+                  setViewMode('dashboard');
+                } else {
+                  setIsOnboardingOpen(true);
+                }
+              }}
+              onPreviewSample={() => {
+                handleUpdateWedding(SAMPLE_MERMAID_PARTY_DATA);
+                setViewMode('guest');
+              }}
+              onNavigateHome={() => setViewMode('landing')}
+              onOpenLegal={(doc) => setLegalModalDoc(doc)}
+              onOpenCookieSettings={handleOpenCookieSettings}
+            />
+          )}
 
-        {viewMode === 'hackathon' && (
-          <HackathonLandingPage
-            onStartCreating={(eventType) => {
-              handleUpdateWedding({
-                ...SAMPLE_HACKATHON_DATA,
-                id: wedding?.id || SAMPLE_HACKATHON_DATA.id,
-              });
-              if (user) {
-                setViewMode('dashboard');
-              } else {
-                setIsOnboardingOpen(true);
-              }
-            }}
-            onPreviewSample={() => {
-              handleUpdateWedding(SAMPLE_HACKATHON_DATA);
-              setViewMode('guest');
-            }}
-            onNavigateHome={() => setViewMode('landing')}
-            onOpenLegal={(doc) => setLegalModalDoc(doc)}
-            onOpenCookieSettings={handleOpenCookieSettings}
-            onOpenCheckout={handleOpenCheckout}
-          />
-        )}
+          {viewMode === 'hackathon' && (
+            <HackathonLandingPage
+              onStartCreating={(eventType) => {
+                handleUpdateWedding({
+                  ...SAMPLE_HACKATHON_DATA,
+                  id: wedding?.id || SAMPLE_HACKATHON_DATA.id,
+                });
+                if (user) {
+                  setViewMode('dashboard');
+                } else {
+                  setIsHackathonOnboardingOpen(true);
+                }
+              }}
+              onPreviewSample={() => {
+                handleUpdateWedding(SAMPLE_HACKATHON_DATA);
+                setViewMode('guest');
+              }}
+              onNavigateHome={() => setViewMode('landing')}
+              onOpenLegal={(doc) => setLegalModalDoc(doc)}
+              onOpenCookieSettings={handleOpenCookieSettings}
+              onOpenCheckout={handleOpenCheckout}
+            />
+          )}
 
-        {viewMode === 'dashboard' && user && (
-          <MainDashboard
-            wedding={wedding}
-            onChangeWedding={handleUpdateWedding}
-            rsvps={rsvps}
-            onAddRSVP={handleAddRSVP}
-            onToggleCheckIn={handleToggleCheckIn}
-            user={user}
-            onOpenGuestPreview={() => setViewMode('guest')}
-            onOpenCheckout={handleOpenCheckout}
-            onRedeemVoucher={handleRedeemVoucher}
-            onSignOut={handleSignOut}
-          />
-        )}
+          {viewMode === 'dashboard' && user && (
+            <MainDashboard
+              wedding={wedding}
+              onChangeWedding={handleUpdateWedding}
+              rsvps={rsvps}
+              onAddRSVP={handleAddRSVP}
+              onToggleCheckIn={handleToggleCheckIn}
+              user={user}
+              onOpenGuestPreview={() => setViewMode('guest')}
+              onOpenCheckout={handleOpenCheckout}
+              onRedeemVoucher={handleRedeemVoucher}
+              onSignOut={handleSignOut}
+            />
+          )}
+        </Suspense>
       </main>
 
-      {/* Interactive Free Onboarding Wizard Modal */}
-      <OnboardingWizardModal
-        isOpen={isOnboardingOpen}
-        onClose={() => setIsOnboardingOpen(false)}
-        onComplete={handleOnboardingComplete}
-        onSwitchToSignIn={() => handleOpenAuth('signin')}
-        isEtsyVIP={!!etsyVIPAuth}
-        etsyPlan={etsyVIPAuth?.plan || 'pro'}
-        etsyVoucher={etsyVIPAuth?.voucher || 'ETSY-PRO-VIP'}
-      />
+      <Suspense fallback={null}>
+        {/* Interactive Free Onboarding Wizard Modal (Weddings) */}
+        <OnboardingWizardModal
+          isOpen={isOnboardingOpen}
+          onClose={() => setIsOnboardingOpen(false)}
+          onComplete={handleOnboardingComplete}
+          onSwitchToSignIn={() => handleOpenAuth('signin')}
+          isEtsyVIP={!!etsyVIPAuth}
+          etsyPlan={etsyVIPAuth?.plan || 'pro'}
+          etsyVoucher={etsyVIPAuth?.voucher || 'ETSY-PRO-VIP'}
+        />
+
+        {/* Dedicated Cyber-Terminal Hackathon Onboarding Wizard */}
+        <HackathonOnboardingModal
+          isOpen={isHackathonOnboardingOpen}
+          onClose={() => setIsHackathonOnboardingOpen(false)}
+          onComplete={(hackData, userAcc) => {
+            setIsHackathonOnboardingOpen(false);
+            handleOnboardingComplete(hackData, userAcc);
+          }}
+          onSwitchToSignIn={() => handleOpenAuth('signin')}
+        />
+      </Suspense>
 
       {/* RSVP Modal */}
       <RSVPModal

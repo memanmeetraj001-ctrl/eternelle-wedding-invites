@@ -1,10 +1,10 @@
-/**
- * Éternelle Production Domain & Site Metadata Configuration
+ï»¿/**
+ * Ã‰ternelle Production Domain & Site Metadata Configuration
  */
 
 export const SITE_CONFIG = {
-  name: 'Éternelle',
-  tagline: 'Luxury Interactive Digital Wedding Invitations',
+  name: 'Ã‰ternelle',
+  tagline: 'Luxury Interactive Digital Wedding Invitations & Celebrations',
   domain: 'eternelleweddinginvites.online',
   baseUrl: 'https://eternelleweddinginvites.online',
   supportEmail: 'support@eternelleweddinginvites.online',
