@@ -12,6 +12,7 @@ import { THEME_PRESETS, SAMPLE_HACKATHON_DATA } from '../../constants/themes';
 import { ENVELOPE_LINER_OPTIONS, STAMP_STYLE_OPTIONS } from '../../constants/stationery';
 import { EnvelopeExperience } from '../guest/EnvelopeExperience';
 import { LegalDocType } from '../legal/LegalModal';
+import { GumroadOverlayButton } from '../common/GumroadOverlayButton';
 
 export interface HackathonLandingPageProps {
   onStartCreating: (eventType?: EventType) => void;
@@ -19,6 +20,7 @@ export interface HackathonLandingPageProps {
   onNavigateHome: () => void;
   onOpenLegal?: (doc: LegalDocType) => void;
   onOpenCookieSettings?: () => void;
+  onOpenCheckout?: (plan: 'pro' | 'lifetime') => void;
 }
 
 export const HackathonLandingPage: React.FC<HackathonLandingPageProps> = ({
@@ -27,6 +29,7 @@ export const HackathonLandingPage: React.FC<HackathonLandingPageProps> = ({
   onNavigateHome,
   onOpenLegal,
   onOpenCookieSettings,
+  onOpenCheckout,
 }) => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -76,6 +79,50 @@ export const HackathonLandingPage: React.FC<HackathonLandingPageProps> = ({
       audio.pause();
       cleanup();
     };
+  }, []);
+
+  // Ensure Gumroad overlay script & listen to Gumroad payment events
+  useEffect(() => {
+    if (!document.querySelector('script[src="https://gumroad.com/js/gumroad.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://gumroad.com/js/gumroad.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    const handleGumroadMessage = (event: MessageEvent) => {
+      if (!event.data) return;
+      const isGumroad =
+        event.origin.includes('gumroad.com') ||
+        (typeof event.data === 'string' && event.data.includes('gumroad'));
+
+      if (isGumroad) {
+        try {
+          const parsed = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+          if (parsed?.type === 'gumroad:sale' || parsed?.event === 'sale' || parsed?.order_number) {
+            confetti({
+              particleCount: 200,
+              spread: 120,
+              origin: { y: 0.5 },
+              colors: ['#00ffcc', '#3b82f6', '#10b981', '#ffffff'],
+            });
+          }
+          if (typeof (window as any).gtag === 'function') {
+            (window as any).gtag('event', 'purchase', {
+              transaction_id: parsed?.order_number || `GUM-${Date.now()}`,
+              value: parsed?.price || (parsed?.product_name?.includes('79') ? 79 : 19),
+              currency: 'USD',
+              items: [{ item_name: parsed?.product_name || 'Hackathon Pass', item_category: 'hackathon' }],
+            });
+          }
+        } catch {
+          // ignore
+        }
+      }
+    };
+
+    window.addEventListener('message', handleGumroadMessage);
+    return () => window.removeEventListener('message', handleGumroadMessage);
   }, []);
 
   useEffect(() => {
@@ -205,8 +252,8 @@ export const HackathonLandingPage: React.FC<HackathonLandingPageProps> = ({
       a: 'Hackers can toggle their team status to "Seeking Teammates", list their core tech skills (e.g. Next.js, PyTorch, Solidity, ROS), and connect with other solo attendees before the opening ceremony mixer.'
     },
     {
-      q: 'Is there special pricing for ACM, IEEE, or high school student hackathons?',
-      a: 'Yes! The single sprint pass is just $2.99 per event, and university departments or student organizations hosting multiple hackathons can activate an unlimited annual license for only $19.99.'
+      q: 'Is there special pricing for ACM, IEEE, or student hackathons?',
+      a: 'Yes! The starter tier is 100% free with core 3D microchip unboxing and RSVP management. For larger events, the Pro Event Pass is just $19 (one-time), and student chapters or departments hosting recurring hackathons can activate an unlimited annual chapter license for $79.'
     },
   ];
 
@@ -757,98 +804,168 @@ export const HackathonLandingPage: React.FC<HackathonLandingPageProps> = ({
       </section>
 
       {/* 10. STUDENT CLUB GRANTS & PRICING */}
-      <section id="pricing" className="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full border-t border-cyan-500/20 text-center">
+      <section id="pricing" className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full border-t border-cyan-500/20 text-center">
         <span className="font-mono text-xs text-cyan-400 font-bold uppercase tracking-widest block mb-2">
-          [ STUDENT CLUB GRANTS &amp; PRICING ]
+          [ PRICING &amp; GRANTS ]
         </span>
         <h2 className="font-mono text-3xl sm:text-4xl font-black text-white uppercase">
-          Accessible For Every Student Council Budget
+          Affordable For Every Student Society &amp; Hackathon
         </h2>
+        <p className="mt-2 text-xs sm:text-sm text-slate-300 font-sans max-w-2xl mx-auto">
+          Transparent pricing with instant Gumroad checkout and zero hidden charges. Built for student clubs, university departments, and hackathon organizing teams.
+        </p>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-4xl mx-auto">
-          {/* Single Event Pass */}
-          <div className="p-7 rounded-2xl bg-slate-950 border border-cyan-500/30 flex flex-col justify-between">
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6 text-left max-w-5xl mx-auto">
+          {/* Plan 1: Free Starter */}
+          <div className="p-7 rounded-2xl bg-slate-950 border border-cyan-500/30 flex flex-col justify-between hover:border-cyan-500/60 transition-all">
             <div>
               <div className="flex justify-between items-center mb-4">
-                <span className="font-mono text-xs px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 uppercase font-bold">
-                  Single Event Pass
+                <span className="font-mono text-[11px] px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 uppercase font-bold">
+                  Free Starter
                 </span>
-                <span className="font-mono text-slate-400 text-xs">Per Hackathon</span>
+                <span className="font-mono text-slate-400 text-xs">Forever Free</span>
               </div>
-              <div className="font-mono text-3xl font-black text-white">$2.99</div>
+              <div className="font-mono text-4xl font-black text-white">$0</div>
               <p className="text-xs text-slate-300 mt-2 font-sans">
-                Full 3D cyber unboxing suite for a single collegiate hackathon or 48-hour sprint.
+                Core 3D cyber unboxing and hacker RSVP suite for student clubs and weekend hackathons.
               </p>
               <ul className="mt-6 space-y-2.5 font-sans text-xs text-slate-300">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span>Up to 500 hacker invitations &amp; passes</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Up to 50 hacker invitations &amp; passes</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>Interactive 3D microchip seal unboxing</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span>Offline-ready QR door check-in scanner</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Devpost &amp; Discord links embedded</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span>Devpost &amp; Discord links embedded</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>1-Click calendar sync (.ics &amp; Google)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Dietary &amp; T-shirt size collection</span>
                 </li>
               </ul>
             </div>
 
             <button
               onClick={() => onStartCreating('hackathon')}
-              className="mt-8 w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold uppercase transition-all"
+              className="mt-8 w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-850 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 font-mono text-xs font-bold uppercase transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
             >
-              Activate Single Pass →
+              <span>Start Free (No Card Needed) →</span>
             </button>
           </div>
 
-          {/* Department / Annual Club License */}
-          <div className="p-7 rounded-2xl bg-gradient-to-b from-cyan-950/40 to-slate-900/90 border-2 border-cyan-400 shadow-[0_0_35px_rgba(0,255,204,0.2)] flex flex-col justify-between relative">
-            <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-cyan-400 text-slate-950 font-mono text-[10px] font-black uppercase">
-              RECOMMENDED FOR CHAPTERS
+          {/* Plan 2: Pro Event Pass ($19) */}
+          <div className="p-7 rounded-2xl bg-gradient-to-b from-cyan-950/60 via-slate-900/95 to-slate-950 border-2 border-cyan-400 shadow-[0_0_35px_rgba(0,255,204,0.25)] flex flex-col justify-between relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-mono text-[10px] font-black uppercase tracking-wider shadow-md">
+              MOST POPULAR FOR HACKATHONS
             </div>
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-mono text-xs px-2.5 py-1 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/50 uppercase font-bold">
-                  Annual Department Pass
+              <div className="flex items-center justify-between mb-4 mt-1">
+                <span className="font-mono text-[11px] px-2.5 py-1 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/50 uppercase font-bold">
+                  Pro Event Pass
                 </span>
-                <span className="font-mono text-cyan-300 text-xs">Full Academic Year</span>
+                <span className="font-mono text-cyan-300 text-xs">Per Hackathon</span>
               </div>
-              <div className="font-mono text-3xl font-black text-white">$19.99</div>
+              <div className="font-mono text-4xl font-black text-white flex items-baseline gap-2">
+                $19 <span className="text-xs font-mono text-cyan-400 font-normal">one-time</span>
+              </div>
               <p className="text-xs text-slate-300 mt-2 font-sans">
-                Unlimited hackathons, sprints, designathons, and tech club workshops for the full year.
+                Full hacker check-in command center and guest management for collegiate hackathons with zero restrictions.
               </p>
               <ul className="mt-6 space-y-2.5 font-sans text-xs text-slate-300">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span className="text-white font-semibold">Unlimited events &amp; unlimited hackers</span>
+                  <span className="text-white font-semibold">Unlimited hacker RSVPs &amp; admissions</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span>Custom university subdomains &amp; logos</span>
+                  <span>Live Door QR Check-In Command Mode</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span>Multi-organizer scanner access for volunteers</span>
+                  <span>1-Click CSV Attendee, Dietary &amp; Team Export</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span>Priority 24/7 organizer weekend support</span>
+                  <span>Devpost bounty &amp; sponsor booth integration</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                  <span>Midnight Fuel &amp; live countdown schedule widget</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                  <span>Priority 24/7 weekend organizer support</span>
                 </li>
               </ul>
             </div>
 
-            <button
-              onClick={() => onStartCreating('hackathon')}
-              className="mt-8 w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-mono text-xs font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,255,204,0.4)]"
+            <GumroadOverlayButton
+              plan="pro"
+              onClick={() => onOpenCheckout?.('pro')}
+              className="mt-8 w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-mono text-xs font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,255,204,0.4)] flex items-center justify-center gap-1.5 no-underline cursor-pointer"
             >
-              Get Annual License ($19.99) →
-            </button>
+              <Sparkles size={14} />
+              <span>Activate Pro Pass ($19) →</span>
+            </GumroadOverlayButton>
+          </div>
+
+          {/* Plan 3: Annual / Lifetime Chapter License ($79) */}
+          <div className="p-7 rounded-2xl bg-slate-950 border border-cyan-500/40 flex flex-col justify-between hover:border-cyan-400 transition-all relative">
+            <div className="absolute -top-3 right-6 px-2.5 py-0.5 rounded-full bg-cyan-950 border border-cyan-500/50 text-cyan-300 font-mono text-[9px] uppercase font-bold">
+              ACM / IEEE &amp; DEPARTMENTS
+            </div>
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <span className="font-mono text-[11px] px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 uppercase font-bold">
+                  Annual Chapter License
+                </span>
+                <span className="font-mono text-slate-400 text-xs">Full Academic Year</span>
+              </div>
+              <div className="font-mono text-4xl font-black text-white flex items-baseline gap-2">
+                $79 <span className="text-xs font-mono text-slate-400 font-normal">one-time</span>
+              </div>
+              <p className="text-xs text-slate-300 mt-2 font-sans">
+                Unlimited hackathons, workshops, and sprints for university chapters, student clubs, and CS departments.
+              </p>
+              <ul className="mt-6 space-y-2.5 font-sans text-xs text-slate-300">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span className="text-white font-semibold">Unlimited hackathons &amp; sprints all year</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Custom university subdomains &amp; logos</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Multi-device volunteer door scanners</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>White-label branding &amp; sponsor booth studio</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Dedicated concierge technical support</span>
+                </li>
+              </ul>
+            </div>
+
+            <GumroadOverlayButton
+              plan="lifetime"
+              onClick={() => onOpenCheckout?.('lifetime')}
+              className="mt-8 w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-cyan-400/50 hover:border-cyan-300 text-cyan-300 hover:text-white font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-1.5 no-underline cursor-pointer"
+            >
+              <span>Get Chapter License ($79) →</span>
+            </GumroadOverlayButton>
           </div>
         </div>
       </section>

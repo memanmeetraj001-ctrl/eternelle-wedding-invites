@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Éternelle // Campus Edition — Collegiate Hackathon Digital Suite</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://gumroad.com/js/gumroad.js" async></script>
   <style>
     @keyframes pulseGlow {
       0%, 100% { opacity: 0.4; transform: scale(1); }
@@ -416,7 +417,7 @@
             </tr>
             <tr>
               <td class="p-3 font-bold text-white">Cost</td>
-              <td class="p-3 text-cyan-400 font-bold bg-cyan-950/20">$2.99 / sprint pass</td>
+              <td class="p-3 text-cyan-400 font-bold bg-cyan-950/20">Free (Starter) / $19 (Pro Pass)</td>
               <td class="p-3 text-slate-400">Free, but 40%+ dropoff</td>
               <td class="p-3 text-slate-400">$300+ AWS cloud hosting</td>
             </tr>
@@ -426,54 +427,94 @@
     </section>
 
     <!-- 8. STUDENT CLUB PRICING -->
-    <section class="p-6 rounded-3xl bg-slate-900/80 border border-cyan-500/30 text-center space-y-6">
+    <section class="p-6 sm:p-10 rounded-3xl bg-slate-900/80 border border-cyan-500/30 text-center space-y-6">
       <div>
         <span class="font-mono text-xs text-cyan-400 font-bold uppercase tracking-widest">[ PRICING &amp; GRANTS ]</span>
-        <h2 class="font-mono text-2xl font-black text-white uppercase">Affordable For Every Student Society</h2>
+        <h2 class="font-mono text-2xl sm:text-3xl font-black text-white uppercase">Affordable For Every Student Society &amp; Hackathon</h2>
+        <p class="mt-2 text-xs sm:text-sm text-slate-300 font-sans max-w-2xl mx-auto">Transparent pricing with instant Gumroad checkout and zero hidden charges. Built for student clubs, university departments, and hackathon organizing teams.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-left max-w-4xl mx-auto">
-        <!-- Single Pass -->
-        <div class="p-5 rounded-xl bg-slate-950 border border-cyan-500/30 flex flex-col justify-between">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 text-left max-w-5xl mx-auto">
+        <!-- Plan 1: Free Starter -->
+        <div class="p-5 sm:p-6 rounded-2xl bg-slate-950 border border-cyan-500/30 flex flex-col justify-between hover:border-cyan-500/60 transition-all">
           <div>
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 uppercase font-bold">
-                Single Event Pass
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 uppercase font-bold">
+                Free Starter
               </span>
-              <span class="font-mono text-slate-400 text-xs">Per Hackathon</span>
+              <span class="font-mono text-slate-400 text-xs">Forever Free</span>
             </div>
-            <div class="font-mono text-3xl font-black text-white">$2.99</div>
-            <p class="text-xs text-slate-300 mt-1">Full 3D unboxing &amp; QR check-in engine for 1 collegiate hackathon.</p>
+            <div class="font-mono text-3xl font-black text-white">$0</div>
+            <p class="text-xs text-slate-300 mt-2">Core 3D cyber unboxing &amp; hacker RSVP suite for student clubs and weekend hackathons.</p>
             <ul class="mt-4 space-y-2 text-xs text-slate-300 font-sans">
-              <li>✓ Up to 500 hacker invites &amp; QR passes</li>
-              <li>✓ Offline-ready door scanner web app</li>
+              <li>✓ Up to 50 hacker invitations &amp; passes</li>
+              <li>✓ Interactive 3D microchip seal unboxing</li>
               <li>✓ Devpost &amp; Discord links embedded</li>
+              <li>✓ 1-Click calendar sync (.ics &amp; Google)</li>
+              <li>✓ Dietary &amp; T-shirt size collection</li>
             </ul>
           </div>
-          <a href="/?access=etsy_vip&plan=pro" class="mt-6 block text-center py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold uppercase">
-            Activate Single Pass ($2.99) →
+          <a href="/?view=hackathon" class="mt-6 block text-center py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold uppercase transition-all shadow-sm">
+            Start Free (No Card Needed) →
           </a>
         </div>
 
-        <!-- Annual Club License -->
-        <div class="p-5 rounded-xl bg-gradient-to-br from-cyan-950/60 to-slate-950 border-2 border-cyan-400 flex flex-col justify-between shadow-[0_0_30px_rgba(0,255,204,0.2)]">
+        <!-- Plan 2: Pro Event Pass -->
+        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-cyan-950/60 via-slate-900 to-slate-950 border-2 border-cyan-400 flex flex-col justify-between shadow-[0_0_30px_rgba(0,255,204,0.25)] relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-mono text-[9px] font-black uppercase tracking-wider shadow">
+            MOST POPULAR FOR HACKATHONS
+          </div>
           <div>
-            <div class="flex justify-between items-center mb-2">
+            <div class="flex justify-between items-center mb-3 mt-1">
               <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/50 uppercase font-bold">
-                Annual Chapter License
+                Pro Event Pass
               </span>
-              <span class="font-mono text-cyan-300 text-xs">Full Academic Year</span>
+              <span class="font-mono text-cyan-300 text-xs">Per Hackathon</span>
             </div>
-            <div class="font-mono text-3xl font-black text-white">$19.99</div>
-            <p class="text-xs text-slate-300 mt-1">Unlimited hackathons, workshops, and sprints for ACM/IEEE chapters.</p>
+            <div class="font-mono text-3xl font-black text-white flex items-baseline gap-2">
+              $19 <span class="text-xs font-mono text-cyan-400 font-normal">one-time</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-2">Full hacker check-in command center and guest management for collegiate hackathons with zero restrictions.</p>
             <ul class="mt-4 space-y-2 text-xs text-slate-300 font-sans">
-              <li class="text-white font-semibold">✓ Unlimited hackathons &amp; unlimited hackers</li>
-              <li>✓ Custom university subdomains &amp; department logos</li>
-              <li>✓ Multi-device volunteer door scanners</li>
+              <li class="text-white font-semibold">✓ Unlimited hacker RSVPs &amp; passes</li>
+              <li>✓ Live Door QR Check-In Command Mode</li>
+              <li>✓ 1-Click CSV Attendee &amp; Team Export</li>
+              <li>✓ Devpost bounty &amp; sponsor booth sync</li>
+              <li>✓ Midnight Fuel &amp; live countdown schedule</li>
+              <li>✓ Priority 24/7 weekend organizer support</li>
             </ul>
           </div>
-          <a href="/?access=etsy_vip&plan=pro" class="mt-6 block text-center py-2.5 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 text-slate-950 font-mono text-xs font-black uppercase shadow-lg">
-            Get Annual License ($19.99) →
+          <a href="https://manmeetraj6.gumroad.com/l/pro-pass" data-gumroad-single-product="true" target="_blank" rel="noreferrer" class="gumroad-button mt-6 block text-center py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 text-slate-950 font-mono text-xs font-black uppercase shadow-lg transition-all">
+            Activate Pro Pass ($19) →
+          </a>
+        </div>
+
+        <!-- Plan 3: Annual / Lifetime Chapter License -->
+        <div class="p-5 sm:p-6 rounded-2xl bg-slate-950 border border-cyan-500/40 flex flex-col justify-between hover:border-cyan-400 transition-all relative">
+          <div class="absolute -top-3 right-5 px-2 py-0.5 rounded-full bg-cyan-950 border border-cyan-500/50 text-cyan-300 font-mono text-[9px] uppercase font-bold">
+            ACM / IEEE &amp; DEPARTMENTS
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 uppercase font-bold">
+                Annual Chapter License
+              </span>
+              <span class="font-mono text-slate-400 text-xs">Full Academic Year</span>
+            </div>
+            <div class="font-mono text-3xl font-black text-white flex items-baseline gap-2">
+              $79 <span class="text-xs font-mono text-slate-400 font-normal">one-time</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-2">Unlimited hackathons, workshops, and sprints for ACM/IEEE chapters and CS departments.</p>
+            <ul class="mt-4 space-y-2 text-xs text-slate-300 font-sans">
+              <li class="text-white font-semibold">✓ Unlimited hackathons &amp; sprints all year</li>
+              <li>✓ Custom university subdomains &amp; logos</li>
+              <li>✓ Multi-device volunteer door scanners</li>
+              <li>✓ White-label branding &amp; sponsor studio</li>
+              <li>✓ Dedicated concierge technical support</li>
+            </ul>
+          </div>
+          <a href="https://manmeetraj6.gumroad.com/l/lifetime-deal" data-gumroad-single-product="true" target="_blank" rel="noreferrer" class="gumroad-button mt-6 block text-center py-3 rounded-xl bg-slate-900 hover:bg-slate-850 border border-cyan-400/50 hover:border-cyan-300 text-cyan-300 hover:text-white font-mono text-xs font-bold uppercase transition-all shadow-md">
+            Get Chapter License ($79) →
           </a>
         </div>
       </div>

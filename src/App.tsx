@@ -865,6 +865,7 @@ export function App() {
             onNavigateHome={() => setViewMode('landing')}
             onOpenLegal={(doc) => setLegalModalDoc(doc)}
             onOpenCookieSettings={handleOpenCookieSettings}
+            onOpenCheckout={handleOpenCheckout}
           />
         )}
 
