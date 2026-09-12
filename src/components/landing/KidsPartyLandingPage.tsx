@@ -422,7 +422,7 @@ export const KidsPartyLandingPage: React.FC<KidsPartyLandingPageProps> = ({
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-900/80 border border-teal-400/50 shadow-xl mb-4">
           <span className="text-sm">🧜‍♀️</span>
           <span className="text-[11px] font-mono tracking-widest uppercase font-bold text-amber-300">
-            Etsy Best-Seller Inspired · Versatile Mermaid Suite
+            Bespoke Under-The-Sea · Versatile Mermaid Suite
           </span>
           <span className="text-xs">✨</span>
         </div>

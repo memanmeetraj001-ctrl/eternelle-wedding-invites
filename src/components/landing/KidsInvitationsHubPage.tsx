@@ -85,10 +85,8 @@ export const KidsInvitationsHubPage: React.FC<KidsInvitationsHubPageProps> = ({
   onOpenCookieSettings,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<KidsThemeCategory>('mermaid');
-  const [selectedAge, setSelectedAge] = useState<number>(5); // Default to #1 Etsy Trend: Dive Into Five
+  const [selectedAge, setSelectedAge] = useState<number>(5); // Default to #1 Trend: Dive Into Five
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [isEtsyKitModalOpen, setIsEtsyKitModalOpen] = useState(false);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   // Tropical Audio Player State
   const [isTropicalMusicPlaying, setIsTropicalMusicPlaying] = useState(false);
@@ -149,47 +147,6 @@ export const KidsInvitationsHubPage: React.FC<KidsInvitationsHubPageProps> = ({
     }
   };
 
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(label);
-    setTimeout(() => setCopiedField(null), 2200);
-  };
-
-  const etsyTitle = "Mermaid Birthday Invitation Editable, Dive Into Five Digital Mermaid Birthday Invitation, Little Mermaid Invite WhatsApp Phone Smartphone";
-  const etsyTags = [
-    "mermaid birthday",
-    "little mermaid invite",
-    "digital invite",
-    "dive into five",
-    "mermaid invitation",
-    "kids birthday invite",
-    "whatsapp invitation",
-    "instant download",
-    "editable birthday",
-    "mermaid party invite",
-    "under the sea party",
-    "smartphone invite",
-    "mermaid tail invite"
-  ];
-  const etsyDescription = `🌊 MAGICAL DIGITAL MERMAID BIRTHDAY INVITATION (INTERACTIVE MICRO-SITE) 🧜‍♀️
-Instant Access · Editable On Any Device · WhatsApp & Text Message Ready
-
-Say goodbye to static, boring Canva PDFs that get lost in parents' camera rolls! Welcome your little mermaid's guests with a luxury 3D animated unboxing experience featuring real tropical music, interactive wax seal opening, and one-click RSVP tracking.
-
-✨ WHAT MAKES THIS SPECIAL:
-• 3D Interactive Envelope Unboxing (Iridescent Mermaid Scales Liner & Pearl Seashell Stamp)
-• Real Tropical Island Ocean Soundtrack that plays automatically
-• Live RSVP Tracker with Child Swimming Comfort Level & Parent Allergy Questionnaire
-• 1-Click Apple & Google Calendar Sync for busy parents
-• Integrated Google Maps directions to your venue / backyard pool
-• Fits ALL Ages: Sweet One, Two Cool, Three Wishes, Fin-tastic Four, Dive Into Five, Seven Seas Six, Lucky Seven, and beyond!
-
-💌 HOW IT WORKS:
-1. Purchase & instantly receive your private access link.
-2. Edit honoree name, date, time, venue, schedule & poolside snacks in 2 minutes.
-3. Share via WhatsApp, iMessage, SMS, or Email.
-4. Watch RSVPs appear on your private parent dashboard in real-time!`;
-
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-[#082224] via-[#0d3336] to-[#061819] text-stone-100 flex flex-col font-sans relative overflow-x-hidden selection:bg-teal-400 selection:text-teal-950">
       
@@ -243,16 +200,6 @@ Say goodbye to static, boring Canva PDFs that get lost in parents' camera rolls!
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Etsy Seller Listing Kit Button */}
-          <button
-            onClick={() => setIsEtsyKitModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 text-xs font-semibold transition-all cursor-pointer shadow-md"
-            title="Open Ready-To-Paste Etsy SEO Keywords, Title & Tags"
-          >
-            <Tag size={13} className="text-amber-400" />
-            <span>Etsy Seller Kit</span>
-          </button>
-
           {/* Tropical Audio Toggle */}
           <button
             onClick={toggleTropicalAudio}
@@ -342,12 +289,12 @@ Say goodbye to static, boring Canva PDFs that get lost in parents' camera rolls!
         </div>
       </section>
 
-      {/* 3. HERO SHOWCASE WITH HIGH-CONVERTING ETSY KEYWORDS */}
+      {/* 3. HERO SHOWCASE WITH HIGHLIGHT CHIPS */}
       <section className="relative z-10 pt-6 pb-6 px-4 sm:px-6 text-center max-w-4xl mx-auto flex flex-col items-center">
         <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-teal-900/80 border border-teal-400/50 shadow-xl mb-3">
           <span className="text-sm">🧜‍♀️</span>
           <span className="text-[11px] font-mono tracking-widest uppercase font-bold text-amber-300">
-            Etsy Best-Seller Style · Digital Mermaid Birthday Invitation
+            Digital Mermaid Birthday Invitation · Interactive Smartphone Suite
           </span>
           <span className="text-xs">✨</span>
         </div>
@@ -451,17 +398,17 @@ Say goodbye to static, boring Canva PDFs that get lost in parents' camera rolls!
         </div>
       </section>
 
-      {/* 6. ETSY LISTING VISUAL ASSET SHOWCASE */}
+      {/* 6. COUTURE STATIONERY & MULTI-DEVICE FLATLAY SHOWCASE */}
       <section className="relative z-10 py-12 px-4 sm:px-8 max-w-5xl mx-auto">
         <div className="text-center mb-8">
           <span className="text-xs font-mono uppercase tracking-widest text-amber-300 font-bold block mb-1">
-            Etsy Seller Ready Assets
+            Couture Keepsake & Digital Suite
           </span>
           <h2 className="font-serif text-2xl sm:text-4xl text-white font-bold">
             High-Resolution Invitation Card & Multi-Device Flatlay
           </h2>
           <p className="text-xs sm:text-sm text-teal-200/80 mt-1 max-w-xl mx-auto">
-            Ready to list on your Etsy store. These high-converting product mockups turn Etsy search visitors into instant buyers.
+            Includes both vertical 5x7 printable stationery artwork and interactive 3D smartphone micro-sites for parents and guests.
           </p>
         </div>
 
@@ -479,7 +426,7 @@ Say goodbye to static, boring Canva PDFs that get lost in parents' camera rolls!
               </div>
               <div className="rounded-2xl overflow-hidden shadow-2xl border border-teal-500/30 bg-stone-900 group relative">
                 <img 
-                  src="/etsy-photos/etsy_mermaid_invite_card.jpg" 
+                  src="/assets/mermaid/mermaid_invite_card.jpg" 
                   alt="Mermaid Birthday Invitation Card Dive Into Five"
                   className="w-full h-80 object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
@@ -504,7 +451,7 @@ Say goodbye to static, boring Canva PDFs that get lost in parents' camera rolls!
               </div>
               <div className="rounded-2xl overflow-hidden shadow-2xl border border-teal-500/30 bg-stone-900 group relative">
                 <img 
-                  src="/etsy-photos/etsy_mermaid_multidevice_mockup.jpg" 
+                  src="/assets/mermaid/mermaid_multidevice_mockup.jpg" 
                   alt="Mermaid Invitation Multi-device mockup phone tablet"
                   className="w-full h-80 object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
@@ -518,17 +465,17 @@ Say goodbye to static, boring Canva PDFs that get lost in parents' camera rolls!
         </div>
       </section>
 
-      {/* 7. WHY ÉTERNELLE BEATS CANVA PDFS (THE ETSY SELLER ADVANTAGE) */}
+      {/* 7. WHY ÉTERNELLE BEATS CANVA PDFS */}
       <section className="relative z-10 py-12 px-4 sm:px-8 max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <span className="text-xs font-mono uppercase tracking-widest text-amber-300 font-bold block mb-1">
-            The Ultimate Seller Advantage
+            The Interactive Difference
           </span>
           <h2 className="font-serif text-2xl sm:text-4xl text-white font-bold">
-            Why Éternelle Crushes Standard Canva PDFs on Etsy
+            Why Éternelle Beats Standard Canva PDFs
           </h2>
           <p className="text-xs sm:text-sm text-teal-200/80 mt-1 max-w-xl mx-auto">
-            Etsy buyers are tired of broken Canva template links and static PDFs that parents forget to open. Here is why Éternelle gets you 5-star reviews:
+            Parents are tired of broken Canva template links and static PDFs that get lost in text messages. Here is why Éternelle delivers an unforgettable celebration experience:
           </p>
         </div>
 
@@ -605,8 +552,8 @@ Say goodbye to static, boring Canva PDFs that get lost in parents' camera rolls!
         <div className="space-y-3">
           {[
             {
-              q: 'Can I sell this mermaid invitation directly on my Etsy shop?',
-              a: 'Yes! You can bundle access to this interactive micro-site into your Etsy digital download. Provide your buyers with their private access link or an access PDF guide. They can edit their honoree name, date, time, and schedule in seconds.',
+              q: 'How do I customize and send this invitation to parents?',
+              a: 'Simply click "Launch Your Mermaid Suite" to personalize your child\'s name, age milestone, date, time, venue address, and party schedule. Then share your private invitation link via WhatsApp, iMessage, SMS, or Email. Parents tap to unbox the envelope with zero app downloads needed.',
             },
             {
               q: 'How do guests and parents open this invitation?',
@@ -675,104 +622,7 @@ Say goodbye to static, boring Canva PDFs that get lost in parents' camera rolls!
         </div>
       </section>
 
-      {/* 10. ETSY SELLER LISTING KIT MODAL */}
-      {isEtsyKitModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-          <div className="w-full max-w-2xl bg-[#092527] border border-teal-400/40 rounded-3xl p-6 shadow-2xl text-stone-100 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-4 border-b border-teal-500/20">
-              <div className="flex items-center gap-2">
-                <Tag className="text-amber-400" size={18} />
-                <h3 className="font-serif text-lg font-bold text-white">
-                  Etsy Seller Kit · High-Converting SEO Copy
-                </h3>
-              </div>
-              <button 
-                onClick={() => setIsEtsyKitModalOpen(false)}
-                className="text-stone-400 hover:text-white text-sm cursor-pointer p-1"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-5 mt-4 text-xs">
-              {/* Title Section */}
-              <div className="bg-[#0e3639] p-3.5 rounded-xl border border-teal-700/40">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-mono uppercase text-amber-300 font-bold">
-                    Optimized Etsy Title ({etsyTitle.length} chars)
-                  </span>
-                  <button
-                    onClick={() => copyToClipboard(etsyTitle, 'title')}
-                    className="flex items-center gap-1 text-teal-200 hover:text-white bg-teal-900/80 px-2 py-1 rounded cursor-pointer"
-                  >
-                    {copiedField === 'title' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-                    <span>{copiedField === 'title' ? 'Copied!' : 'Copy'}</span>
-                  </button>
-                </div>
-                <p className="font-sans text-stone-200 select-all bg-black/30 p-2 rounded">
-                  {etsyTitle}
-                </p>
-              </div>
-
-              {/* 13 Tags Section */}
-              <div className="bg-[#0e3639] p-3.5 rounded-xl border border-teal-700/40">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-mono uppercase text-amber-300 font-bold">
-                    13 Etsy SEO Tags (All ≤ 20 Chars)
-                  </span>
-                  <button
-                    onClick={() => copyToClipboard(etsyTags.join(', '), 'tags')}
-                    className="flex items-center gap-1 text-teal-200 hover:text-white bg-teal-900/80 px-2 py-1 rounded cursor-pointer"
-                  >
-                    {copiedField === 'tags' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-                    <span>{copiedField === 'tags' ? 'Copied All!' : 'Copy All 13'}</span>
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {etsyTags.map((tag, idx) => (
-                    <span 
-                      key={idx}
-                      className="bg-black/40 border border-teal-600/40 text-teal-200 px-2 py-1 rounded-md text-[11px] font-mono"
-                    >
-                      {tag} ({tag.length})
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Description Section */}
-              <div className="bg-[#0e3639] p-3.5 rounded-xl border border-teal-700/40">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-mono uppercase text-amber-300 font-bold">
-                    Etsy Product Description
-                  </span>
-                  <button
-                    onClick={() => copyToClipboard(etsyDescription, 'desc')}
-                    className="flex items-center gap-1 text-teal-200 hover:text-white bg-teal-900/80 px-2 py-1 rounded cursor-pointer"
-                  >
-                    {copiedField === 'desc' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-                    <span>{copiedField === 'desc' ? 'Copied Description!' : 'Copy Description'}</span>
-                  </button>
-                </div>
-                <pre className="font-sans text-[11px] text-stone-200 whitespace-pre-wrap select-all bg-black/30 p-2.5 rounded max-h-48 overflow-y-auto leading-relaxed">
-                  {etsyDescription}
-                </pre>
-              </div>
-            </div>
-
-            <div className="mt-5 pt-3 border-t border-teal-500/20 text-right">
-              <button
-                onClick={() => setIsEtsyKitModalOpen(false)}
-                className="px-5 py-2 rounded-full bg-teal-500 hover:bg-teal-400 text-teal-950 font-bold text-xs cursor-pointer"
-              >
-                Close Toolkit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 11. FOOTER */}
+      {/* 10. FOOTER */}
       <footer className="relative z-10 py-8 px-4 text-center border-t border-teal-900/60 text-[11px] text-teal-400/60 flex flex-col items-center gap-2">
         <BrandLogo size="sm" />
         <p>© 2026 Éternelle Studio · Kids Birthday & Mermaid Suite Edition. All rights reserved.</p>

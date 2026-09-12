@@ -362,7 +362,7 @@ export function LandingPage({
                 className="w-full mb-2.5 py-3 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-amber-400 hover:brightness-105 text-stone-950 font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <span>🧜‍♀️</span>
-                <span>Explore Kids Invitations Hub & Mermaid Suite (#1 Etsy Best-Seller) →</span>
+                <span>Explore Kids Invitations Hub & Mermaid Suite →</span>
               </button>
             )}
 

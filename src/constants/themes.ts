@@ -673,7 +673,7 @@ export const MERMAID_AGE_MILESTONES: Record<number, MermaidAgeMilestone> = {
     pun: 'Dive Into Five',
     headline: 'DIVE INTO FIVE! SPLISH SPLASH BIRTHDAY BASH',
     subtitle: 'GRAB YOUR MERMAID TAILS & TOWELS FOR',
-    bannerTag: 'Etsy #1 Best Seller Trend',
+    bannerTag: '#1 Most Popular Celebration',
   },
   6: {
     age: 6,
@@ -867,13 +867,13 @@ export const SAMPLE_MERMAID_PARTY_DATA: WeddingData = {
   photos: [
     {
       id: 'p-1',
-      url: '/etsy-photos/etsy_mermaid_invite_card.jpg',
+      url: '/assets/mermaid/mermaid_invite_card.jpg',
       caption: 'Official "Dive Into Five" Mermaid Invitation Stationery Card',
-      dateTag: 'Etsy #1 Best-Seller Style',
+      dateTag: 'Signature Gold Foil Edition',
     },
     {
       id: 'p-2',
-      url: '/etsy-photos/etsy_mermaid_multidevice_mockup.jpg',
+      url: '/assets/mermaid/mermaid_multidevice_mockup.jpg',
       caption: 'Interactive 3D Smartphone & Tablet Guest Unboxing',
       dateTag: 'Digital Experience',
     },
