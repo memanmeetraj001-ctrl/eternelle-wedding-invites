@@ -398,69 +398,174 @@ export const KidsInvitationsHubPage: React.FC<KidsInvitationsHubPageProps> = ({
         </div>
       </section>
 
-      {/* 6. COUTURE STATIONERY & MULTI-DEVICE FLATLAY SHOWCASE */}
+      {/* 6. EVERYTHING INCLUDED: INTERACTIVE CELEBRATION SUITE */}
       <section className="relative z-10 py-12 px-4 sm:px-8 max-w-5xl mx-auto">
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
           <span className="text-xs font-mono uppercase tracking-widest text-amber-300 font-bold block mb-1">
-            Couture Keepsake & Digital Suite
+            Interactive Guest Suite · All-In-One
           </span>
           <h2 className="font-serif text-2xl sm:text-4xl text-white font-bold">
-            High-Resolution Invitation Card & Multi-Device Flatlay
+            Everything Included for a Flawless Celebration
           </h2>
           <p className="text-xs sm:text-sm text-teal-200/80 mt-1 max-w-xl mx-auto">
-            Includes both vertical 5x7 printable stationery artwork and interactive 3D smartphone micro-sites for parents and guests.
+            From 3D wax seal unboxing to live parent headcount tracking, swim safety questionnaires, and 1-tap GPS directions.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-          {/* Card Mockup */}
-          <div className="bg-[#0e3639]/80 border border-teal-500/30 rounded-3xl p-5 shadow-xl flex flex-col justify-between overflow-hidden">
+        {/* 6-Card Interactive Feature Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          
+          {/* Card 1: 3D Unboxing Experience */}
+          <div className="bg-[#0e3639]/80 border border-teal-500/30 hover:border-teal-400/60 rounded-3xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 group relative flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold font-mono tracking-wider text-amber-300 uppercase">
-                  Stationery Card Artwork
-                </span>
-                <span className="text-[10px] bg-teal-900 px-2 py-0.5 rounded-full border border-teal-700 text-teal-200 font-mono">
-                  Dive Into Five Edition
-                </span>
+              <div className="w-10 h-10 rounded-2xl bg-teal-900/80 border border-teal-500/40 flex items-center justify-center text-amber-300 mb-3 group-hover:scale-110 transition-transform">
+                <Sparkles size={20} />
               </div>
-              <div className="rounded-2xl overflow-hidden shadow-2xl border border-teal-500/30 bg-stone-900 group relative">
-                <img 
-                  src="/assets/mermaid/mermaid_invite_card.jpg" 
-                  alt="Mermaid Birthday Invitation Card Dive Into Five"
-                  className="w-full h-80 object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-teal-300 font-semibold block mb-1">
+                Guest Experience
+              </span>
+              <h3 className="font-serif text-lg font-bold text-white mb-2">
+                3D Animated Unboxing
+              </h3>
+              <p className="text-xs text-teal-200/75 leading-relaxed">
+                Parents tap to break the golden seashell wax seal, unveiling an iridescent scaled liner and sliding invitation card with smooth physics.
+              </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-teal-500/20 text-xs text-teal-200 flex items-center justify-between">
-              <span>Iridescent Lavender & Aqua Palette</span>
-              <span className="text-amber-300 font-semibold">5x7 Ratio High-Res</span>
+            <div className="mt-4 pt-3 border-t border-teal-500/20 flex items-center justify-between text-[11px] text-amber-300 font-medium">
+              <span>Interactive Touch & Physics</span>
+              <span>Zero Lag</span>
             </div>
           </div>
 
-          {/* Multi-Device Experience */}
-          <div className="bg-[#0e3639]/80 border border-teal-500/30 rounded-3xl p-5 shadow-xl flex flex-col justify-between overflow-hidden">
+          {/* Card 2: Tropical Audio Soundtrack */}
+          <div className="bg-[#0e3639]/80 border border-teal-500/30 hover:border-teal-400/60 rounded-3xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 group relative flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold font-mono tracking-wider text-amber-300 uppercase">
-                  Multi-Device Flatlay Mockup
-                </span>
-                <span className="text-[10px] bg-teal-900 px-2 py-0.5 rounded-full border border-teal-700 text-teal-200 font-mono">
-                  Smartphone & Web
-                </span>
+              <div className="w-10 h-10 rounded-2xl bg-teal-900/80 border border-teal-500/40 flex items-center justify-center text-teal-300 mb-3 group-hover:scale-110 transition-transform">
+                <Music size={20} />
               </div>
-              <div className="rounded-2xl overflow-hidden shadow-2xl border border-teal-500/30 bg-stone-900 group relative">
-                <img 
-                  src="/assets/mermaid/mermaid_multidevice_mockup.jpg" 
-                  alt="Mermaid Invitation Multi-device mockup phone tablet"
-                  className="w-full h-80 object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                />
+              <span className="text-[10px] font-mono tracking-widest uppercase text-teal-300 font-semibold block mb-1">
+                Immersive Audio
+              </span>
+              <h3 className="font-serif text-lg font-bold text-white mb-2">
+                Tropical Ocean Soundtrack
+              </h3>
+              <p className="text-xs text-teal-200/75 leading-relaxed">
+                Plays sunny beach melodies and relaxing ukulele tunes the moment the envelope opens, with full volume and mute control.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-teal-500/20 flex items-center justify-between text-[11px] text-teal-200 font-medium">
+              <span>Automatic Audio Ambient</span>
+              <span className="text-amber-300">Mute Control</span>
+            </div>
+          </div>
+
+          {/* Card 3: Live RSVP & Headcount */}
+          <div className="bg-[#0e3639]/80 border border-teal-500/30 hover:border-teal-400/60 rounded-3xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 group relative flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-2xl bg-teal-900/80 border border-teal-500/40 flex items-center justify-center text-amber-300 mb-3 group-hover:scale-110 transition-transform">
+                <Users size={20} />
               </div>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-teal-300 font-semibold block mb-1">
+                Guest Management
+              </span>
+              <h3 className="font-serif text-lg font-bold text-white mb-2">
+                Live RSVP & Headcount
+              </h3>
+              <p className="text-xs text-teal-200/75 leading-relaxed">
+                Parents confirm party attendance in 1 tap. Track total kids and adults in real-time without digging through messy text group chats.
+              </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-teal-500/20 text-xs text-teal-200 flex items-center justify-between">
-              <span>Instant WhatsApp / iMessage Delivery</span>
-              <span className="text-amber-300 font-semibold">No App Required</span>
+            <div className="mt-4 pt-3 border-t border-teal-500/20 flex items-center justify-between text-[11px] text-amber-300 font-medium">
+              <span>Real-Time Tracker</span>
+              <span>1-Tap Confirmation</span>
             </div>
+          </div>
+
+          {/* Card 4: Swim & Pool Safety Survey */}
+          <div className="bg-[#0e3639]/80 border border-teal-500/30 hover:border-teal-400/60 rounded-3xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 group relative flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-2xl bg-teal-900/80 border border-teal-500/40 flex items-center justify-center text-cyan-300 mb-3 group-hover:scale-110 transition-transform">
+                <Waves size={20} />
+              </div>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-teal-300 font-semibold block mb-1">
+                Safety First
+              </span>
+              <h3 className="font-serif text-lg font-bold text-white mb-2">
+                Swim Comfort Questionnaire
+              </h3>
+              <p className="text-xs text-teal-200/75 leading-relaxed">
+                Know before the party whether each child swims independently, stays in the shallow end, or needs a puddle jumper life vest.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-teal-500/20 flex items-center justify-between text-[11px] text-cyan-200 font-medium">
+              <span>Peace of Mind</span>
+              <span className="text-amber-300">Poolside Safety</span>
+            </div>
+          </div>
+
+          {/* Card 5: Allergy & Dietary Protection */}
+          <div className="bg-[#0e3639]/80 border border-teal-500/30 hover:border-teal-400/60 rounded-3xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 group relative flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-2xl bg-teal-900/80 border border-teal-500/40 flex items-center justify-center text-amber-300 mb-3 group-hover:scale-110 transition-transform">
+                <Utensils size={20} />
+              </div>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-teal-300 font-semibold block mb-1">
+                Parent Peace of Mind
+              </span>
+              <h3 className="font-serif text-lg font-bold text-white mb-2">
+                Allergy & Dietary Tracking
+              </h3>
+              <p className="text-xs text-teal-200/75 leading-relaxed">
+                Built-in dietary questionnaire collects peanut, dairy, gluten, and egg restrictions so your poolside treats and cake are 100% safe.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-teal-500/20 flex items-center justify-between text-[11px] text-teal-200 font-medium">
+              <span>Dietary Summary</span>
+              <span className="text-amber-300">Kid-Friendly</span>
+            </div>
+          </div>
+
+          {/* Card 6: 1-Click WhatsApp / SMS Sharing */}
+          <div className="bg-[#0e3639]/80 border border-teal-500/30 hover:border-teal-400/60 rounded-3xl p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 group relative flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-2xl bg-teal-900/80 border border-teal-500/40 flex items-center justify-center text-teal-300 mb-3 group-hover:scale-110 transition-transform">
+                <Share2 size={20} />
+              </div>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-teal-300 font-semibold block mb-1">
+                Frictionless Delivery
+              </span>
+              <h3 className="font-serif text-lg font-bold text-white mb-2">
+                1-Click WhatsApp & SMS
+              </h3>
+              <p className="text-xs text-teal-200/75 leading-relaxed">
+                Zero app downloads or accounts required for parents. Send your custom web link via WhatsApp, iMessage, or SMS for immediate access.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-teal-500/20 flex items-center justify-between text-[11px] text-teal-200 font-medium">
+              <span>All Smartphones</span>
+              <span className="text-amber-300">No App Needed</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Trust & Performance Metrics Banner */}
+        <div className="mt-8 p-4 sm:p-5 rounded-2xl bg-[#092224]/90 border border-teal-500/25 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div>
+            <span className="font-serif text-xl sm:text-2xl font-bold text-amber-300 block">100%</span>
+            <span className="text-[11px] text-teal-200/80">Mobile Responsive</span>
+          </div>
+          <div>
+            <span className="font-serif text-xl sm:text-2xl font-bold text-teal-300 block">0 Apps</span>
+            <span className="text-[11px] text-teal-200/80">Instant Browser Access</span>
+          </div>
+          <div>
+            <span className="font-serif text-xl sm:text-2xl font-bold text-cyan-300 block">&lt; 2 Min</span>
+            <span className="text-[11px] text-teal-200/80">Self-Customization</span>
+          </div>
+          <div>
+            <span className="font-serif text-xl sm:text-2xl font-bold text-emerald-400 block">Real-Time</span>
+            <span className="text-[11px] text-teal-200/80">Live RSVP Updates</span>
           </div>
         </div>
       </section>
