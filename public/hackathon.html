@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Éternelle // Campus Edition — Collegiate Hackathon Digital Suite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
+    .animate-spin-slow { animation: spinSlow 18s linear infinite; }
+    
+    .perspective-1000 { perspective: 1200px; }
+    .preserve-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    
+    .matrix-grid {
+      background-image: linear-gradient(to right, rgba(0, 255, 204, 0.07) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(0, 255, 204, 0.07) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+  </style>
+</head>
+<body class="bg-[#050811] text-slate-100 font-sans antialiased selection:bg-cyan-500 selection:text-slate-950 p-0 m-0">
+
+  <!-- MATRIX GRID BACKGROUND -->
+  <div class="fixed inset-0 pointer-events-none matrix-grid z-0"></div>
+  <div class="fixed top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none z-0"></div>
+  <div class="fixed bottom-1/3 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none z-0"></div>
+
+  <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-10">
+
+    <!-- 1. TOP TICKER -->
+    <div class="rounded-xl bg-gradient-to-r from-cyan-950/80 via-slate-900 to-purple-950/80 border border-cyan-500/30 p-2.5 text-center text-xs font-mono text-cyan-300 flex items-center justify-between shadow-lg">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping inline-block"></span>
+        <span class="text-white font-bold">CAMPUS SPRINT 2026:</span>
+        <span class="text-slate-300 hidden sm:inline">Built for ACM &amp; IEEE Student Branches across 250+ Universities</span>
+      </div>
+      <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold uppercase">
+        MLH Compliant
+      </span>
+    </div>
+
+    <!-- 2. NAVBAR -->
+    <header class="flex items-center justify-between border-b border-cyan-500/20 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 to-purple-600 p-0.5 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,204,0.3)]">
+          <div class="w-full h-full bg-[#080e1b] rounded-[10px] flex items-center justify-center font-mono font-black text-cyan-400 text-lg">
+            &gt;_
+          </div>
+        </div>
+        <div>
+          <div class="font-mono font-black text-base sm:text-lg tracking-wider text-white">
+            ÉTERNBELLE<span class="text-cyan-400">//</span>CAMPUS
+          </div>
+          <div class="text-[10px] font-mono text-slate-400">Next-Gen Collegiate Admission &amp; Unboxing Suite</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="#unboxing-stage" class="hidden sm:inline-block px-3 py-1.5 rounded-lg border border-cyan-500/30 text-cyan-300 text-xs font-mono hover:bg-cyan-500/10 transition-colors">
+          3D Demo
+        </a>
+        <a href="/?access=etsy_vip&plan=pro" class="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-slate-950 font-mono font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,255,204,0.4)]">
+          Launch Suite →
+        </a>
+      </div>
+    </header>
+
+    <!-- 3. HERO SECTION -->
+    <section class="text-center space-y-5 pt-4">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-cyan-500/40 text-cyan-300 font-mono text-xs shadow-md">
+        <span>⚡ ADMISSION &amp; DOOR PASS ENGINE FOR COLLEGIATE HACKATHONS</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-mono font-black tracking-tight text-white uppercase max-w-4xl mx-auto leading-tight">
+        The 3D Cyber Invitation &amp; QR Pass Suite for <br class="hidden sm:inline"/>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-purple-400">
+          Student Builders
+        </span>
+      </h1>
+
+      <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto font-sans leading-relaxed">
+        Ditch boring Google Forms. Empower your campus hackathon with interactive 3D microchip unboxing, 
+        sub-second offline QR check-in, real-time Devpost track selection, and solo hacker matchmaking.
+      </p>
+
+      <!-- METRIC CARDS -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto pt-4 font-mono">
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/20 text-center">
+          <div class="text-xl sm:text-2xl font-black text-cyan-400">48h SPRINT</div>
+          <div class="text-[10px] text-slate-400 uppercase mt-0.5">Live Countdown</div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/20 text-center">
+          <div class="text-xl sm:text-2xl font-black text-purple-400">$25,000+</div>
+          <div class="text-[10px] text-slate-400 uppercase mt-0.5">Bounties Synced</div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/20 text-center">
+          <div class="text-xl sm:text-2xl font-black text-emerald-400">1.2s SCAN</div>
+          <div class="text-[10px] text-slate-400 uppercase mt-0.5">Offline QR Gate</div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/20 text-center">
+          <div class="text-xl sm:text-2xl font-black text-cyan-300">99.4%</div>
+          <div class="text-[10px] text-slate-400 uppercase mt-0.5">Show-Up Turnout</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. INTERACTIVE 3D UNBOXING STAGE -->
+    <section id="unboxing-stage" class="p-6 rounded-3xl bg-[#080d19] border border-cyan-500/30 shadow-[0_0_50px_rgba(0,255,204,0.15)] space-y-6">
+      
+      <div class="flex flex-col sm:flex-row items-center justify-between border-b border-cyan-500/20 pb-4 gap-2">
+        <div>
+          <span class="font-mono text-xs text-cyan-400 font-bold uppercase tracking-widest">[ INTERACTIVE TEST STAGE ]</span>
+          <h2 class="font-mono text-xl sm:text-2xl font-black text-white uppercase">3D Holographic Cyber Unboxing</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="toggleAudioBtn" onclick="toggleMuteAudio()" class="px-3 py-1.5 rounded-full bg-black/80 border border-cyan-500/40 text-cyan-300 font-mono text-xs flex items-center gap-1.5 hover:bg-slate-900">
+            <span id="audioIcon">🔊</span>
+            <span id="audioLabel">Cyber Audio: ON</span>
+          </button>
+          <button onclick="resetEnvelope()" class="px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-mono text-slate-200">
+            ↺ Re-seal
+          </button>
+        </div>
+      </div>
+
+      <!-- 3D ENVELOPE ARENA -->
+      <div class="relative w-full min-h-[380px] flex flex-col items-center justify-center p-4">
+        
+        <!-- Status Bar -->
+        <div class="mb-3 text-center">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/90 border border-cyan-500/40 font-mono text-[10px] text-cyan-400 shadow-[0_0_15px_rgba(0,255,204,0.2)]">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>CYBERHACKS 2026 · STANFORD &amp; MIT CHAPTERS</span>
+          </div>
+        </div>
+
+        <!-- Envelope Body (Perspective Container) -->
+        <div id="envelopeContainer" class="relative w-[310px] sm:w-[420px] h-[220px] sm:h-[280px] perspective-1000 select-none cursor-pointer transition-transform duration-300" onclick="triggerUnbox()">
+          
+          <!-- Pocket Back -->
+          <div class="absolute inset-0 rounded-2xl bg-[#090f1e] border border-cyan-500/40 shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_25px_rgba(0,255,204,0.2)] overflow-hidden">
+            <div class="w-full h-full opacity-20 matrix-grid"></div>
+          </div>
+
+          <!-- SLIDING INNER VIP PASS -->
+          <div id="innerCard" class="absolute left-[5%] w-[90%] h-[90%] top-[5%] rounded-xl bg-gradient-to-br from-[#090f1d] via-[#0d182e] to-[#060a14] border border-cyan-400/50 p-4 flex flex-col justify-between text-left shadow-2xl transition-all duration-700 z-10" style="transform: translateY(0%);">
+            <div>
+              <div class="flex items-center justify-between border-b border-cyan-500/20 pb-1.5">
+                <span class="font-mono text-[9px] text-cyan-400 font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                  VIP HACKER PASS #CH26-489
+                </span>
+                <span class="font-mono text-[8px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold">
+                  $25,000 PRIZES
+                </span>
+              </div>
+              <div class="mt-2 font-mono">
+                <div class="text-xs sm:text-sm font-black text-white uppercase">CYBERHACKS 2026: CAMPUS SPRINT</div>
+                <div class="text-[9px] text-slate-300 mt-0.5">📍 Gates Computer Science Bldg · Stanford, CA</div>
+                <div class="text-[9px] text-cyan-300 font-bold mt-0.5">⏱ OCT 24-26, 2026 · 48H CLOCK</div>
+              </div>
+            </div>
+
+            <!-- Active Track Tags -->
+            <div class="my-1">
+              <div class="text-[8px] font-mono text-slate-400 uppercase mb-1">Assigned Tracks:</div>
+              <div class="flex flex-wrap gap-1 font-mono text-[8px]">
+                <span class="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 border border-cyan-500/30">#AI/LLMs</span>
+                <span class="px-1.5 py-0.5 rounded bg-slate-800 text-purple-300 border border-purple-500/30">#Web3</span>
+                <span class="px-1.5 py-0.5 rounded bg-slate-800 text-emerald-300 border border-emerald-500/30">#Robotics</span>
+              </div>
+            </div>
+
+            <div class="pt-1.5 border-t border-cyan-500/20 flex items-center justify-between font-mono text-[8px] text-slate-400">
+              <span class="text-emerald-400 font-bold">WiFi: Campus-HackNet</span>
+              <span class="text-cyan-300 font-bold uppercase underline">CLAIM QR PASS →</span>
+            </div>
+          </div>
+
+          <!-- Left Flap -->
+          <div class="absolute inset-0 pointer-events-none z-20" style="clip-path: polygon(0 0, 0 100%, 52% 50%); background: linear-gradient(135deg, #0f192e 0%, #080d19 100%); border-left: 1px solid rgba(0,255,204,0.3);"></div>
+          
+          <!-- Right Flap -->
+          <div class="absolute inset-0 pointer-events-none z-20" style="clip-path: polygon(100% 0, 100% 100%, 48% 50%); background: linear-gradient(225deg, #0f192e 0%, #080d19 100%); border-right: 1px solid rgba(0,255,204,0.3);"></div>
+          
+          <!-- Bottom Flap -->
+          <div class="absolute inset-0 pointer-events-none z-20" style="clip-path: polygon(0 100%, 100% 100%, 50% 42%); background: linear-gradient(0deg, #0d1527 0%, #070c17 100%); border-bottom: 1px solid rgba(0,255,204,0.3);"></div>
+
+          <!-- TOP V-FLAP -->
+          <div id="topFlap" class="absolute inset-0 origin-top pointer-events-none transition-transform duration-700 preserve-3d z-30" style="clip-path: polygon(0 0, 100% 0, 50% 58%); background: linear-gradient(180deg, #13223d 0%, #0a1120 100%); border-top: 1px solid rgba(0,255,204,0.4); transform: rotateX(0deg);"></div>
+
+          <!-- HOLOGRAPHIC MICROCHIP SEAL -->
+          <div id="sealButton" class="absolute left-1/2 top-[55%] -translate-x-1/2 -translate-y-1/2 z-40 transition-all duration-700">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#0a1120] border-2 border-cyan-400 flex items-center justify-center relative shadow-[0_0_30px_rgba(0,255,204,0.6)] hover:scale-110 active:scale-95 transition-transform">
+              <div class="absolute inset-1 rounded-full border border-cyan-400/40 border-dashed animate-spin-slow"></div>
+              <svg class="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="4" y="4" width="16" height="16" rx="2" />
+                <rect x="9" y="9" width="6" height="6" fill="#00ffcc" />
+                <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" />
+              </svg>
+              <span class="absolute bottom-1 font-mono text-[7px] text-cyan-300 font-bold uppercase tracking-wider">DECRYPT</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Action Callout Below Envelope -->
+        <div class="mt-4 text-center">
+          <button id="unboxActionBtn" onclick="triggerUnbox()" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 text-slate-950 font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,255,204,0.4)] transition-all">
+            &gt; Tap Seal to Unbox
+          </button>
+          <div id="unboxHint" class="font-mono text-[10px] text-slate-400 mt-1.5">Hardware-accelerated 3D SVG &amp; Web Audio engine</div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- 5. REAL-TIME TRACK & DOOR SCANNER TELEMETRY -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Track Telemetry -->
+      <div class="p-5 rounded-2xl bg-slate-900/80 border border-cyan-500/30 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="font-mono text-sm font-bold text-white uppercase flex items-center gap-2">
+            <span class="text-cyan-400">📊</span>
+            <span>Live Track Distribution</span>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">SYNCED</span>
+        </div>
+
+        <div class="space-y-3 font-mono text-xs">
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>#1 Artificial Intelligence &amp; LLMs</span>
+              <span id="aiCount" class="text-cyan-400 font-bold">42% (210 Hackers)</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="aiBar" class="w-[42%] h-full bg-cyan-400 rounded-full transition-all duration-500"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>#2 Web3 &amp; Decentralized Tech</span>
+              <span id="web3Count" class="text-purple-400 font-bold">24% (120 Hackers)</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="web3Bar" class="w-[24%] h-full bg-purple-500 rounded-full transition-all duration-500"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>#3 Robotics &amp; Embedded IoT</span>
+              <span id="roboticsCount" class="text-emerald-400 font-bold">18% (90 Hackers)</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="roboticsBar" class="w-[18%] h-full bg-emerald-400 rounded-full transition-all duration-500"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-slate-300 mb-1">
+              <span>#4 HealthTech &amp; Biotech</span>
+              <span id="healthCount" class="text-amber-400 font-bold">16% (80 Hackers)</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="healthBar" class="w-[16%] h-full bg-amber-400 rounded-full transition-all duration-500"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center justify-between text-[11px] font-mono text-slate-400 border-t border-slate-800">
+          <span>Capacity: 500 Hackers (100% Full)</span>
+          <button onclick="simulateNewRegistration()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[10px] border border-cyan-500/30">
+            + Simulate Registration
+          </button>
+        </div>
+      </div>
+
+      <!-- Offline QR Door Check-in Simulator -->
+      <div class="p-5 rounded-2xl bg-slate-900/80 border border-purple-500/30 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="font-mono text-sm font-bold text-white uppercase flex items-center gap-2">
+            <span class="text-purple-400">📱</span>
+            <span>Offline QR Gate Scanner</span>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">OFFLINE READY</span>
+        </div>
+
+        <p class="text-xs text-slate-300 font-sans">
+          Volunteers scan attendee badges from any phone camera at the registration desk. Passes decrypt in &lt;1.2s without Wi-Fi.
+        </p>
+
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2 font-mono text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400">Recent Door Scan:</span>
+            <span id="scanStatus" class="text-emerald-400 font-bold">✓ VERIFIED // ADMITTED (0.8s)</span>
+          </div>
+          <div id="scanHackerName" class="text-white font-bold text-sm">Alex Chen (MIT Engineering)</div>
+          <div id="scanDetails" class="text-[10px] text-slate-400">Track: AI / LLMs · Swag: L · Diet: Vegetarian</div>
+        </div>
+
+        <button onclick="simulateScan()" class="w-full py-2.5 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-400/50 text-purple-200 font-mono text-xs font-bold uppercase transition-all flex items-center justify-center gap-2">
+          <span>📷 Scan Next Hacker Badge</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- 6. 6 CORE ORGANIZER MODULES -->
+    <section class="space-y-6">
+      <div class="text-center space-y-1">
+        <span class="font-mono text-xs text-cyan-400 font-bold uppercase tracking-widest">[ COMPLETE ARCHITECTURE ]</span>
+        <h2 class="font-mono text-2xl font-black text-white uppercase">6 Core Modules Built For Campus Leads</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 font-sans">
+        
+        <div class="p-4 rounded-xl bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 transition-all">
+          <div class="text-cyan-400 font-mono text-lg mb-2">01. 💎 Microchip Unboxing</div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            3D interactive digital envelope that attendees record and tweet, generating huge organic buzz across campus.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 transition-all">
+          <div class="text-emerald-400 font-mono text-lg mb-2">02. ⚡ Offline QR Check-in</div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Eliminates registration queues. Checks in 500+ builders in under 15 minutes with zero latency.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 transition-all">
+          <div class="text-purple-400 font-mono text-lg mb-2">03. 🤝 Team Matchmaking</div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Connect solo coders with designers and hardware hackers based on programming language and track.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 transition-all">
+          <div class="text-amber-400 font-mono text-lg mb-2">04. 🍕 48h Fuel Drops &amp; Alerts</div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Real-time notifications for midnight pizza drops, Red Bull restocks, mentor labs, and code freeze.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 transition-all">
+          <div class="text-blue-400 font-mono text-lg mb-2">05. 🏆 Devpost &amp; Bounties</div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Seamlessly links API sponsors, cloud credits, submission portals, and judging criteria in one card.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 transition-all">
+          <div class="text-rose-400 font-mono text-lg mb-2">06. 🛡️ Lab Security &amp; WiFi</div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Provides one-tap access to building access maps, safety waivers, and campus guest network credentials.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 7. HEAD-TO-HEAD COMPARISON TABLE -->
+    <section class="space-y-4">
+      <div class="text-center">
+        <h2 class="font-mono text-xl font-black text-white uppercase">Why Top Hackathons Switch to Éternelle</h2>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-cyan-500/30 bg-slate-950">
+        <table class="w-full text-left text-xs font-mono">
+          <thead>
+            <tr class="border-b border-cyan-500/30 bg-slate-900 text-slate-300">
+              <th class="p-3">Feature</th>
+              <th class="p-3 text-cyan-400 bg-cyan-950/40">Éternelle Campus</th>
+              <th class="p-3 text-slate-400">Google Forms / Eventbrite</th>
+              <th class="p-3 text-slate-400">In-House Custom Code</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800 text-slate-300">
+            <tr>
+              <td class="p-3 font-bold text-white">First Impression</td>
+              <td class="p-3 text-cyan-300 bg-cyan-950/20">3D Holographic Microchip Unboxing</td>
+              <td class="p-3 text-slate-400">Plain text email &amp; flat form</td>
+              <td class="p-3 text-slate-400">Basic landing page, no unboxing</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-white">Door Check-In</td>
+              <td class="p-3 text-emerald-400 font-bold bg-cyan-950/20">&lt;1.2s Offline QR Scanner</td>
+              <td class="p-3 text-slate-400">Manual spreadsheet search</td>
+              <td class="p-3 text-slate-400">Crashes when Wi-Fi drops</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-white">Solo Matchmaking</td>
+              <td class="p-3 text-cyan-300 bg-cyan-950/20">Built-in with Discord/Tech tags</td>
+              <td class="p-3 text-slate-400">Chaotic Discord channels</td>
+              <td class="p-3 text-slate-400">Manual DB queries</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-white">Setup Time</td>
+              <td class="p-3 text-cyan-300 bg-cyan-950/20">5 Minutes (No Code)</td>
+              <td class="p-3 text-slate-400">1 Hour</td>
+              <td class="p-3 text-slate-400">3-4 Weeks dev sprint</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-white">Cost</td>
+              <td class="p-3 text-cyan-400 font-bold bg-cyan-950/20">$2.99 / sprint pass</td>
+              <td class="p-3 text-slate-400">Free, but 40%+ dropoff</td>
+              <td class="p-3 text-slate-400">$300+ AWS cloud hosting</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 8. STUDENT CLUB PRICING -->
+    <section class="p-6 rounded-3xl bg-slate-900/80 border border-cyan-500/30 text-center space-y-6">
+      <div>
+        <span class="font-mono text-xs text-cyan-400 font-bold uppercase tracking-widest">[ PRICING &amp; GRANTS ]</span>
+        <h2 class="font-mono text-2xl font-black text-white uppercase">Affordable For Every Student Society</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-left max-w-4xl mx-auto">
+        <!-- Single Pass -->
+        <div class="p-5 rounded-xl bg-slate-950 border border-cyan-500/30 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 uppercase font-bold">
+                Single Event Pass
+              </span>
+              <span class="font-mono text-slate-400 text-xs">Per Hackathon</span>
+            </div>
+            <div class="font-mono text-3xl font-black text-white">$2.99</div>
+            <p class="text-xs text-slate-300 mt-1">Full 3D unboxing &amp; QR check-in engine for 1 collegiate hackathon.</p>
+            <ul class="mt-4 space-y-2 text-xs text-slate-300 font-sans">
+              <li>✓ Up to 500 hacker invites &amp; QR passes</li>
+              <li>✓ Offline-ready door scanner web app</li>
+              <li>✓ Devpost &amp; Discord links embedded</li>
+            </ul>
+          </div>
+          <a href="/?access=etsy_vip&plan=pro" class="mt-6 block text-center py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold uppercase">
+            Activate Single Pass ($2.99) →
+          </a>
+        </div>
+
+        <!-- Annual Club License -->
+        <div class="p-5 rounded-xl bg-gradient-to-br from-cyan-950/60 to-slate-950 border-2 border-cyan-400 flex flex-col justify-between shadow-[0_0_30px_rgba(0,255,204,0.2)]">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/50 uppercase font-bold">
+                Annual Chapter License
+              </span>
+              <span class="font-mono text-cyan-300 text-xs">Full Academic Year</span>
+            </div>
+            <div class="font-mono text-3xl font-black text-white">$19.99</div>
+            <p class="text-xs text-slate-300 mt-1">Unlimited hackathons, workshops, and sprints for ACM/IEEE chapters.</p>
+            <ul class="mt-4 space-y-2 text-xs text-slate-300 font-sans">
+              <li class="text-white font-semibold">✓ Unlimited hackathons &amp; unlimited hackers</li>
+              <li>✓ Custom university subdomains &amp; department logos</li>
+              <li>✓ Multi-device volunteer door scanners</li>
+            </ul>
+          </div>
+          <a href="/?access=etsy_vip&plan=pro" class="mt-6 block text-center py-2.5 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 text-slate-950 font-mono text-xs font-black uppercase shadow-lg">
+            Get Annual License ($19.99) →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. FOOTER -->
+    <footer class="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-slate-400 gap-3">
+      <div>© 2026 ÉTERNBELLE // CAMPUS INNOVATION SUITE · ALL RIGHTS RESERVED.</div>
+      <div class="flex items-center gap-4">
+        <a href="/" class="hover:text-cyan-300">Éternelle Hub</a>
+        <a href="/hackathon" class="text-cyan-400 hover:underline">Live Route (/hackathon)</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SCRIPT LOGIC: AUDIO & 3D UNBOXING -->
+  <script>
+    let isUnboxed = false;
+    let isAudioMuted = false;
+
+    // Web Audio Synthesizer (Instant 0-latency laser sweep)
+    function playCyberSound() {
+      if (isAudioMuted) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+
+        // 1. Futuristic Laser Sweep
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(140, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.35);
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(400, ctx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(3200, ctx.currentTime + 0.35);
+
+        gain.gain.setValueAtTime(0.01, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.55);
+
+        // 2. Sub-bass Thump
+        const sub = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        sub.type = 'sine';
+        sub.frequency.setValueAtTime(95, ctx.currentTime + 0.08);
+        sub.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.45);
+        subGain.gain.setValueAtTime(0.28, ctx.currentTime + 0.08);
+        subGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+
+        sub.connect(subGain);
+        subGain.connect(ctx.destination);
+        sub.start(ctx.currentTime + 0.08);
+        sub.stop(ctx.currentTime + 0.45);
+      } catch (e) {}
+    }
+
+    function playBeepSound() {
+      if (isAudioMuted) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200, ctx.currentTime);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      } catch(e) {}
+    }
+
+    function toggleMuteAudio() {
+      isAudioMuted = !isAudioMuted;
+      document.getElementById('audioIcon').innerText = isAudioMuted ? '🔇' : '🔊';
+      document.getElementById('audioLabel').innerText = isAudioMuted ? 'Cyber Audio: MUTED' : 'Cyber Audio: ON';
+    }
+
+    function triggerUnbox() {
+      if (isUnboxed) return;
+      isUnboxed = true;
+
+      playCyberSound();
+
+      // Animate Top Flap
+      const topFlap = document.getElementById('topFlap');
+      topFlap.style.transform = 'rotateX(175deg)';
+
+      // Animate Seal
+      const seal = document.getElementById('sealButton');
+      seal.style.transform = 'translate(-50%, -50%) scale(0.8)';
+      seal.style.opacity = '0';
+      seal.style.pointerEvents = 'none';
+
+      // Slide inner card upward
+      const card = document.getElementById('innerCard');
+      card.style.transform = 'translateY(-56%)';
+      card.style.zIndex = '25';
+
+      // Update button text
+      document.getElementById('unboxActionBtn').innerText = '✓ Pass Unboxed · Claim Badge';
+      document.getElementById('unboxHint').innerText = 'Click "Re-seal" above to replay unboxing';
+    }
+
+    function resetEnvelope() {
+      isUnboxed = false;
+      const topFlap = document.getElementById('topFlap');
+      topFlap.style.transform = 'rotateX(0deg)';
+
+      const seal = document.getElementById('sealButton');
+      seal.style.transform = 'translate(-50%, -50%) scale(1)';
+      seal.style.opacity = '1';
+      seal.style.pointerEvents = 'auto';
+
+      const card = document.getElementById('innerCard');
+      card.style.transform = 'translateY(0%)';
+      card.style.zIndex = '10';
+
+      document.getElementById('unboxActionBtn').innerText = '> Tap Seal to Unbox';
+      document.getElementById('unboxHint').innerText = 'Hardware-accelerated 3D SVG & Web Audio engine';
+    }
+
+    // Interactive Telemetry Simulation
+    let countAI = 210;
+    let countWeb3 = 120;
+    let countRobotics = 90;
+    let countHealth = 80;
+
+    function simulateNewRegistration() {
+      countAI += Math.floor(Math.random() * 3) + 1;
+      countWeb3 += Math.floor(Math.random() * 2);
+      countRobotics += Math.floor(Math.random() * 2);
+      countHealth += Math.floor(Math.random() * 2);
+
+      const total = countAI + countWeb3 + countRobotics + countHealth;
+      const pAI = Math.round((countAI / total) * 100);
+      const pWeb3 = Math.round((countWeb3 / total) * 100);
+      const pRobotics = Math.round((countRobotics / total) * 100);
+      const pHealth = 100 - pAI - pWeb3 - pRobotics;
+
+      document.getElementById('aiCount').innerText = `${pAI}% (${countAI} Hackers)`;
+      document.getElementById('aiBar').style.width = `${pAI}%`;
+
+      document.getElementById('web3Count').innerText = `${pWeb3}% (${countWeb3} Hackers)`;
+      document.getElementById('web3Bar').style.width = `${pWeb3}%`;
+
+      document.getElementById('roboticsCount').innerText = `${pRobotics}% (${countRobotics} Hackers)`;
+      document.getElementById('roboticsBar').style.width = `${pRobotics}%`;
+
+      document.getElementById('healthCount').innerText = `${pHealth}% (${countHealth} Hackers)`;
+      document.getElementById('healthBar').style.width = `${pHealth}%`;
+
+      playBeepSound();
+    }
+
+    // Door Scanner Simulation
+    const sampleAttendees = [
+      { name: 'Elena Rostova (Stanford AI Lab)', track: 'AI / LLMs', swag: 'M', diet: 'Vegan' },
+      { name: 'Devon Vance (Berkeley EECS)', track: 'Robotics & IoT', swag: 'L', diet: 'Halal' },
+      { name: 'Marcus Sterling (Caltech Web3 Club)', track: 'Web3 / DePIN', swag: 'XL', diet: 'Gluten-Free' },
+      { name: 'Priya Patel (CMU Robotics)', track: 'HealthTech', swag: 'S', diet: 'Vegetarian' },
+      { name: 'Jordan Hayes (Harvard ACM Chapter)', track: 'AI / LLMs', swag: 'L', diet: 'None' }
+    ];
+    let scanIdx = 0;
+
+    function simulateScan() {
+      scanIdx = (scanIdx + 1) % sampleAttendees.length;
+      const att = sampleAttendees[scanIdx];
+      playBeepSound();
+
+      document.getElementById('scanStatus').innerText = '✓ VERIFIED // ADMITTED (0.8s)';
+      document.getElementById('scanHackerName').innerText = att.name;
+      document.getElementById('scanDetails').innerText = `Track: ${att.track} · Swag: ${att.swag} · Diet: ${att.diet}`;
+    }
+  </script>
+
+</body>
+</html>
