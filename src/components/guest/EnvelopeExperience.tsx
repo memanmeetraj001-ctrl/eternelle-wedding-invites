@@ -1131,19 +1131,46 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
               }}
             />
 
-            {/* 6. TOP V-FLAP (Folds upward on unbox) */}
+            {/* 6. TOP V-FLAP CONTAINER (Folds upward on unbox) */}
             <div 
               className="absolute inset-0 origin-top transition-transform duration-[1100ms] cubic-bezier(0.4, 0, 0.2, 1) pointer-events-none"
               style={{
-                clipPath: 'polygon(0 0, 100% 0, 50% 59%)',
-                background: 'linear-gradient(180deg, #111e33 0%, #0b1322 55%, #050912 100%)',
-                borderTop: '1px solid rgba(0, 255, 204, 0.4)',
-                transform: isFlapOpen ? 'rotateX(175deg)' : 'rotateX(0deg)',
-                backfaceVisibility: 'hidden',
+                transform: isFlapOpen ? 'rotateX(180deg)' : 'rotateX(0deg)',
+                transformStyle: 'preserve-3d',
                 zIndex: isFlapOpen ? 12 : 30,
-                filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.9))',
               }}
-            />
+            >
+              {/* Front Face (Visible when closed) */}
+              <div 
+                className="absolute inset-0"
+                style={{
+                  clipPath: 'polygon(0 0, 100% 0, 50% 59%)',
+                  background: 'linear-gradient(180deg, #111e33 0%, #0b1322 55%, #050912 100%)',
+                  borderTop: '1px solid rgba(0, 255, 204, 0.4)',
+                  filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.9))',
+                  backfaceVisibility: 'hidden',
+                }}
+              />
+              {/* Back Face / Matrix Liner (Visible when folded up 180deg, sits behind card) */}
+              <div 
+                className="absolute inset-0 overflow-hidden"
+                style={{
+                  clipPath: 'polygon(0 0, 100% 0, 50% 59%)',
+                  background: 'linear-gradient(0deg, #0d1a30 0%, #070d18 100%)',
+                  borderBottom: '1px solid rgba(0, 255, 204, 0.3)',
+                  transform: 'rotateX(180deg)',
+                  backfaceVisibility: 'hidden',
+                }}
+              >
+                <div 
+                  className="w-full h-full opacity-30"
+                  style={{
+                    backgroundImage: 'linear-gradient(rgba(0,255,204,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,204,0.15) 1px, transparent 1px)',
+                    backgroundSize: '20px 20px',
+                  }}
+                />
+              </div>
+            </div>
 
             {/* 7. HOLOGRAPHIC MICROCHIP SEAL (Centered at V-Flap apex) */}
             <div 
