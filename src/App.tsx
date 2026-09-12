@@ -15,7 +15,7 @@ import { LandingPage } from './components/landing/LandingPage';
 import { HalloweenLandingPage } from './components/landing/HalloweenLandingPage';
 import { KidsPartyLandingPage } from './components/landing/KidsPartyLandingPage';
 import { KidsInvitationsHubPage } from './components/landing/KidsInvitationsHubPage';
-import { UniversityHackathonLandingPage } from './components/landing/UniversityHackathonLandingPage';
+import { HackathonLandingPage } from './components/landing/HackathonLandingPage';
 import { MainDashboard } from './components/dashboard/MainDashboard';
 import { GuestInvitationView } from './components/guest/GuestInvitationView';
 import { RSVPModal } from './components/guest/RSVPModal';
@@ -846,7 +846,7 @@ export function App() {
         )}
 
         {viewMode === 'hackathon' && (
-          <UniversityHackathonLandingPage
+          <HackathonLandingPage
             onStartCreating={(eventType) => {
               handleUpdateWedding({
                 ...SAMPLE_HACKATHON_DATA,
@@ -864,6 +864,7 @@ export function App() {
             }}
             onNavigateHome={() => setViewMode('landing')}
             onOpenLegal={(doc) => setLegalModalDoc(doc)}
+            onOpenCookieSettings={handleOpenCookieSettings}
           />
         )}
 

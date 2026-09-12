@@ -140,6 +140,15 @@ export function LandingPage({
             Explore Halloween Edition →
           </button>
         )}
+        <span className="text-stone-500 hidden sm:inline">|</span>
+        {onOpenHackathon && (
+          <button 
+            onClick={onOpenHackathon}
+            className="underline font-bold hover:text-white text-cyan-400 flex items-center gap-1 ml-1 cursor-pointer"
+          >
+            Explore Hackathon Edition →
+          </button>
+        )}
       </div>
 
       {/* 2. SECONDARY SUB-NAVIGATION BAR */}
@@ -169,6 +178,14 @@ export function LandingPage({
               className="text-teal-900 hover:text-teal-950 transition-colors whitespace-nowrap flex items-center gap-1 font-bold bg-teal-100 px-2.5 py-0.5 rounded-full border border-teal-300 shadow-xs cursor-pointer"
             >
               <span>🧜‍♀️ Kids Invitations</span>
+            </button>
+          )}
+          {onOpenHackathon && (
+            <button 
+              onClick={onOpenHackathon} 
+              className="text-cyan-900 hover:text-cyan-950 transition-colors whitespace-nowrap flex items-center gap-1 font-bold bg-cyan-100 px-2.5 py-0.5 rounded-full border border-cyan-300 shadow-xs cursor-pointer"
+            >
+              <span>⚡ Hackathons</span>
             </button>
           )}
           <button onClick={() => scrollToSection('features')} className="hover:text-rose-600 transition-colors whitespace-nowrap cursor-pointer">
