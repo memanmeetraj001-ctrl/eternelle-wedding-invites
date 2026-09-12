@@ -20,26 +20,7 @@
     </image:image>
   </url>
 
-  <!-- 2. Dedicated Collegiate Hackathon & ACM Chapter Portal -->
-  <url>
-    <loc>https://eternelleweddinginvites.online/hackathon</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</image:loc>
-      <image:title>Collegiate Hackathon Digital Passes &amp; Door Scanner</image:title>
-      <image:caption>3D holographic microchip seal unboxing and offline-ready door check-in scanner app</image:caption>
-    </image:image>
-  </url>
 
-  <!-- 3. University Hackathon Portal Alias -->
-  <url>
-    <loc>https://eternelleweddinginvites.online/university</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
-  </url>
 
   <!-- 4. Dedicated Gothic Masquerade & Halloween Party Edition -->
   <url>

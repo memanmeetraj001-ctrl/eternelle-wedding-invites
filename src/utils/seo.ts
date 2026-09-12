@@ -30,13 +30,6 @@ const ROUTE_SEO: Record<string, Partial<SEOMetadata>> = {
     ogImage: 'https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=1200&q=80',
     keywords: 'halloween party invitation, gothic wedding invite, masquerade digital invite, dark velvet envelope, 3D wax seal, spooky rsvp'
   },
-  hackathon: {
-    title: 'Collegiate Hackathon Digital Passes & Door Check-In Suite | Éternelle Campus',
-    description: 'Hardware-accelerated 3D microchip cyber unboxing, instant QR badge generation, offline door check-in scanners, and Devpost/Discord sync for ACM/IEEE chapters.',
-    canonicalUrl: 'https://eternelleweddinginvites.online/hackathon',
-    ogImage: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80',
-    keywords: 'hackathon invitation, hackathon qr pass, collegiate hackathon software, acm event check in, door scanner web app, 3d cyber badge'
-  },
   kids_party: {
     title: 'Kids Birthday & Mermaid Lagoon Interactive Invitations | Éternelle Kids',
     description: 'Enchant your little guests with animated 3D seashell wax seals, underwater ocean audio melodies, poolside dietary RSVPs, and mobile party schedules.',

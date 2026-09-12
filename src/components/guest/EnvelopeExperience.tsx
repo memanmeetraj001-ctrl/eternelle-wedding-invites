@@ -82,49 +82,6 @@ const playSpookySoundEffect = () => {
   } catch {}
 };
 
-// Cyber Terminal Laser & Power-Up Synthesizer (Instant 0-latency Web Audio)
-const playCyberSoundEffect = () => {
-  try {
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-    
-    // Futuristic power-up sweep
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(140, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.35);
-    
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(400, ctx.currentTime);
-    filter.frequency.exponentialRampToValueAtTime(3200, ctx.currentTime + 0.35);
-
-    gain.gain.setValueAtTime(0.01, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.1);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.6);
-
-    // Sub-bass confirmation thump
-    const subOsc = ctx.createOscillator();
-    const subGain = ctx.createGain();
-    subOsc.type = 'sine';
-    subOsc.frequency.setValueAtTime(90, ctx.currentTime + 0.1);
-    subOsc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.5);
-    subGain.gain.setValueAtTime(0.3, ctx.currentTime + 0.1);
-    subGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-    subOsc.connect(subGain);
-    subGain.connect(ctx.destination);
-    subOsc.start(ctx.currentTime + 0.1);
-    subOsc.stop(ctx.currentTime + 0.5);
-  } catch {}
-};
 
 // Intaglio Architectural Vector Etching of Gothic Cathedral (Pure SVG matching reference image)
 const GothicCathedralEtching: React.FC = () => (
@@ -285,11 +242,9 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   
   const isHalloween = wedding.eventType === 'halloween' || theme.id === 'midnight-haunt';
   const isKidsParty = wedding.eventType === 'kids_party' || theme.id === 'mermaid-lagoon';
-  const isHackathon = wedding.eventType === 'hackathon' || theme.id === 'cyber-hackathon';
   const postmarkCity = stationery.postmarkCity || (
     isHalloween ? 'SALEM WITCH COVEN · CONDEMNED 1692' : 
     isKidsParty ? 'CORAL BAY · POOL SUITE' : 
-    isHackathon ? 'SILICON VALLEY // HACK_PASS_2026' :
     (wedding.cityState ? wedding.cityState.split(',')[0].toUpperCase() : 'PARIS') + ' · AIRMAIL'
   );
 
@@ -368,8 +323,6 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     // Play sound effect
     if (isHalloween) {
       playSpookySoundEffect();
-    } else if (isHackathon) {
-      playCyberSoundEffect();
     }
 
     // Play music if enabled
@@ -380,15 +333,13 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
     // Sparkle Confetti Burst
     try {
       confetti({
-        particleCount: isHalloween ? 110 : isHackathon ? 95 : 75,
+        particleCount: isHalloween ? 110 : 75,
         spread: 85,
         origin: { y: 0.6 },
         colors: isHalloween 
           ? ['#d4af37', '#991b1b', '#ea580c', '#17141f', '#f5e3ba', '#7e22ce']
           : isKidsParty
           ? ['#38bdf8', '#48b2b7', '#f472b6', '#fbbf24', '#ffffff', '#2dd4bf']
-          : isHackathon
-          ? ['#00ffcc', '#7928ca', '#0070f3', '#10b981', '#38bdf8', '#ffffff']
           : [theme.waxSealBg, currentFoil.sampleHex, '#10b981', '#fdf2f4', '#ffffff'],
         disableForReducedMotion: true,
       });
@@ -460,16 +411,16 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           {wedding.musicEnabled && wedding.backgroundMusicUrl && (
             <button
               onClick={toggleMusic}
-              title={isMusicPlaying ? 'Mute Music' : (isHalloween ? 'Play Horror Soundtrack' : isHackathon ? 'Play Synthwave Sprint' : 'Play Romantic Music')}
+              title={isMusicPlaying ? 'Mute Music' : (isHalloween ? 'Play Horror Soundtrack' : 'Play Romantic Music')}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-md border text-white/90 text-xs font-sans transition-all shadow-lg cursor-pointer ${
-                isHalloween ? 'border-[#c3a573]/40' : isHackathon ? 'border-cyan-500/40 text-cyan-200' : 'border-white/15'
+                isHalloween ? 'border-[#c3a573]/40' : 'border-white/15'
               }`}
             >
               {isMusicPlaying ? (
                 <>
-                  <Volume2 size={14} className={isHalloween ? "text-[#d4af37] animate-pulse" : isHackathon ? "text-cyan-300 animate-pulse" : "text-amber-300 animate-pulse"} />
-                  <span className={`text-[11px] font-medium font-serif ${isHalloween ? 'text-amber-200' : isKidsParty ? 'text-teal-200' : isHackathon ? 'text-cyan-300' : 'text-amber-200'}`}>
-                    {isHalloween ? 'Cathedral Organ Playing' : isKidsParty ? 'Tropical Ocean Music Playing' : isHackathon ? 'Synthwave Sprint Playing' : 'Music Playing'}
+                  <Volume2 size={14} className={isHalloween ? "text-[#d4af37] animate-pulse" : "text-amber-300 animate-pulse"} />
+                  <span className={`text-[11px] font-medium font-serif ${isHalloween ? 'text-amber-200' : isKidsParty ? 'text-teal-200' : 'text-amber-200'}`}>
+                    {isHalloween ? 'Cathedral Organ Playing' : isKidsParty ? 'Tropical Ocean Music Playing' : 'Music Playing'}
                   </span>
                   <span className="flex items-center gap-0.5 ml-0.5">
                     <span className="w-1 h-2 rounded-full animate-pulse bg-cyan-400" />
@@ -481,7 +432,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                 <>
                   <VolumeX size={14} className="text-stone-400" />
                   <span className="text-[11px] text-stone-300 font-medium">
-                    {isHalloween ? 'Horror Music Muted' : isKidsParty ? 'Ocean Music Muted' : isHackathon ? 'Synthwave Muted' : 'Music Muted'}
+                    {isHalloween ? 'Horror Music Muted' : isKidsParty ? 'Ocean Music Muted' : 'Music Muted'}
                   </span>
                 </>
               )}
@@ -493,11 +444,11 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           <button
             onClick={handleReplay}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-md border text-stone-200 text-xs font-sans transition-all shadow-lg cursor-pointer ${
-              isHalloween ? 'border-[#c3a573]/40 hover:text-amber-300' : isKidsParty ? 'border-teal-400/40 hover:text-teal-200' : isHackathon ? 'border-cyan-500/40 text-cyan-200 hover:text-cyan-100 hover:border-cyan-400' : 'border-white/15 hover:text-amber-200'
+              isHalloween ? 'border-[#c3a573]/40 hover:text-amber-300' : isKidsParty ? 'border-teal-400/40 hover:text-teal-200' : 'border-white/15 hover:text-amber-200'
             }`}
           >
             <RotateCcw size={12} />
-            <span>{isHalloween ? 'Re-seal Gothic Envelope' : isKidsParty ? 'Re-seal Mermaid Envelope' : isHackathon ? 'Reset Cyber Terminal' : 'Re-tie Ribbon'}</span>
+            <span>{isHalloween ? 'Re-seal Gothic Envelope' : isKidsParty ? 'Re-seal Mermaid Envelope' : 'Re-tie Ribbon'}</span>
           </button>
         )}
       </div>
@@ -964,282 +915,6 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
               )}
             </button>
           </div>
-        </div>
-      ) : isHackathon ? (
-        /* ========================================================================= */
-        /* 2C. COLLEGIATE HACKATHON: CYBER MATRIX 3D TERMINAL UNBOXING               */
-        /* ========================================================================= */
-        <div className="relative w-full max-w-[360px] sm:max-w-[460px] md:max-w-[560px] lg:max-w-[640px] flex flex-col items-center">
-          
-          {/* Cyber Terminal Frame / Glow Backdrop */}
-          <div className="absolute -inset-4 sm:-inset-8 pointer-events-none overflow-hidden rounded-3xl z-0">
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl animate-pulse" />
-            <div className="absolute top-1/3 left-6 w-40 h-40 rounded-full bg-purple-600/15 blur-2xl" />
-            <div className="absolute bottom-1/4 right-6 w-48 h-48 rounded-full bg-emerald-500/10 blur-2xl" />
-            
-            {/* Ambient Matrix Grid Lines */}
-            <div 
-              className="absolute inset-0 opacity-15"
-              style={{
-                backgroundImage: 'linear-gradient(to right, rgba(0, 255, 204, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 255, 204, 0.1) 1px, transparent 1px)',
-                backgroundSize: '32px 32px'
-              }}
-            />
-          </div>
-
-          {/* Terminal Status Header */}
-          <div className="text-center mb-3 sm:mb-4 max-w-md md:max-w-xl z-20 px-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/80 border border-cyan-500/40 text-cyan-400 font-mono text-[9px] sm:text-[10px] tracking-wider mb-1.5 shadow-[0_0_15px_rgba(0,255,204,0.2)]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span>&gt; SYSTEM://CAMPUS_HACKATHON.READY</span>
-              <span className="text-slate-400 font-sans">|</span>
-              <span className="text-purple-300">48-HR SPRINT</span>
-            </div>
-            <h1 className="font-mono text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight drop-shadow-[0_0_20px_rgba(0,255,204,0.3)] uppercase">
-              {wedding.eventTitle || wedding.coupleName1 || 'CYBERHACKS 2026'}
-            </h1>
-            <p className="text-[10px] sm:text-xs font-mono text-cyan-300/80 tracking-wide mt-0.5">
-              {wedding.honoreeName || 'Stanford & MIT Engineering Federation'} · {wedding.weddingDate || 'OCTOBER 24-26, 2026'}
-            </p>
-          </div>
-
-          {/* Interactive Envelope Container with 3D perspective */}
-          <div
-            ref={containerRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            onClick={stage === 'sealed' ? handleUnbox : undefined}
-            className={`relative w-[310px] sm:w-[380px] md:w-[460px] lg:w-[500px] h-[230px] sm:h-[280px] md:h-[320px] lg:h-[350px] z-20 transition-transform duration-300 ease-out ${
-              stage === 'sealed' ? 'cursor-pointer group' : ''
-            }`}
-            style={{
-              perspective: '1400px',
-              transform: `rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`,
-              transformStyle: 'preserve-3d',
-            }}
-          >
-            {/* 1. Envelope Back Pocket (Cyber Carbon Obsidian) */}
-            <div 
-              className="absolute inset-0 rounded-2xl shadow-[0_25px_65px_rgba(0,0,0,0.98),0_0_40px_rgba(0,255,204,0.15)] overflow-hidden"
-              style={{
-                background: 'radial-gradient(circle at 50% 30%, #0d1527 0%, #070a14 70%, #03060c 100%)',
-                border: '1px solid rgba(0, 255, 204, 0.25)',
-              }}
-            >
-              {/* Glowing matrix trace lines in pocket */}
-              <div 
-                className="w-full h-full opacity-20"
-                style={{
-                  backgroundImage: 'radial-gradient(#00ffcc 1px, transparent 1px), radial-gradient(#7928ca 1px, transparent 1px)',
-                  backgroundSize: '20px 20px',
-                  backgroundPosition: '0 0, 10px 10px'
-                }}
-              />
-            </div>
-
-            {/* 2. THE INNER CYBER ACCESS PASS CARD (Slides upward on open) */}
-            <div 
-              onClick={isFullyOpen ? onOpen : undefined}
-              className={`absolute left-[6%] w-[88%] h-[90%] rounded-xl transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) overflow-hidden flex flex-col justify-between p-4 sm:p-5 text-left ${
-                isFullyOpen ? 'cursor-pointer hover:scale-[1.01] shadow-2xl' : ''
-              }`}
-              style={{
-                top: '5%',
-                background: 'linear-gradient(145deg, #090e1a 0%, #0d172a 50%, #060913 100%)',
-                border: '1px solid rgba(0, 255, 204, 0.45)',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,255,204,0.12)',
-                transform: isFlapOpen ? 'translateY(-56%)' : 'translateY(0%)',
-                zIndex: isFlapOpen ? 25 : 10,
-              }}
-            >
-              {/* Card Header with Glowing Status */}
-              <div>
-                <div className="flex items-center justify-between pb-2 border-b border-cyan-500/20">
-                  <div className="flex items-center gap-1.5 font-mono text-[9px] sm:text-[10px] text-cyan-400 font-bold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                    <span>HACKER PASS // VIP ADMISSION</span>
-                  </div>
-                  <span className="font-mono text-[8px] sm:text-[9px] px-2 py-0.5 rounded bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold">
-                    {wedding.prizePool || '$25,000 BOUNTIES'}
-                  </span>
-                </div>
-
-                <div className="mt-2.5">
-                  <h3 className="font-mono text-xs sm:text-sm md:text-base font-black text-white tracking-wide uppercase leading-tight">
-                    {wedding.eventTitle || wedding.coupleName1 || 'CYBERHACKS 2026: CAMPUS SPRINT'}
-                  </h3>
-                  <p className="text-[9px] sm:text-[10px] font-sans text-slate-300 mt-1 flex items-center gap-1">
-                    <span className="text-cyan-400 font-mono">📍</span> {wedding.venueName || 'Gates Computer Science Building & Robotics Lab'}
-                  </p>
-                  <p className="text-[9px] sm:text-[10px] font-mono text-cyan-400/90 mt-0.5">
-                    ⏱ {wedding.weddingDate || 'OCT 24-26, 2026'} · {wedding.weddingTime || '48 HOURS'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Challenge Track Badges */}
-              <div className="my-2">
-                <p className="text-[8px] sm:text-[9px] font-mono uppercase text-slate-400 mb-1">
-                  Active Challenge Tracks:
-                </p>
-                <div className="flex flex-wrap gap-1">
-                  {(wedding.hackathonTracks || ['AI & LLMs', 'Web3 / DePIN', 'Robotics IoT', 'HealthTech']).map((track, i) => (
-                    <span key={i} className="text-[8px] sm:text-[9px] font-mono px-2 py-0.5 rounded bg-slate-800/90 text-cyan-300 border border-cyan-500/30">
-                      #{track}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card Footer Bar */}
-              <div className="pt-2 border-t border-cyan-500/20 flex items-center justify-between font-mono text-[8px] sm:text-[9px] text-slate-400">
-                <span className="text-emerald-400">WiFi: {wedding.wifiInfo ? 'Campus-HackNet' : 'INCLUDED'}</span>
-                <span className="text-purple-300 font-bold">TAP TO VIEW FULL SUITE →</span>
-              </div>
-            </div>
-
-            {/* 3. LEFT CYBER FLAP */}
-            <div 
-              className="absolute inset-0 pointer-events-none z-20"
-              style={{
-                clipPath: 'polygon(0 0, 0 100%, 53% 50%)',
-                background: 'linear-gradient(135deg, #0d1728 0%, #090e1a 70%, #04070e 100%)',
-                borderLeft: '1px solid rgba(0, 255, 204, 0.3)',
-                filter: 'drop-shadow(3px 0 8px rgba(0,0,0,0.85))',
-              }}
-            />
-
-            {/* 4. RIGHT CYBER FLAP */}
-            <div 
-              className="absolute inset-0 pointer-events-none z-20"
-              style={{
-                clipPath: 'polygon(100% 0, 100% 100%, 47% 50%)',
-                background: 'linear-gradient(225deg, #0d1728 0%, #090e1a 70%, #04070e 100%)',
-                borderRight: '1px solid rgba(0, 255, 204, 0.3)',
-                filter: 'drop-shadow(-3px 0 8px rgba(0,0,0,0.85))',
-              }}
-            />
-
-            {/* 5. BOTTOM CYBER POCKET FLAP */}
-            <div 
-              className="absolute inset-0 pointer-events-none z-20"
-              style={{
-                clipPath: 'polygon(0 100%, 100% 100%, 50% 41%)',
-                background: 'linear-gradient(0deg, #0b1220 0%, #080d17 60%, #050810 100%)',
-                borderBottom: '1px solid rgba(0, 255, 204, 0.3)',
-                filter: 'drop-shadow(0 -5px 12px rgba(0,0,0,0.95))',
-              }}
-            />
-
-            {/* 6. TOP V-FLAP CONTAINER (Folds upward on unbox) */}
-            <div 
-              className="absolute inset-0 origin-top transition-transform duration-[1100ms] cubic-bezier(0.4, 0, 0.2, 1) pointer-events-none"
-              style={{
-                transform: isFlapOpen ? 'rotateX(180deg)' : 'rotateX(0deg)',
-                transformStyle: 'preserve-3d',
-                zIndex: isFlapOpen ? 12 : 30,
-              }}
-            >
-              {/* Front Face (Visible when closed) */}
-              <div 
-                className="absolute inset-0"
-                style={{
-                  clipPath: 'polygon(0 0, 100% 0, 50% 59%)',
-                  background: 'linear-gradient(180deg, #111e33 0%, #0b1322 55%, #050912 100%)',
-                  borderTop: '1px solid rgba(0, 255, 204, 0.4)',
-                  filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.9))',
-                  backfaceVisibility: 'hidden',
-                }}
-              />
-              {/* Back Face / Matrix Liner (Visible when folded up 180deg, sits behind card) */}
-              <div 
-                className="absolute inset-0 overflow-hidden"
-                style={{
-                  clipPath: 'polygon(0 0, 100% 0, 50% 59%)',
-                  background: 'linear-gradient(0deg, #0d1a30 0%, #070d18 100%)',
-                  borderBottom: '1px solid rgba(0, 255, 204, 0.3)',
-                  transform: 'rotateX(180deg)',
-                  backfaceVisibility: 'hidden',
-                }}
-              >
-                <div 
-                  className="w-full h-full opacity-30"
-                  style={{
-                    backgroundImage: 'linear-gradient(rgba(0,255,204,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,204,0.15) 1px, transparent 1px)',
-                    backgroundSize: '20px 20px',
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* 7. HOLOGRAPHIC MICROCHIP SEAL (Centered at V-Flap apex) */}
-            <div 
-              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-[1100ms] z-40"
-              style={{
-                top: isFlapOpen ? '16%' : '55%',
-                transform: isFlapOpen ? 'translate(-50%, -50%) scale(0.85)' : 'translate(-50%, -50%) scale(1)',
-                opacity: isFlapOpen ? 0 : 1,
-                pointerEvents: isFlapOpen ? 'none' : 'auto',
-              }}
-            >
-              <div 
-                onClick={handleUnbox}
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full cursor-pointer hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center relative select-none shadow-[0_0_25px_rgba(0,255,204,0.6)]"
-                style={{
-                  background: 'radial-gradient(circle at 35% 35%, #1e293b 0%, #0f172a 60%, #020617 100%)',
-                  border: '2px solid #00ffcc',
-                }}
-              >
-                <div className="absolute inset-1 rounded-full border border-cyan-400/40 border-dashed animate-spin" style={{ animationDuration: '18s' }} />
-                <svg viewBox="0 0 48 48" className="w-9 h-9 sm:w-11 sm:h-11 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <rect x="14" y="14" width="20" height="20" rx="3" stroke="#00ffcc" fill="#0f172a" strokeWidth="1.8" />
-                  <line x1="8" y1="18" x2="14" y2="18" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="8" y1="24" x2="14" y2="24" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="8" y1="30" x2="14" y2="30" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="34" y1="18" x2="40" y2="18" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="34" y1="24" x2="40" y2="24" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="34" y1="30" x2="40" y2="30" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="18" y1="8" x2="18" y2="14" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="24" y1="8" x2="24" y2="14" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="30" y1="8" x2="30" y2="14" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="18" y1="34" x2="18" y2="40" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="24" y1="34" x2="24" y2="40" stroke="#00ffcc" strokeWidth="2" />
-                  <line x1="30" y1="34" x2="30" y2="40" stroke="#00ffcc" strokeWidth="2" />
-                  <circle cx="24" cy="24" r="3.5" fill="#00ffcc" className="animate-pulse" />
-                </svg>
-                <span className="absolute bottom-1 font-mono text-[7px] text-cyan-300 font-bold tracking-widest uppercase">
-                  VERIFY
-                </span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Action CTA Button Below Envelope */}
-          <div className="mt-7 flex flex-col items-center z-30">
-            <button 
-              onClick={stage === 'sealed' ? handleUnbox : onOpen}
-              className="px-7 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-mono font-bold text-xs tracking-wider uppercase transition-all shadow-[0_0_25px_rgba(0,255,204,0.4)] hover:shadow-[0_0_35px_rgba(0,255,204,0.6)] flex items-center gap-2 cursor-pointer active:scale-95"
-            >
-              {stage === 'sealed' ? (
-                <span>&gt; DECRYPT PASS // UNBOX</span>
-              ) : (
-                <span className="flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-slate-950" />
-                  <span>CLAIM QR BADGE &amp; ENTER HUB →</span>
-                </span>
-              )}
-            </button>
-
-            {/* Terminal prompt indicator */}
-            <div 
-              onClick={stage === 'sealed' ? handleUnbox : onOpen}
-              className="text-cyan-400/80 animate-chevron-down mt-2 cursor-pointer font-mono text-[10px]"
-            >
-              <ChevronDown className="w-5 h-5 mx-auto" />
-            </div>
-          </div>
-
         </div>
       ) : (
         /* ========================================================================= */

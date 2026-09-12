@@ -28,7 +28,6 @@ interface LandingPageProps {
   onSelectTheme: (themeId: ThemeId) => void;
   onOpenHalloween?: () => void;
   onOpenKidsParty?: () => void;
-  onOpenHackathon?: () => void;
   onOpenLegal: (doc: LegalDocType) => void;
   onOpenCookieSettings?: () => void;
 }
@@ -43,7 +42,6 @@ export function LandingPage({
   onSelectTheme,
   onOpenHalloween,
   onOpenKidsParty,
-  onOpenHackathon,
   onOpenLegal,
   onOpenCookieSettings,
 }: LandingPageProps) {
@@ -141,15 +139,6 @@ export function LandingPage({
             Explore Halloween Edition →
           </button>
         )}
-        <span className="text-stone-500 hidden sm:inline">|</span>
-        {onOpenHackathon && (
-          <button 
-            onClick={onOpenHackathon}
-            className="underline font-bold hover:text-white text-cyan-400 flex items-center gap-1 ml-1 cursor-pointer"
-          >
-            Explore Hackathon Edition →
-          </button>
-        )}
       </div>
 
       {/* 2. SECONDARY SUB-NAVIGATION BAR */}
@@ -181,16 +170,7 @@ export function LandingPage({
               <span>🧜‍♀️ Kids Invitations</span>
             </button>
           )}
-          {onOpenHackathon && (
-            <button 
-              onClick={onOpenHackathon} 
-              className="text-cyan-900 hover:text-cyan-950 transition-colors whitespace-nowrap flex items-center gap-1.5 font-bold bg-gradient-to-r from-cyan-100 to-blue-100 px-3 py-1 rounded-full border border-cyan-400 shadow-xs cursor-pointer hover:border-cyan-500"
-            >
-              <span className="text-xs">⚡</span>
-              <span>Hackathon Page</span>
-              <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500 text-slate-950 font-mono font-black uppercase">Campus</span>
-            </button>
-          )}
+
           <button onClick={() => scrollToSection('features')} className="hover:text-rose-600 transition-colors whitespace-nowrap cursor-pointer">
             Features
           </button>
@@ -259,30 +239,7 @@ export function LandingPage({
                 </span>
                 
                 <div className="space-y-2.5">
-                  {/* Hackathon Landing Page Button */}
-                  {onOpenHackathon && (
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        onOpenHackathon();
-                      }}
-                      className="w-full p-3.5 rounded-2xl bg-gradient-to-br from-cyan-950 via-slate-900 to-slate-950 border-2 border-cyan-400 text-left flex items-center justify-between group hover:border-cyan-300 transition-all shadow-md shadow-cyan-950/20 cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">⚡</span>
-                        <div>
-                          <div className="font-mono text-xs font-black text-cyan-300 flex items-center gap-1.5">
-                            <span>Hackathon Campus Suite</span>
-                            <span className="px-1.5 py-0.2 rounded bg-cyan-400 text-slate-950 text-[9px] font-black uppercase">Live</span>
-                          </div>
-                          <p className="text-[11px] text-slate-300 font-sans mt-0.5">
-                            48H countdown, Devpost bounties &amp; 3D unboxing
-                          </p>
-                        </div>
-                      </div>
-                      <ArrowRight size={16} className="text-cyan-400 group-hover:translate-x-1 transition-transform shrink-0" />
-                    </button>
-                  )}
+
 
                   {/* Halloween Landing Page Button */}
                   {onOpenHalloween && (
@@ -592,15 +549,7 @@ export function LandingPage({
               </button>
             )}
 
-            {activeEventPreset.type === 'hackathon' && onOpenHackathon && (
-              <button
-                onClick={onOpenHackathon}
-                className="w-full mb-2.5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:brightness-105 text-slate-950 font-mono font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
-              >
-                <span>⚡</span>
-                <span>Explore Dedicated Hackathon Campus Landing Page →</span>
-              </button>
-            )}
+
 
             {activeEventPreset.type === 'halloween' && onOpenHalloween && (
               <button
@@ -1536,18 +1485,6 @@ export function LandingPage({
                     Charity Galas
                   </button>
                 </li>
-                <li>
-                  {onOpenHackathon ? (
-                    <button onClick={onOpenHackathon} className="hover:text-cyan-700 transition-colors font-medium text-cyan-950 flex items-center gap-1">
-                      <span>⚡ Collegiate Hackathons</span>
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-100 text-cyan-800 font-bold font-mono">Campus</span>
-                    </button>
-                  ) : (
-                    <button onClick={() => { setSelectedEventType('hackathon'); scrollToSection('milestones'); }} className="hover:text-cyan-700 transition-colors font-medium text-cyan-950">
-                      ⚡ Collegiate Hackathons
-                    </button>
-                  )}
-                </li>
               </ul>
             </div>
 
@@ -1582,14 +1519,6 @@ export function LandingPage({
                     Creator Commercial License
                   </button>
                 </li>
-                {onOpenHackathon && (
-                  <li>
-                    <button onClick={onOpenHackathon} className="text-cyan-800 hover:text-cyan-950 font-bold transition-colors flex items-center gap-1.5 text-left">
-                      <span>⚡ University Hackathons</span>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-800 uppercase font-mono font-bold">Campus</span>
-                    </button>
-                  </li>
-                )}
               </ul>
             </div>
 

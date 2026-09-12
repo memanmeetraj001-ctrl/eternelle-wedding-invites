@@ -91,13 +91,6 @@ export const ENVELOPE_LINER_OPTIONS: Record<EnvelopeLinerId, EnvelopeLinerOption
     previewGradient: 'from-[#48b2b7] via-[#7ae2e8] to-[#e6c280]',
     patternCss: `radial-gradient(circle at 50% 30%, rgba(255,255,255,0.3) 0%, transparent 60%), repeating-radial-gradient(circle at 50% 0, rgba(212,175,55,0.2) 0, rgba(212,175,55,0.2) 8px, transparent 9px, transparent 22px), linear-gradient(135deg, #1f6b72 0%, #2f949c 50%, #44b6bd 100%)`,
   },
-  'cyber-circuit': {
-    id: 'cyber-circuit',
-    name: 'Neon Matrix & Silicon Circuit',
-    tagline: 'Futuristic glowing PCB traces with cyber cyan and electric violet data pulses',
-    previewGradient: 'from-[#070e18] via-[#0d2a3a] to-[#00ffcc]',
-    patternCss: `radial-gradient(circle at 50% 50%, rgba(0,255,204,0.2) 0%, transparent 60%), repeating-linear-gradient(90deg, rgba(0,255,204,0.08) 0px, rgba(0,255,204,0.08) 1px, transparent 1px, transparent 20px), repeating-linear-gradient(0deg, rgba(121,40,202,0.1) 0px, rgba(121,40,202,0.1) 1px, transparent 1px, transparent 20px), linear-gradient(135deg, #070d18 0%, #030710 100%)`,
-  },
 };
 
 export const STAMP_STYLE_OPTIONS: Record<StampStyleId, StampStyleOption> = {
@@ -163,15 +156,6 @@ export const STAMP_STYLE_OPTIONS: Record<StampStyleId, StampStyleOption> = {
     badge: 'Ocean Post',
     imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=300&q=80',
     accentColor: '#48b2b7',
-  },
-  'microchip-hologram': {
-    id: 'microchip-hologram',
-    name: 'Quantum Microchip Hologram',
-    denom: 'HACK PROTOCOL · 2026',
-    subtitle: 'Silicon chip with holographic cryptographic seal',
-    badge: 'Campus Tech',
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=300&q=80',
-    accentColor: '#00ffcc',
   },
 };
 

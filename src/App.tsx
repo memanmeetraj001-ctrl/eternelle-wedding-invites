@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { WeddingData, RSVPRecord, ThemeId } from './types/invitation';
-import { INITIAL_WEDDING_DATA, INITIAL_RSVPS, THEME_PRESETS, SAMPLE_HALLOWEEN_PARTY_DATA, SAMPLE_MERMAID_PARTY_DATA, SAMPLE_HACKATHON_DATA } from './constants/themes';
+import { INITIAL_WEDDING_DATA, INITIAL_RSVPS, THEME_PRESETS, SAMPLE_HALLOWEEN_PARTY_DATA, SAMPLE_MERMAID_PARTY_DATA } from './constants/themes';
 import { GUMROAD_CONFIG } from './constants/gumroad';
 import { detectGumroadRedirect } from './utils/gumroadVerify';
 import { BrandLogo } from './components/common/BrandLogo';
@@ -22,8 +22,6 @@ import { updatePageSEO } from './utils/seo';
 // Lazy-loaded secondary pages & modals for fast Core Web Vitals
 const HalloweenLandingPage = lazy(() => import('./components/landing/HalloweenLandingPage').then(m => ({ default: m.HalloweenLandingPage })));
 const KidsInvitationsHubPage = lazy(() => import('./components/landing/KidsInvitationsHubPage').then(m => ({ default: m.KidsInvitationsHubPage })));
-const HackathonLandingPage = lazy(() => import('./components/landing/HackathonLandingPage').then(m => ({ default: m.HackathonLandingPage })));
-const HackathonOnboardingModal = lazy(() => import('./components/onboarding/HackathonOnboardingModal').then(m => ({ default: m.HackathonOnboardingModal })));
 const OnboardingWizardModal = lazy(() => import('./components/onboarding/OnboardingWizardModal').then(m => ({ default: m.OnboardingWizardModal })));
 const MainDashboard = lazy(() => import('./components/dashboard/MainDashboard').then(m => ({ default: m.MainDashboard })));
 const MasterAdminPanel = lazy(() => import('./components/admin/MasterAdminPanel').then(m => ({ default: m.MasterAdminPanel })));
@@ -52,7 +50,7 @@ import {
   apiSubmitRSVP
 } from './utils/api';
 
-export type AppViewMode = 'landing' | 'halloween' | 'kids_party' | 'hackathon' | 'dashboard' | 'guest' | 'admin';
+export type AppViewMode = 'landing' | 'halloween' | 'kids_party' | 'dashboard' | 'guest' | 'admin';
 
 export function App() {
   // Initialize storage seeds
@@ -80,11 +78,6 @@ export function App() {
     // Kids Invitations Hub / Mermaid Pool Party Route: /kids, /kids-invitations, /kids-party, /mermaid, ?view=kids, ?view=kids_party
     if (path === '/kids' || path.startsWith('/kids/') || path === '/kids-invitations' || path.startsWith('/kids-invitations') || path === '/kids-party' || path.startsWith('/kids-party') || path === '/mermaid' || path.startsWith('/mermaid') || search.includes('view=kids') || search.includes('view=kids_party') || search.includes('view=mermaid') || search.includes('event=kids_party') || search.includes('access=kids_party')) {
       return { view: 'kids_party' };
-    }
-
-    // Collegiate Hackathon Route: /hackathon, /university, /universities, ?view=hackathon, ?event=hackathon
-    if (path === '/hackathon' || path.startsWith('/hackathon') || path === '/university' || path.startsWith('/university') || path === '/universities' || path.startsWith('/universities') || search.includes('view=hackathon') || search.includes('event=hackathon')) {
-      return { view: 'hackathon' };
     }
 
     // Guest Invite Slug Detection: /invite/:slug or /w/:slug or ?invite=:slug
@@ -160,7 +153,6 @@ export function App() {
     if (initialRoute.view === 'admin') return 'admin';
     if (initialRoute.view === 'halloween') return 'halloween';
     if (initialRoute.view === 'kids_party') return 'kids_party';
-    if (initialRoute.view === 'hackathon') return 'hackathon';
     if (isEtsyFromURL) return 'landing';
     // If user is already logged in, take them to dashboard only if on landing root
     return user ? 'dashboard' : 'landing';
@@ -168,7 +160,6 @@ export function App() {
 
   const [isMobileFrame, setIsMobileFrame] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
-  const [isHackathonOnboardingOpen, setIsHackathonOnboardingOpen] = useState(false);
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(() => !!isEtsyFromURL);
   const [authInitialTab, setAuthInitialTab] = useState<'signin' | 'signup'>('signup');
@@ -226,7 +217,6 @@ export function App() {
     if (typeof window !== 'undefined') {
       let targetPath = '/';
       if (viewMode === 'halloween') targetPath = '/halloween';
-      else if (viewMode === 'hackathon') targetPath = '/hackathon';
       else if (viewMode === 'kids_party') targetPath = '/kids';
       else if (viewMode === 'admin') targetPath = '/admin';
       else if (viewMode === 'dashboard') targetPath = '/dashboard';
@@ -244,7 +234,6 @@ export function App() {
       const path = window.location.pathname.toLowerCase();
       if (path === '/admin') setViewMode('admin');
       else if (path === '/halloween') setViewMode('halloween');
-      else if (path === '/hackathon' || path === '/university' || path === '/universities') setViewMode('hackathon');
       else if (path === '/kids' || path === '/kids-party' || path === '/kids-invitations' || path === '/mermaid') setViewMode('kids_party');
       else if (path === '/dashboard') setViewMode('dashboard');
       else if (path.startsWith('/invite/') || path.startsWith('/w/')) setViewMode('guest');
@@ -710,9 +699,8 @@ export function App() {
         </div>
       )}
 
-      {/* TOP HEADER (Hidden in dedicated Hackathon Campus Mode) */}
-      {viewMode !== 'hackathon' && (
-        <header className="sticky top-0 z-50 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 transition-colors bg-white/95 border-amber-200/70 text-stone-900 shadow-xs">
+      {/* TOP HEADER */}
+      <header className="sticky top-0 z-50 backdrop-blur-md border-b px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 transition-colors bg-white/95 border-amber-200/70 text-stone-900 shadow-xs">
           
           {/* Brand Logo */}
           <div 
@@ -820,7 +808,6 @@ export function App() {
             )}
           </div>
         </header>
-      )}
 
       {/* BODY VIEW ROUTER */}
       <main className="flex-1 flex flex-col items-center">
@@ -841,7 +828,6 @@ export function App() {
             onSelectTheme={(themeId) => handleUpdateWedding({ ...wedding, themeId })}
             onOpenHalloween={() => setViewMode('halloween')}
             onOpenKidsParty={() => setViewMode('kids_party')}
-            onOpenHackathon={() => setViewMode('hackathon')}
             onOpenLegal={(doc) => setLegalModalDoc(doc)}
             onOpenCookieSettings={handleOpenCookieSettings}
           />
@@ -894,30 +880,6 @@ export function App() {
             />
           )}
 
-          {viewMode === 'hackathon' && (
-            <HackathonLandingPage
-              onStartCreating={(eventType) => {
-                handleUpdateWedding({
-                  ...SAMPLE_HACKATHON_DATA,
-                  id: wedding?.id || SAMPLE_HACKATHON_DATA.id,
-                });
-                if (user) {
-                  setViewMode('dashboard');
-                } else {
-                  setIsHackathonOnboardingOpen(true);
-                }
-              }}
-              onPreviewSample={() => {
-                handleUpdateWedding(SAMPLE_HACKATHON_DATA);
-                setViewMode('guest');
-              }}
-              onNavigateHome={() => setViewMode('landing')}
-              onOpenLegal={(doc) => setLegalModalDoc(doc)}
-              onOpenCookieSettings={handleOpenCookieSettings}
-              onOpenCheckout={handleOpenCheckout}
-            />
-          )}
-
           {viewMode === 'dashboard' && user && (
             <MainDashboard
               wedding={wedding}
@@ -947,16 +909,6 @@ export function App() {
           etsyVoucher={etsyVIPAuth?.voucher || 'ETSY-PRO-VIP'}
         />
 
-        {/* Dedicated Cyber-Terminal Hackathon Onboarding Wizard */}
-        <HackathonOnboardingModal
-          isOpen={isHackathonOnboardingOpen}
-          onClose={() => setIsHackathonOnboardingOpen(false)}
-          onComplete={(hackData, userAcc) => {
-            setIsHackathonOnboardingOpen(false);
-            handleOnboardingComplete(hackData, userAcc);
-          }}
-          onSwitchToSignIn={() => handleOpenAuth('signin')}
-        />
       </Suspense>
 
       {/* RSVP Modal */}
