@@ -397,6 +397,11 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         .animate-bubble-1 { animation: floatBubbles 5.5s ease-in-out infinite; }
         .animate-bubble-2 { animation: floatBubbles 7s ease-in-out infinite 1.8s; }
         .animate-bubble-3 { animation: floatBubbles 6s ease-in-out infinite 3.2s; }
+        @keyframes floatMermaid {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-6px) rotate(1.2deg); }
+        }
+        .animate-float-mermaid { animation: floatMermaid 4.2s ease-in-out infinite; }
       `}</style>
 
       {/* 1. Top Audio & Re-seal Bar */}
@@ -761,7 +766,16 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                     zIndex: isFlapOpen ? 25 : 10,
                   }}
                 >
-                  <div className="flex-1 flex flex-col items-center justify-between py-0.5">
+                  {/* Decorative mini mermaid accent on card corner */}
+                  <div className="absolute -top-1 right-1 w-10 sm:w-14 h-auto opacity-75 pointer-events-none z-0">
+                    <img 
+                      src="/assets/mermaid/little_mermaid_transparent.png" 
+                      alt="" 
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
+
+                  <div className="flex-1 flex flex-col items-center justify-between py-0.5 relative z-10">
                     <div>
                       <span className="text-[7px] sm:text-[8px] md:text-[9px] font-mono tracking-[0.22em] text-[#0d5c63] uppercase font-bold block mb-1">
                         {wedding.subtitleIntro || 'DIVE INTO FIVE! SPLISH SPLASH BIRTHDAY BASH'}
@@ -866,6 +880,20 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                 alt="Pearl Seashell Wax Seal"
                 className="w-20 sm:w-24 md:w-26 h-20 sm:h-24 md:h-26 drop-shadow-[0_4px_14px_rgba(7,36,38,0.35)] hover:scale-105 transition-transform cursor-pointer active:scale-95"
                 onClick={handleUnbox}
+              />
+            </div>
+
+            {/* Enchanting Watercolor Little Mermaid perched on envelope corner */}
+            <div 
+              className="absolute -top-10 -right-5 sm:-top-14 sm:-right-7 md:-top-16 md:-right-8 w-24 sm:w-32 md:w-36 lg:w-40 z-45 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(7,36,38,0.38)] animate-float-mermaid transition-all duration-700 select-none"
+              style={{
+                transform: isFlapOpen ? 'translateY(-12px) scale(1.02)' : 'translateY(0) scale(1)',
+              }}
+            >
+              <img 
+                src="/assets/mermaid/little_mermaid_transparent.png" 
+                alt="Magical Little Mermaid" 
+                className="w-full h-auto object-contain pointer-events-none"
               />
             </div>
           </div>
