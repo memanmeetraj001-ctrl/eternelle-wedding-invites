@@ -5,6 +5,7 @@ import {
   Send, Mail, Globe, ExternalLink
 } from 'lucide-react';
 import { WeddingData, ThemeConfig } from '../../types/invitation';
+import { getEventDisplayNames, getOccasionLabels } from '../../utils/eventCustomization';
 
 interface SaveTheDateStudioProps {
   wedding: WeddingData;
@@ -19,41 +20,15 @@ export const SaveTheDateStudio: React.FC<SaveTheDateStudioProps> = ({ wedding, t
     ? `https://eternelleweddinginvites.online/invite/${wedding.slug || 'alex-sarah'}`
     : `${window.location.origin}/invite/${wedding.slug || 'alex-sarah'}`;
 
-  const coupleOrHonoree = wedding.coupleName2 
-    ? `${wedding.coupleName1} & ${wedding.coupleName2}` 
-    : wedding.coupleName1;
+  const eventDisplay = getEventDisplayNames(wedding);
+  const labels = getOccasionLabels(wedding.eventType);
 
-  const eventLabel = wedding.eventType === 'halloween'
-    ? 'Halloween party & gothic masquerade'
-    : wedding.eventType === 'birthday' 
-    ? 'birthday celebration' 
-    : wedding.eventType === 'engagement' 
-    ? 'engagement party' 
-    : wedding.eventType === 'anniversary' 
-    ? 'anniversary celebration' 
-    : wedding.eventType === 'baby_shower' 
-    ? 'baby shower' 
-    : wedding.eventType === 'gala' 
-    ? 'gala dinner' 
-    : 'wedding';
+  const coupleOrHonoree = eventDisplay.primaryTitle;
+  const shareTitle = `${coupleOrHonoree} — ${wedding.headline || eventDisplay.headline}`;
+  const whatsappMessage = eventDisplay.whatsappShareText(destinationUrl);
+  const socialCaption = eventDisplay.socialCaption;
 
-  const shareTitle = `${coupleOrHonoree} — ${wedding.headline || 'Celebration Invitation'}`;
-  
-  const whatsappMessage = wedding.eventType === 'halloween'
-    ? `🎃 Enter if you dare! You're invited to ${wedding.coupleName1 || 'our Halloween Party'} on ${wedding.weddingDate} at ${wedding.venueName}. Open your 3D gothic invitation, view the witching hour schedule & RSVP: ${destinationUrl}`
-    : wedding.eventType === 'birthday'
-    ? `You're invited! 🎂 Join us to celebrate ${wedding.coupleName1}'s birthday on ${wedding.weddingDate} at ${wedding.venueName}. Open the digital invitation & RSVP here: ${destinationUrl}`
-    : wedding.eventType === 'gala'
-    ? `You are cordially invited to ${wedding.coupleName1} on ${wedding.weddingDate} at ${wedding.venueName}. View the full program & RSVP: ${destinationUrl}`
-    : `We are getting married! 💕 ${wedding.coupleName1} & ${wedding.coupleName2} invite you to celebrate on ${wedding.weddingDate} at ${wedding.venueName}. Open our 3D digital invitation & RSVP here: ${destinationUrl}`;
-
-  const socialCaption = wedding.eventType === 'halloween'
-    ? `Enter if you dare... 🦇✨ You're cordially invited to ${wedding.coupleName1 || 'The Midnight Masquerade'} on ${wedding.weddingDate}. Tap the link in bio to open your 3D digital envelope, costume contest details & potion bar menu! 🎃🕯️ #halloweenparty #gothicaesthetic #halloweeninvitation #costumeparty #halloweenaesthetic #midnightmasquerade #halloweenpins`
-    : wedding.eventType === 'birthday'
-    ? `It's a celebration! 🎂 Join us for ${wedding.coupleName1}'s milestone birthday on ${wedding.weddingDate}. Tap the link in bio for full details, itinerary & RSVP! ✨ #birthdaycelebration #milestone #${(wedding.coupleName1 || 'birthday').toLowerCase().replace(/\s+/g, '')}`
-    : `We said YES! 💍 Join us for the wedding of ${coupleOrHonoree} on ${wedding.weddingDate}. Tap the link in our bio to view the animated envelope, schedule & RSVP! ✨ #weddinginvitation #savethedate #${(wedding.coupleName1 || 'wedding').toLowerCase().replace(/\s+/g, '')}and${(wedding.coupleName2 || 'celebration').toLowerCase().replace(/\s+/g, '')}`;
-
-  const emailSubject = `Invitation: ${coupleOrHonoree}'s ${eventLabel.toUpperCase()} (${wedding.weddingDate})`;
+  const emailSubject = `Invitation: ${coupleOrHonoree}'s ${labels.pageTitle} (${wedding.weddingDate})`;
   const emailBody = `Dear Friends and Family,\n\nWe would be honored by your presence to celebrate with us!\n\nEvent: ${shareTitle}\nDate & Time: ${wedding.weddingDate} at ${wedding.weddingTime}\nVenue: ${wedding.venueName} (${wedding.cityState})\n\nPlease open your interactive 3D invitation card and RSVP using the link below:\n${destinationUrl}\n\nWarmly,\n${coupleOrHonoree}`;
 
   const copyText = (text: string, sectionId: string) => {

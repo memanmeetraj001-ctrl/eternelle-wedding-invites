@@ -268,26 +268,47 @@ export function createNewWeddingForUser(user: UserAccount): WeddingData {
     c2 = parts[1].trim() || 'Partner 2';
   } else if (cleanName && cleanName !== 'User') {
     c1 = cleanName;
-    c2 = 'Partner';
+    c2 = '';
   } else {
-    const emailPrefix = user.email ? user.email.split('@')[0] : 'couple';
+    const emailPrefix = user.email ? user.email.split('@')[0] : 'celebration';
     c1 = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
-    c2 = 'Partner';
+    c2 = '';
   }
 
-  const rawSlug = `${c1}-${c2}`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  const slug = `${rawSlug || 'wedding'}-${user.id.slice(-4)}`;
-  const initials = `${c1.charAt(0) || 'A'}&${c2.charAt(0) || 'B'}`.toUpperCase();
+  const rawSlug = c2 ? `${c1}-${c2}` : c1;
+  const cleanSlugPart = rawSlug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const slug = `${cleanSlugPart || 'celebration'}-${user.id.slice(-4)}`;
+  const initials = c2 
+    ? `${c1.charAt(0) || 'A'}&${c2.charAt(0) || 'B'}`.toUpperCase()
+    : (c1.startsWith('Baby ') ? c1.replace('Baby ', '').charAt(0) || 'B' : c1.charAt(0) || 'É').toUpperCase();
+
+  const isBaby = c1.toLowerCase().includes('baby');
+  const isGala = c1.toLowerCase().includes('gala') || c1.toLowerCase().includes('foundation');
+  const eventType = isBaby ? 'baby_shower' : isGala ? 'gala' : c2 ? 'wedding' : 'birthday';
 
   const newWedding: WeddingData = {
     ...INITIAL_WEDDING_DATA,
     id: 'wed_' + user.id,
     userId: user.id,
+    eventType,
     slug,
     coupleName1: c1,
     coupleName2: c2,
     coupleInitials: initials,
-    headline: 'PLEASE JOIN US FOR THE WEDDING OF',
+    headline: isBaby 
+      ? 'JOIN US IN CELEBRATING THE ARRIVAL OF'
+      : isGala
+      ? 'REQUESTS THE PLEASURE OF YOUR COMPANY AT'
+      : c2
+      ? 'PLEASE JOIN US FOR THE WEDDING OF'
+      : 'YOU ARE CORDIALLY INVITED TO CELEBRATE',
+    subtitleIntro: isBaby
+      ? 'A SWEET LITTLE BLESSING'
+      : isGala
+      ? 'ANNUAL BENEFIT SOIREE'
+      : c2
+      ? 'TOGETHER WITH THEIR FAMILIES'
+      : 'A SPECTACULAR MILESTONE',
     weddingDate: '2027-06-18',
     weddingTime: '4:00 PM',
     venueName: 'The Glasshouse Estate',
@@ -295,13 +316,15 @@ export function createNewWeddingForUser(user: UserAccount): WeddingData {
     cityState: 'Santa Barbara, California',
     mapsUrl: 'https://maps.google.com',
     rsvpDeadline: 'May 01, 2027',
-    themeId: 'olive-burgundy',
+    themeId: isBaby ? 'dusty-rose' : isGala ? 'champagne-noir' : 'olive-burgundy',
     photos: INITIAL_WEDDING_DATA.photos,
     menu: INITIAL_WEDDING_DATA.menu,
     faqs: INITIAL_WEDDING_DATA.faqs,
-    storyTitle: 'Our Love Story',
-    storyText: INITIAL_WEDDING_DATA.storyText,
-    giftRegistryUrl: '',
+    storyTitle: isBaby ? 'Our Growing Family' : isGala ? 'Our Mission & Vision' : c2 ? 'Our Love Story' : 'A Chapter of Memories',
+    storyText: isBaby 
+      ? 'We are overjoyed to welcome our sweet little blessing into the world. Thank you for surrounding our growing family with your love and warmth.'
+      : INITIAL_WEDDING_DATA.storyText,
+    giftRegistryUrl: isBaby ? 'https://www.babylist.com' : '',
     transportInfo: 'Valet parking will be provided at the entrance.',
   };
 

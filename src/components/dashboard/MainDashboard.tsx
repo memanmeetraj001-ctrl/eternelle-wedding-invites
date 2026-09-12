@@ -12,6 +12,7 @@ import { InvitationEditor } from '../editor/InvitationEditor';
 import { RSVPDashboard } from './RSVPDashboard';
 import { SaveTheDateStudio } from '../marketing/SaveTheDateStudio';
 import { GumroadOverlayButton } from '../common/GumroadOverlayButton';
+import { getEventDisplayNames, getOccasionLabels } from '../../utils/eventCustomization';
 
 interface MainDashboardProps {
   wedding: WeddingData;
@@ -61,6 +62,9 @@ export function MainDashboard({
     ? `https://eternelleweddinginvites.online/invite/${wedding.slug || 'alex-sarah'}`
     : `${window.location.origin}/invite/${wedding.slug || 'alex-sarah'}`;
 
+  const displayNames = getEventDisplayNames(wedding);
+  const labels = getOccasionLabels(wedding.eventType);
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(inviteUrl);
     setCopiedLink(true);
@@ -68,14 +72,14 @@ export function MainDashboard({
   };
 
   const handleCopyWhatsAppInvite = () => {
-    const text = `✨ Together with their families, ${wedding.coupleName1} & ${wedding.coupleName2} invite you to celebrate their wedding!\n\n📅 Date: ${wedding.weddingDate}\n📍 Venue: ${wedding.venueName}, ${wedding.cityState}\n\n💌 Open your 3D digital envelope & RSVP here:\n${inviteUrl}`;
+    const text = displayNames.whatsappShareText(inviteUrl);
     navigator.clipboard.writeText(text);
     setCopiedText(true);
     setTimeout(() => setCopiedText(false), 2000);
   };
 
   const handleShareWhatsApp = () => {
-    const text = encodeURIComponent(`✨ Together with their families, ${wedding.coupleName1} & ${wedding.coupleName2} invite you to celebrate their wedding!\n\n📅 Date: ${wedding.weddingDate}\n📍 Venue: ${wedding.venueName}\n\n💌 Open your private 3D invitation & RSVP:\n${inviteUrl}`);
+    const text = encodeURIComponent(displayNames.whatsappShareText(inviteUrl));
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
@@ -96,7 +100,7 @@ export function MainDashboard({
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="font-serif text-lg font-bold text-stone-900">
-                {wedding.coupleName1} & {wedding.coupleName2}
+                {displayNames.primaryTitle}
               </h1>
               <span className={'px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ' + (
                 plan === 'lifetime' ? 'bg-rose-100 text-rose-900 border border-rose-300' :
@@ -350,7 +354,7 @@ export function MainDashboard({
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div>
                   <h3 className="font-serif text-xl font-bold text-stone-900">
-                    Share Your Wedding Invitation & Drive Traffic
+                    Share Your {labels.pageTitle} Invitation & Drive Traffic
                   </h3>
                   <p className="text-xs text-stone-600 mt-0.5">
                     Generate viral Pinterest pins, Instagram stories, or send direct WhatsApp messages.

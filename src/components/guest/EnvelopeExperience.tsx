@@ -8,6 +8,7 @@ import {
   FOIL_FINISH_OPTIONS, 
   DEFAULT_STATIONERY 
 } from '../../constants/stationery';
+import { getEventDisplayNames } from '../../utils/eventCustomization';
 
 interface EnvelopeExperienceProps {
   wedding: WeddingData;
@@ -239,6 +240,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   const currentLiner = ENVELOPE_LINER_OPTIONS[stationery.linerId] || ENVELOPE_LINER_OPTIONS['botanical-gold'];
   const currentStamp = STAMP_STYLE_OPTIONS[stationery.stampId] || STAMP_STYLE_OPTIONS['royal-crest'];
   const currentFoil = FOIL_FINISH_OPTIONS[stationery.foilFinish] || FOIL_FINISH_OPTIONS['gold'];
+  const eventDisplay = getEventDisplayNames(wedding);
   
   const isHalloween = wedding.eventType === 'halloween' || theme.id === 'midnight-haunt';
   const isKidsParty = wedding.eventType === 'kids_party' || theme.id === 'mermaid-lagoon';
@@ -925,13 +927,13 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           {/* Header Intro Text */}
           <div className="text-center mb-3 sm:mb-5 max-w-md md:max-w-xl h-16 sm:h-20 flex flex-col justify-center transition-opacity duration-500 px-2">
             <span className="text-[8px] sm:text-[10px] md:text-xs font-mono font-bold tracking-[0.25em] sm:tracking-[0.35em] uppercase block drop-shadow-md text-amber-300/90">
-              {wedding.subtitleIntro || (isKidsParty ? 'DIVE INTO A MAGICAL CELEBRATION FOR' : 'TOGETHER WITH THEIR FAMILIES')}
+              {wedding.subtitleIntro || eventDisplay.subtitleIntro}
             </span>
             <h1 className="font-script text-3xl sm:text-5xl md:text-6xl font-bold mt-0.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight tracking-wide text-amber-100">
-              {wedding.coupleName1} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
+              {eventDisplay.primaryTitle}
             </h1>
             <p className="text-[10px] sm:text-xs md:text-sm font-serif italic text-stone-300/90 tracking-wide mt-0.5">
-              {isKidsParty ? 'A Magical Under-The-Sea Mermaid Celebration' : 'Request the honour of your presence at their celebration'}
+              {eventDisplay.quote}
             </p>
           </div>
 
@@ -995,7 +997,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                       </div>
 
                       <span className="text-[7px] sm:text-[9px] tracking-[0.2em] sm:tracking-[0.3em] font-mono uppercase font-bold block text-amber-900">
-                        {wedding.headline || 'PLEASE JOIN US FOR THE WEDDING OF'}
+                        {wedding.headline || eventDisplay.headline}
                       </span>
 
                       <div className="my-1 space-y-0.5">
@@ -1003,18 +1005,14 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                           className="font-script text-2xl sm:text-4xl font-bold leading-tight drop-shadow-xs"
                           style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : { color: '#1c1917' }}
                         >
-                          {wedding.coupleName1 || 'Our Celebration'}
+                          {eventDisplay.honoreeName}
                         </h2>
-                        {wedding.coupleName2 && (
-                          <>
-                            <span className="font-serif italic text-xs sm:text-sm font-bold block my-0.5 text-amber-900">&</span>
-                            <h2 
-                              className="font-script text-2xl sm:text-4xl font-bold leading-tight drop-shadow-xs"
-                              style={stationery.foilFinish !== 'none' ? currentFoil.shimmerStyle : { color: '#1c1917' }}
-                            >
-                              {wedding.coupleName2}
-                            </h2>
-                          </>
+                        {eventDisplay.secondaryContext && (
+                          <p className="font-serif italic text-xs sm:text-sm font-bold block my-0.5 text-amber-900">
+                            {eventDisplay.hasSingleSubject
+                              ? (wedding.eventType === 'baby_shower' ? `Parents: ${eventDisplay.secondaryContext}` : eventDisplay.secondaryContext)
+                              : `& ${eventDisplay.secondaryContext}`}
+                          </p>
                         )}
                       </div>
                     </div>

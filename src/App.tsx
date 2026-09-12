@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Eye, ExternalLink, ShieldAlert
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { WeddingData, RSVPRecord, ThemeId } from './types/invitation';
+import { WeddingData, RSVPRecord, ThemeId, EventType } from './types/invitation';
 import { INITIAL_WEDDING_DATA, INITIAL_RSVPS, THEME_PRESETS, SAMPLE_HALLOWEEN_PARTY_DATA, SAMPLE_MERMAID_PARTY_DATA } from './constants/themes';
 import { GUMROAD_CONFIG } from './constants/gumroad';
 import { detectGumroadRedirect } from './utils/gumroadVerify';
@@ -160,6 +160,7 @@ export function App() {
 
   const [isMobileFrame, setIsMobileFrame] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [onboardingEventType, setOnboardingEventType] = useState<EventType>('wedding');
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(() => !!isEtsyFromURL);
   const [authInitialTab, setAuthInitialTab] = useState<'signin' | 'signup'>('signup');
@@ -815,7 +816,10 @@ export function App() {
           <LandingPage
             wedding={wedding}
             theme={activeTheme}
-            onOpenStudio={() => {
+            onOpenStudio={(selectedType?: EventType) => {
+              if (selectedType) {
+                setOnboardingEventType(selectedType);
+              }
               if (user) {
                 setViewMode('dashboard');
               } else {
@@ -898,9 +902,10 @@ export function App() {
       </main>
 
       <Suspense fallback={null}>
-        {/* Interactive Free Onboarding Wizard Modal (Weddings) */}
+        {/* Interactive Free Onboarding Wizard Modal */}
         <OnboardingWizardModal
           isOpen={isOnboardingOpen}
+          initialEventType={onboardingEventType}
           onClose={() => setIsOnboardingOpen(false)}
           onComplete={handleOnboardingComplete}
           onSwitchToSignIn={() => handleOpenAuth('signin')}

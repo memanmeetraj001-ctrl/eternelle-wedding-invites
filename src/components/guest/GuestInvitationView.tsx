@@ -14,6 +14,7 @@ import {
   downloadIcsFile 
 } from '../../utils/calendar';
 import { FOIL_FINISH_OPTIONS, DEFAULT_STATIONERY } from '../../constants/stationery';
+import { getEventDisplayNames, getOccasionLabels } from '../../utils/eventCustomization';
 
 interface GuestInvitationViewProps {
   wedding: WeddingData;
@@ -28,6 +29,8 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 }) => {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const eventDisplay = getEventDisplayNames(wedding);
+  const occasionLabels = getOccasionLabels(wedding.eventType);
   const enabledBlocks = wedding.blocks && wedding.blocks.length > 0
     ? wedding.blocks.filter(b => b.enabled)
     : [
@@ -202,8 +205,8 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
               <button
                 onClick={() => {
                   const url = window.location.href;
-                  const title = `${wedding.coupleName1} ${wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''} — Invitation`;
-                  const text = `Join us to celebrate with ${wedding.coupleName1} ${wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''} on ${wedding.weddingDate}! Open 3D invitation: ${url}`;
+                  const title = `${eventDisplay.primaryTitle} — Invitation`;
+                  const text = `${eventDisplay.socialShareCaption}\nOpen invitation: ${url}`;
                   if (navigator.share) {
                     navigator.share({ title, text, url }).catch(() => {});
                   } else {
@@ -244,9 +247,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                   {wedding.weddingDate} · {wedding.cityState}
                 </span>
                 <p className="font-serif italic text-amber-100 text-[11px] sm:text-sm tracking-wide mt-0.5 drop-shadow line-clamp-2">
-                  {wedding.eventType === 'halloween' || theme.id === 'midnight-haunt'
-                    ? '"When the blood moon rises over Salem, step beyond the wrought-iron gates into candlelit darkness."'
-                    : '"Two lives, two hearts, joined together in friendship, united forever in love."'}
+                  "{eventDisplay.quote}"
                 </p>
               </div>
             </div>
@@ -311,7 +312,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                 <span className={`text-[8px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em] uppercase font-mono font-bold block ${
                   wedding.eventType === 'halloween' || theme.id === 'midnight-haunt' ? 'text-orange-400 drop-shadow-[0_1px_4px_rgba(234,88,12,0.8)]' : 'text-amber-900'
                 }`}>
-                  {wedding.headline || (wedding.eventType === 'halloween' ? 'BY DECREE OF THE WITCHING HOUR GATHERING' : 'PLEASE JOIN US FOR THE WEDDING OF')}
+                  {wedding.headline || eventDisplay.headline}
                 </span>
 
                 {/* Romantic / Gothic Calligraphy Script */}
@@ -326,25 +327,29 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                       ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle 
                       : { color: '#1c1917' }}
                   >
-                    {wedding.coupleName1 || wedding.honoreeName || 'Celebration'}
+                    {eventDisplay.honoreeName}
                   </h2>
-                  {wedding.coupleName2 && (
+                  {eventDisplay.secondaryContext && (
                     <>
-                      <span className={`font-serif italic text-sm sm:text-lg font-bold block my-0.5 ${
-                        wedding.eventType === 'halloween' ? 'text-purple-300' : 'text-amber-900'
-                      }`}>&</span>
-                      <h2 
-                        className={`font-script text-3xl sm:text-5xl font-bold leading-tight drop-shadow-xs ${
-                          wedding.eventType === 'halloween' ? 'text-purple-200' : ''
-                        }`}
-                        style={(wedding.eventType === 'halloween' || theme.id === 'midnight-haunt')
+                      {!eventDisplay.hasSingleSubject && (
+                        <span className={`font-serif italic text-sm sm:text-lg font-bold block my-0.5 ${
+                          wedding.eventType === 'halloween' ? 'text-purple-300' : 'text-amber-900'
+                        }`}>&</span>
+                      )}
+                      <p 
+                        className={eventDisplay.hasSingleSubject 
+                          ? "font-serif italic text-xs sm:text-sm text-stone-700 mt-1 font-semibold"
+                          : `font-script text-3xl sm:text-5xl font-bold leading-tight drop-shadow-xs ${wedding.eventType === 'halloween' ? 'text-purple-200' : ''}`}
+                        style={!eventDisplay.hasSingleSubject ? ((wedding.eventType === 'halloween' || theme.id === 'midnight-haunt')
                           ? { color: '#f3e8ff', textShadow: '0 0 16px rgba(192,132,252,0.9), 0 0 30px rgba(126,34,206,0.7)' }
                           : (wedding.stationery || theme.stationery)?.foilFinish !== 'none' 
                           ? (FOIL_FINISH_OPTIONS[(wedding.stationery || theme.stationery)?.foilFinish || 'gold'] || FOIL_FINISH_OPTIONS['gold']).shimmerStyle 
-                          : { color: '#1c1917' }}
+                          : { color: '#1c1917' }) : undefined}
                       >
-                        {wedding.coupleName2}
-                      </h2>
+                        {eventDisplay.hasSingleSubject
+                          ? (wedding.eventType === 'baby_shower' ? `Parents: ${eventDisplay.secondaryContext}` : eventDisplay.secondaryContext)
+                          : eventDisplay.secondaryContext}
+                      </p>
                     </>
                   )}
                 </div>
@@ -843,7 +848,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
 
                   {wedding.giftRegistryUrl && (
                     <div className="mt-3 pt-3 border-t border-stone-800 text-center space-y-1.5">
-                      <span className="text-[11px] sm:text-xs text-stone-400 block">Wishing Well & Gift Registry</span>
+                      <span className="text-[11px] sm:text-xs text-stone-400 block">{occasionLabels.registryTitle}</span>
                       <a
                         href={wedding.giftRegistryUrl}
                         target="_blank"
@@ -851,7 +856,7 @@ export const GuestInvitationView: React.FC<GuestInvitationViewProps> = ({
                         className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-stone-800 hover:bg-stone-700 text-amber-200 text-xs font-serif transition-colors shadow-md"
                       >
                         <Sparkles size={12} />
-                        <span>Visit Couple's Registry</span>
+                        <span>Visit {occasionLabels.registryTitle}</span>
                         <ExternalLink size={11} />
                       </a>
                     </div>

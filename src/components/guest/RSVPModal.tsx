@@ -12,6 +12,7 @@ import {
   generateYahooCalendarUrl, 
   downloadIcsFile 
 } from '../../utils/calendar';
+import { getEventDisplayNames } from '../../utils/eventCustomization';
 
 interface RSVPModalProps {
   wedding: WeddingData;
@@ -114,8 +115,8 @@ export const RSVPModal: React.FC<RSVPModalProps> = ({
     setIsSubmitted(true);
   };
 
-  const eventHeadline = wedding.eventTitle || 
-    (wedding.coupleName1 && wedding.coupleName2 ? `${wedding.coupleName1} & ${wedding.coupleName2}` : wedding.honoreeName || 'Our Special Celebration');
+  const eventDisplay = getEventDisplayNames(wedding);
+  const eventHeadline = wedding.eventTitle || eventDisplay.primaryTitle;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">

@@ -21,7 +21,7 @@ import { LegalDocType } from '../legal/LegalModal';
 interface LandingPageProps {
   wedding: WeddingData;
   theme: ThemeConfig;
-  onOpenStudio: () => void;
+  onOpenStudio: (eventType?: EventType) => void;
   onOpenGuestDemo: () => void;
   onOpenAuth: (tab?: 'signin' | 'signup') => void;
   onOpenCheckout: (plan: 'pro' | 'lifetime') => void;
@@ -187,7 +187,7 @@ export function LandingPage({
 
         <div className="flex items-center gap-2">
           <button
-            onClick={onOpenStudio}
+            onClick={() => onOpenStudio()}
             className="hidden sm:inline-flex px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white text-[11px] font-bold shadow-md shadow-rose-500/20 transition-all whitespace-nowrap cursor-pointer"
           >
             Create Free Event
@@ -406,7 +406,7 @@ export function LandingPage({
 
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-6 z-10">
           <button
-            onClick={onOpenStudio}
+            onClick={() => onOpenStudio()}
             className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white font-bold text-base shadow-xl shadow-rose-500/25 transition-all flex items-center justify-center gap-2.5 group cursor-pointer"
           >
             <Sparkles size={18} className="text-rose-100 group-hover:rotate-12 transition-transform" />
@@ -562,7 +562,7 @@ export function LandingPage({
             )}
 
             <button
-              onClick={onOpenStudio}
+              onClick={() => onOpenStudio(activeEventPreset.type)}
               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white font-bold text-sm shadow-lg shadow-rose-500/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               <Palette size={15} />
@@ -823,7 +823,7 @@ export function LandingPage({
 
               <div className="mt-5 pt-3 border-t border-stone-800 text-[11px] text-stone-400 font-medium flex items-center justify-between">
                 <span>Free Tier: Up to 20 RSVPs</span>
-                <button onClick={onOpenStudio} className="text-amber-400 font-bold hover:underline cursor-pointer">
+                <button onClick={() => onOpenStudio()} className="text-amber-400 font-bold hover:underline cursor-pointer">
                   Customize Suite →
                 </button>
               </div>
@@ -942,7 +942,7 @@ export function LandingPage({
             </div>
 
             <button
-              onClick={onOpenStudio}
+              onClick={() => onOpenStudio()}
               className="px-6 py-3 rounded-xl bg-stone-950 hover:bg-stone-900 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer"
             >
               <UserCheck size={15} className="text-emerald-400" />
@@ -1161,7 +1161,7 @@ export function LandingPage({
             </div>
 
             <button
-              onClick={onOpenStudio}
+              onClick={() => onOpenStudio()}
               className="w-full py-3 rounded-xl bg-stone-100 hover:bg-stone-200 border border-stone-300 text-stone-900 text-xs font-bold transition-all cursor-pointer shadow-sm"
             >
               Start Free (No Card Needed)
@@ -1396,7 +1396,7 @@ export function LandingPage({
 
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <button
-              onClick={onOpenStudio}
+              onClick={() => onOpenStudio()}
               className="px-8 py-4 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 text-white font-bold text-sm shadow-xl shadow-rose-500/25 flex items-center gap-2 transition-all cursor-pointer"
             >
               <Sparkles size={16} />
@@ -1583,7 +1583,7 @@ export function LandingPage({
                   </button>
                 </li>
                 <li>
-                  <button onClick={onOpenStudio} className="text-rose-800 hover:text-rose-950 font-bold transition-colors">
+                  <button onClick={() => onOpenStudio()} className="text-rose-800 hover:text-rose-950 font-bold transition-colors">
                     Create Free Suite →
                   </button>
                 </li>

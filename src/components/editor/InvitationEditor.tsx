@@ -15,6 +15,7 @@ import {
 } from '../../types/invitation';
 import { THEME_PRESETS, CURATED_MUSIC_OPTIONS, EVENT_CATEGORY_PRESETS, DEFAULT_EVENT_BLOCKS, DEFAULT_RSVP_SURVEY } from '../../constants/themes';
 import { ENVELOPE_LINER_OPTIONS, STAMP_STYLE_OPTIONS, FOIL_FINISH_OPTIONS, DEFAULT_STATIONERY } from '../../constants/stationery';
+import { getOccasionLabels, isSingleHonoreeEvent, getEventDisplayNames } from '../../utils/eventCustomization';
 
 interface InvitationEditorProps {
   wedding: WeddingData;
@@ -51,6 +52,10 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
   const currentBlocks: EventBlockConfig[] = wedding.blocks && wedding.blocks.length > 0
     ? wedding.blocks
     : (DEFAULT_EVENT_BLOCKS[wedding.eventType || 'wedding'] || DEFAULT_EVENT_BLOCKS.wedding);
+
+  const occasionLabels = getOccasionLabels(wedding.eventType);
+  const singleHonoree = isSingleHonoreeEvent(wedding.eventType);
+  const eventDisplay = getEventDisplayNames(wedding);
 
   // Audio Preview State
   const [previewingTrackId, setPreviewingTrackId] = useState<string | null>(null);
@@ -463,12 +468,10 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
           { id: 'stationery', label: '2. Stationery & Foil Suite', icon: Mail },
           { 
             id: 'couple', 
-            label: wedding.eventType === 'birthday' 
+            label: wedding.eventType === 'baby_shower'
+              ? '3. Baby & Date'
+              : singleHonoree 
               ? '3. Honoree & Date' 
-              : wedding.eventType === 'gala' 
-              ? '3. Gala & Host' 
-              : wedding.eventType === 'baby_shower' 
-              ? '3. Parents & Date' 
               : '3. Couple & Date', 
             icon: Heart 
           },
@@ -724,7 +727,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                           className="font-script text-lg leading-none block"
                           style={foil.id !== 'none' ? foil.shimmerStyle : { color: '#ffffff' }}
                         >
-                          {wedding.coupleName1 || 'Liam & Scarlett'}
+                          {eventDisplay.primaryTitle || 'Liam & Scarlett'}
                         </span>
                       </div>
                     </div>
@@ -736,20 +739,12 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
           </div>
         )}
 
-        {/* SECTION 2: COUPLE / HONOREE & EVENT INFORMATION */}
+        {/* SECTION 2: HONOREE / HOST & EVENT INFORMATION */}
         {activeSection === 'couple' && (
           <div className="space-y-6 animate-fadeIn">
             <div>
               <h3 className="font-serif text-2xl text-stone-900 font-normal">
-                {wedding.eventType === 'birthday' 
-                  ? 'Honoree, Milestone & Venue Details' 
-                  : wedding.eventType === 'gala' 
-                  ? 'Gala Title, Host & Venue Details' 
-                  : wedding.eventType === 'baby_shower' 
-                  ? 'Expecting Parents & Celebration Details'
-                  : wedding.eventType === 'anniversary'
-                  ? 'Anniversary Couple & Venue Details'
-                  : 'Couple Names & Venue Details'}
+                {occasionLabels.pageTitle} &amp; Venue Details
               </h3>
               <p className="text-xs text-stone-500 mt-0.5">
                 These details are displayed on the front of your 3D digital envelope and invitation cards.
@@ -759,39 +754,27 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {wedding.eventType === 'birthday' 
-                    ? 'Honoree / Birthday Star Name' 
-                    : wedding.eventType === 'gala' || wedding.eventType === 'custom'
-                    ? 'Primary Host / Organization Name' 
-                    : wedding.eventType === 'baby_shower' 
-                    ? 'Expecting Parent / Mother Name' 
-                    : 'Partner 1 First Name'}
+                  {occasionLabels.subjectLabel} *
                 </label>
                 <input
                   type="text"
                   value={wedding.coupleName1 || ''}
                   onChange={(e) => handleFieldChange('coupleName1', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
-                  placeholder={wedding.eventType === 'birthday' ? 'e.g. Sophia Laurent' : wedding.eventType === 'gala' ? 'e.g. The Elysée Foundation' : 'e.g. Liam'}
+                  placeholder={occasionLabels.subjectPlaceholder}
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {wedding.eventType === 'birthday' 
-                    ? 'Milestone Tagline (e.g. Turning 30!)' 
-                    : wedding.eventType === 'gala' || wedding.eventType === 'custom'
-                    ? 'Event Sub-title / Keynote' 
-                    : wedding.eventType === 'baby_shower' 
-                    ? 'Partner / Baby Name' 
-                    : 'Partner 2 First Name'}
+                  {occasionLabels.secondaryLabel} {singleHonoree ? <span className="text-stone-400 font-normal">(Optional)</span> : '*'}
                 </label>
                 <input
                   type="text"
                   value={wedding.coupleName2 || ''}
                   onChange={(e) => handleFieldChange('coupleName2', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
-                  placeholder={wedding.eventType === 'birthday' ? 'e.g. Celebrating 30 Years' : wedding.eventType === 'gala' ? 'e.g. Annual Charity Banquet' : 'e.g. Scarlett'}
+                  placeholder={occasionLabels.secondaryPlaceholder}
                 />
               </div>
 
@@ -802,7 +785,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                   value={wedding.coupleInitials || ''}
                   onChange={(e) => handleFieldChange('coupleInitials', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900 font-serif"
-                  placeholder={wedding.eventType === 'birthday' ? 'e.g. S' : 'e.g. L&S'}
+                  placeholder={singleHonoree ? 'e.g. O' : 'e.g. L&S'}
                 />
               </div>
 
@@ -813,12 +796,12 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
                   value={wedding.headline || ''}
                   onChange={(e) => handleFieldChange('headline', e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl border border-stone-300 bg-stone-50 focus:bg-white focus:border-amber-600 focus:outline-none text-sm text-stone-900"
-                  placeholder="PLEASE JOIN US FOR THE WEDDING OF"
+                  placeholder={occasionLabels.defaultHeadline}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">Wedding Date</label>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Event Date</label>
                 <input
                   type="date"
                   value={wedding.weddingDate || ''}
@@ -828,7 +811,7 @@ export const InvitationEditor: React.FC<InvitationEditorProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">Ceremony Start Time</label>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Event Start Time</label>
                 <input
                   type="text"
                   value={wedding.weddingTime || ''}

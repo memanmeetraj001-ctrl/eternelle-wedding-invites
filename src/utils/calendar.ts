@@ -1,4 +1,5 @@
 import { WeddingData } from '../types/invitation';
+import { getEventDisplayNames } from './eventCustomization';
 
 /**
  * Universal Calendar helper to format and generate links & ICS files
@@ -50,14 +51,8 @@ function parseEventDates(wedding: WeddingData): { startUtc: string; endUtc: stri
 }
 
 function getEventTitle(wedding: WeddingData): string {
-  if (wedding.eventTitle) return wedding.eventTitle;
-  if (wedding.coupleName1 && wedding.coupleName2) {
-    return `Wedding of ${wedding.coupleName1} & ${wedding.coupleName2}`;
-  }
-  if (wedding.honoreeName) {
-    return `${wedding.honoreeName}'s Celebration`;
-  }
-  return 'Éternelle Celebration';
+  const display = getEventDisplayNames(wedding);
+  return display.calendarTitle;
 }
 
 function getEventLocation(wedding: WeddingData): string {

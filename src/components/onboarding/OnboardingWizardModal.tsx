@@ -5,11 +5,12 @@ import {
   Eye, Lock, Mail, User, CheckCircle2, Loader2, AlertCircle
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { WeddingData, ThemeId, ThemeConfig } from '../../types/invitation';
-import { THEME_PRESETS, INITIAL_WEDDING_DATA } from '../../constants/themes';
+import { WeddingData, ThemeId, ThemeConfig, EventType } from '../../types/invitation';
+import { THEME_PRESETS, INITIAL_WEDDING_DATA, EVENT_CATEGORY_PRESETS, DEFAULT_EVENT_BLOCKS } from '../../constants/themes';
 import { BrandLogo } from '../common/BrandLogo';
 import { apiRegister, apiSaveWedding } from '../../utils/api';
 import { UserAccount, saveUser } from '../../utils/storage';
+import { getOccasionLabels, isSingleHonoreeEvent } from '../../utils/eventCustomization';
 
 interface OnboardingWizardModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ interface OnboardingWizardModalProps {
   isEtsyVIP?: boolean;
   etsyPlan?: 'pro' | 'lifetime';
   etsyVoucher?: string;
+  initialEventType?: EventType;
 }
 
 export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
@@ -29,8 +31,10 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   isEtsyVIP = false,
   etsyPlan = 'pro',
   etsyVoucher = 'ETSY-PRO-VIP',
+  initialEventType = 'wedding',
 }) => {
   const [step, setStep] = useState<number>(1);
+  const [eventType, setEventType] = useState<EventType>(initialEventType);
   
   // Wizard State
   const [partner1, setPartner1] = useState('');
@@ -53,28 +57,63 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       setStep(1);
       setErrorMessage(null);
       setIsSubmitting(false);
+      const targetType = initialEventType || 'wedding';
+      setEventType(targetType);
+      const preset = EVENT_CATEGORY_PRESETS[targetType];
+      if (preset && preset.defaultTheme) {
+        setThemeId(preset.defaultTheme);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, initialEventType]);
 
   if (!isOpen) return null;
 
   const currentTheme = THEME_PRESETS[themeId] || THEME_PRESETS['olive-burgundy'];
+  const occasionLabels = getOccasionLabels(eventType);
+  const singleHonoree = isSingleHonoreeEvent(eventType);
+
+  const handleSelectEventType = (type: EventType) => {
+    setEventType(type);
+    const preset = EVENT_CATEGORY_PRESETS[type];
+    if (preset && preset.defaultTheme) {
+      setThemeId(preset.defaultTheme);
+    }
+  };
 
   const autoGenerateInitials = (p1: string, p2: string) => {
-    const i1 = p1.trim() ? p1.trim()[0].toUpperCase() : '';
-    const i2 = p2.trim() ? p2.trim()[0].toUpperCase() : '';
+    const t1 = p1.trim();
+    const t2 = p2.trim();
+    if (eventType === 'baby_shower') {
+      const clean = t1.startsWith('Baby ') ? t1.replace('Baby ', '').trim() : t1;
+      return clean ? clean.charAt(0).toUpperCase() : 'B';
+    }
+    if (singleHonoree) {
+      return t1 ? t1.charAt(0).toUpperCase() : 'É';
+    }
+    const i1 = t1 ? t1[0].toUpperCase() : '';
+    const i2 = t2 ? t2[0].toUpperCase() : '';
     return i1 && i2 ? `${i1}&${i2}` : i1 || i2 || 'É';
   };
 
   const autoGenerateSlug = (p1: string, p2: string) => {
     const s1 = p1.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
     const s2 = p2.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-    return s1 && s2 ? `${s1}-${s2}` : s1 || s2 || 'our-wedding';
+    if (eventType === 'baby_shower') {
+      return s1 ? `${s1}-shower` : 'baby-shower';
+    }
+    if (eventType === 'kids_party') {
+      return s1 ? `${s1}-party` : 'kids-celebration';
+    }
+    if (singleHonoree) {
+      return s1 ? `${s1}-celebration` : 'celebration';
+    }
+    return s1 && s2 ? `${s1}-${s2}` : s1 || s2 || 'our-celebration';
   };
 
   const handleNextFromNames = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!partner1.trim() || !partner2.trim()) return;
+    if (!partner1.trim()) return;
+    if (!singleHonoree && !partner2.trim()) return;
     if (!initials) setInitials(autoGenerateInitials(partner1, partner2));
     if (!customSlug) setCustomSlug(autoGenerateSlug(partner1, partner2));
     setStep(2);
@@ -98,7 +137,13 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
     setErrorMessage(null);
 
     const coupleSlug = customSlug.toLowerCase().trim() || autoGenerateSlug(partner1, partner2);
-    const coupleName = `${partner1} & ${partner2}`;
+    const primaryName = partner1.trim();
+    const secondaryName = partner2.trim();
+    const coupleName = singleHonoree
+      ? (secondaryName ? `${primaryName} (${secondaryName})` : primaryName)
+      : `${primaryName} & ${secondaryName}`;
+
+    const preset = EVENT_CATEGORY_PRESETS[eventType] || EVENT_CATEGORY_PRESETS.wedding;
 
     try {
       // 1. Register user
@@ -132,14 +177,21 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       const finalWedding: WeddingData = {
         ...INITIAL_WEDDING_DATA,
         id: 'wed_' + Date.now(),
+        eventType,
         slug: coupleSlug,
-        coupleName1: partner1.trim() || 'Genevieve',
-        coupleName2: partner2.trim() || 'Marcus',
+        coupleName1: primaryName || (eventType === 'baby_shower' ? 'Baby Oliver' : 'Genevieve'),
+        coupleName2: secondaryName,
+        honoreeName: singleHonoree ? primaryName : undefined,
         coupleInitials: initials.trim() || autoGenerateInitials(partner1, partner2),
+        headline: preset.defaultHeadline,
+        subtitleIntro: preset.defaultSubtitle,
+        storyTitle: preset.defaultStoryTitle,
         weddingDate: weddingDate || '2027-06-18',
         venueName: venueName.trim() || 'Grand Estate Venue',
         cityState: cityState.trim() || 'Tuscany, Italy',
         themeId,
+        blocks: preset.defaultBlocks || DEFAULT_EVENT_BLOCKS[eventType] || DEFAULT_EVENT_BLOCKS.wedding,
+        giftRegistryUrl: eventType === 'baby_shower' ? 'https://www.babylist.com' : '',
       };
 
       // 2. Persist to storage & backend safely
@@ -199,7 +251,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
               />
             </div>
 
-            {/* STEP 1: COUPLE NAMES & MONOGRAM */}
+            {/* STEP 1: HONOREE NAMES & MONOGRAM */}
             {step === 1 && (
               <div className="space-y-5 animate-fadeIn">
                 <div>
@@ -210,19 +262,57 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                     Who is celebrating?
                   </h2>
                   <p className="text-xs text-stone-400 mt-1">
-                    Your names will be pressed onto your interactive 3D wax seal and stationery.
+                    Your details will be pressed onto your interactive 3D wax seal and stationery.
                   </p>
+                </div>
+
+                {/* Occasion Selection Pills */}
+                <div>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-stone-400 font-bold mb-2">
+                    Celebration Occasion
+                  </label>
+                  <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
+                    {[
+                      { id: 'wedding' as EventType, label: 'Wedding', icon: '💍' },
+                      { id: 'baby_shower' as EventType, label: 'Baby Shower', icon: '🍼' },
+                      { id: 'birthday' as EventType, label: 'Birthday', icon: '🎂' },
+                      { id: 'kids_party' as EventType, label: 'Kids Party', icon: '🧜‍♀️' },
+                      { id: 'anniversary' as EventType, label: 'Anniversary', icon: '🥂' },
+                      { id: 'gala' as EventType, label: 'Gala / Charity', icon: '🍸' },
+                      { id: 'engagement' as EventType, label: 'Engagement', icon: '💎' },
+                      { id: 'halloween' as EventType, label: 'Halloween', icon: '🎃' },
+                    ].map((occ) => {
+                      const isSelected = eventType === occ.id;
+                      return (
+                        <button
+                          key={occ.id}
+                          type="button"
+                          onClick={() => handleSelectEventType(occ.id)}
+                          className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer border ${
+                            isSelected
+                              ? 'bg-amber-400/20 border-amber-400 text-amber-300 shadow-sm font-semibold'
+                              : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200 hover:border-stone-700'
+                          }`}
+                        >
+                          <span>{occ.icon}</span>
+                          <span>{occ.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <form onSubmit={handleNextFromNames} className="space-y-4 text-xs font-sans">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-stone-300 font-medium mb-1">Partner 1 First Name *</label>
+                      <label className="block text-stone-300 font-medium mb-1">
+                        {occasionLabels.subjectLabel} *
+                      </label>
                       <input
                         type="text"
                         required
                         autoFocus
-                        placeholder="e.g. Scarlett"
+                        placeholder={occasionLabels.subjectPlaceholder}
                         value={partner1}
                         onChange={(e) => {
                           setPartner1(e.target.value);
@@ -232,11 +322,13 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                       />
                     </div>
                     <div>
-                      <label className="block text-stone-300 font-medium mb-1">Partner 2 First Name *</label>
+                      <label className="block text-stone-300 font-medium mb-1">
+                        {occasionLabels.secondaryLabel} {singleHonoree ? <span className="text-stone-500 font-normal">(Optional)</span> : '*'}
+                      </label>
                       <input
                         type="text"
-                        required
-                        placeholder="e.g. Julian"
+                        required={!singleHonoree}
+                        placeholder={occasionLabels.secondaryPlaceholder}
                         value={partner2}
                         onChange={(e) => {
                           setPartner2(e.target.value);
@@ -248,10 +340,10 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-stone-300 font-medium mb-1">Wax Seal Monogram Initials</label>
+                    <label className="block text-stone-300 font-medium mb-1">Wax Seal Monogram / Initial</label>
                     <input
                       type="text"
-                      placeholder="e.g. S&J"
+                      placeholder={singleHonoree ? 'e.g. O' : 'e.g. S&J'}
                       value={initials}
                       onChange={(e) => setInitials(e.target.value)}
                       className="w-full px-3.5 py-2.5 rounded-xl bg-stone-950 border border-stone-700 text-stone-100 text-xs focus:outline-none focus:border-amber-400 font-mono"
@@ -260,7 +352,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
                   <button
                     type="submit"
-                    disabled={!partner1.trim() || !partner2.trim()}
+                    disabled={!partner1.trim() || (!singleHonoree && !partner2.trim())}
                     className="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-500 hover:brightness-105 disabled:opacity-50 text-white font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-4"
                   >
                     <span>Continue to Theme Selection</span>
@@ -498,7 +590,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                       ) : (
                         <>
                           <Sparkles size={15} />
-                          <span>{isEtsyVIP ? 'Claim Pro Pass & Launch Builder →' : 'Launch My Free Wedding Suite'}</span>
+                          <span>{isEtsyVIP ? 'Claim Pro Pass & Launch Builder →' : `Launch My Free ${occasionLabels.pageTitle} Suite`}</span>
                           <ArrowRight size={14} />
                         </>
                       )}
@@ -554,12 +646,27 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
             </div>
 
             <p className="text-[9px] tracking-widest uppercase mb-1 font-mono font-bold" style={{ color: currentTheme.cardAccentColor || currentTheme.cardTextPrimary }}>
-              TOGETHER WITH THEIR FAMILIES
+              {singleHonoree 
+                ? (eventType === 'baby_shower' ? 'A SWEET LITTLE BLESSING' : 'YOU ARE CORDIALLY INVITED')
+                : 'TOGETHER WITH THEIR FAMILIES'}
             </p>
 
-            <h3 className="font-serif text-xl font-bold tracking-tight mb-2 leading-tight" style={{ color: currentTheme.cardTextPrimary }}>
-              {partner1 || 'Scarlett'} & {partner2 || 'Julian'}
-            </h3>
+            {singleHonoree ? (
+              <div className="mb-2">
+                <h3 className="font-serif text-xl font-bold tracking-tight leading-tight" style={{ color: currentTheme.cardTextPrimary }}>
+                  {partner1 || (eventType === 'baby_shower' ? 'Baby Oliver' : 'Special Guest')}
+                </h3>
+                {partner2 ? (
+                  <p className="text-[11px] font-serif italic mt-0.5 opacity-80" style={{ color: currentTheme.cardTextSecondary || currentTheme.cardTextPrimary }}>
+                    {eventType === 'baby_shower' ? `Parents: ${partner2}` : partner2}
+                  </p>
+                ) : null}
+              </div>
+            ) : (
+              <h3 className="font-serif text-xl font-bold tracking-tight mb-2 leading-tight" style={{ color: currentTheme.cardTextPrimary }}>
+                {partner1 || 'Scarlett'} & {partner2 || 'Julian'}
+              </h3>
+            )}
 
             <p className="text-[11px] mb-3 font-semibold" style={{ color: currentTheme.cardTextSecondary || currentTheme.cardTextPrimary }}>
               {weddingDate || 'June 18, 2027'} • {venueName || 'Villa Balbiano'}
