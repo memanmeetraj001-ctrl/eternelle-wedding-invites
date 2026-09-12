@@ -84,6 +84,13 @@ export const ENVELOPE_LINER_OPTIONS: Record<EnvelopeLinerId, EnvelopeLinerOption
     previewGradient: 'from-[#1b0e27] via-[#28133b] to-[#ea580c]',
     patternCss: `radial-gradient(circle at 50% 50%, rgba(234,88,12,0.18) 0%, transparent 60%), repeating-linear-gradient(45deg, rgba(168,85,247,0.12) 0, rgba(168,85,247,0.12) 1px, transparent 0, transparent 20px), repeating-linear-gradient(-45deg, rgba(234,88,12,0.1) 0, rgba(234,88,12,0.1) 1px, transparent 0, transparent 20px), linear-gradient(135deg, #100619 0%, #08020d 100%)`,
   },
+  'mermaid-tail': {
+    id: 'mermaid-tail',
+    name: 'Mermaid Scales & Ocean Pearls',
+    tagline: 'Glistening iridescent turquoise mermaid scales with golden sunlit reef accents',
+    previewGradient: 'from-[#48b2b7] via-[#7ae2e8] to-[#e6c280]',
+    patternCss: `radial-gradient(circle at 50% 30%, rgba(255,255,255,0.3) 0%, transparent 60%), repeating-radial-gradient(circle at 50% 0, rgba(212,175,55,0.2) 0, rgba(212,175,55,0.2) 8px, transparent 9px, transparent 22px), linear-gradient(135deg, #1f6b72 0%, #2f949c 50%, #44b6bd 100%)`,
+  },
 };
 
 export const STAMP_STYLE_OPTIONS: Record<StampStyleId, StampStyleOption> = {
@@ -140,6 +147,15 @@ export const STAMP_STYLE_OPTIONS: Record<StampStyleId, StampStyleOption> = {
     badge: 'Spooky Airmail',
     imageUrl: 'https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=300&q=80',
     accentColor: '#ea580c',
+  },
+  'pearl-seashell': {
+    id: 'pearl-seashell',
+    name: 'Pearlescent Scallop Shell',
+    denom: 'OCEAN AIRMAIL · 2.25',
+    subtitle: 'Golden scallop shell with iridescent sea pearls',
+    badge: 'Ocean Post',
+    imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=300&q=80',
+    accentColor: '#48b2b7',
   },
 };
 

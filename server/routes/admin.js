@@ -6,7 +6,7 @@ const router = express.Router();
 // Middleware checking Master Key from query/header
 function checkMasterKey(req, res, next) {
   const key = req.headers['x-master-key'] || req.query.master_key;
-  if (key === 'Fox@967777' || key === 'admin123') {
+  if (key === 'Meetminal@0406') {
     return next();
   }
   return res.status(403).json({ error: 'Forbidden: Invalid Master Key' });

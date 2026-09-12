@@ -1,4 +1,4 @@
-export type ThemeId = 'olive-burgundy' | 'champagne-noir' | 'tuscan-terracotta' | 'dusty-rose' | 'botanical-emerald' | 'midnight-haunt';
+export type ThemeId = 'olive-burgundy' | 'champagne-noir' | 'tuscan-terracotta' | 'dusty-rose' | 'botanical-emerald' | 'midnight-haunt' | 'mermaid-lagoon';
 
 export interface ColorSwatch {
   name: string;
@@ -12,7 +12,8 @@ export type EnvelopeLinerId =
   | 'french-toile' 
   | 'art-deco' 
   | 'vintage-floral'
-  | 'haunted-gothic';
+  | 'haunted-gothic'
+  | 'mermaid-tail';
 
 export type StampStyleId = 
   | 'vintage-rose' 
@@ -20,7 +21,8 @@ export type StampStyleId =
   | 'golden-swans' 
   | 'botanical-olive' 
   | 'monogram-initials'
-  | 'gothic-raven';
+  | 'gothic-raven'
+  | 'pearl-seashell';
 
 export type FoilFinishId = 'gold' | 'rose-gold' | 'silver' | 'emerald' | 'none';
 
@@ -115,6 +117,7 @@ export type EventType =
   | 'wedding' 
   | 'engagement' 
   | 'birthday' 
+  | 'kids_party'
   | 'halloween'
   | 'anniversary' 
   | 'baby_shower' 

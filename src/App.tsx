@@ -7,12 +7,13 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { WeddingData, RSVPRecord, ThemeId } from './types/invitation';
-import { INITIAL_WEDDING_DATA, INITIAL_RSVPS, THEME_PRESETS, SAMPLE_HALLOWEEN_PARTY_DATA } from './constants/themes';
+import { INITIAL_WEDDING_DATA, INITIAL_RSVPS, THEME_PRESETS, SAMPLE_HALLOWEEN_PARTY_DATA, SAMPLE_MERMAID_PARTY_DATA } from './constants/themes';
 import { GUMROAD_CONFIG } from './constants/gumroad';
 import { detectGumroadRedirect } from './utils/gumroadVerify';
 import { BrandLogo } from './components/common/BrandLogo';
 import { LandingPage } from './components/landing/LandingPage';
 import { HalloweenLandingPage } from './components/landing/HalloweenLandingPage';
+import { KidsPartyLandingPage } from './components/landing/KidsPartyLandingPage';
 import { MainDashboard } from './components/dashboard/MainDashboard';
 import { GuestInvitationView } from './components/guest/GuestInvitationView';
 import { RSVPModal } from './components/guest/RSVPModal';
@@ -46,7 +47,7 @@ import {
   apiSubmitRSVP
 } from './utils/api';
 
-export type AppViewMode = 'landing' | 'halloween' | 'dashboard' | 'guest' | 'admin';
+export type AppViewMode = 'landing' | 'halloween' | 'kids_party' | 'dashboard' | 'guest' | 'admin';
 
 export function App() {
   // Initialize storage seeds
@@ -69,6 +70,11 @@ export function App() {
     // Halloween Landing Page Route: /halloween or ?view=halloween or ?event=halloween
     if (path === '/halloween' || path.startsWith('/halloween') || search.includes('view=halloween') || search.includes('event=halloween')) {
       return { view: 'halloween' };
+    }
+
+    // Kids Party / Mermaid Pool Party Route: /kids-party, /mermaid, ?view=kids_party, ?event=kids_party
+    if (path === '/kids-party' || path.startsWith('/kids-party') || path === '/mermaid' || path.startsWith('/mermaid') || search.includes('view=kids_party') || search.includes('view=mermaid') || search.includes('event=kids_party') || search.includes('access=kids_party')) {
+      return { view: 'kids_party' };
     }
 
     // Guest Invite Slug Detection: /invite/:slug or /w/:slug or ?invite=:slug
@@ -776,6 +782,7 @@ export function App() {
             onOpenCheckout={handleOpenCheckout}
             onSelectTheme={(themeId) => handleUpdateWedding({ ...wedding, themeId })}
             onOpenHalloween={() => setViewMode('halloween')}
+            onOpenKidsParty={() => setViewMode('kids_party')}
             onOpenLegal={(doc) => setLegalModalDoc(doc)}
             onOpenCookieSettings={handleOpenCookieSettings}
           />
@@ -796,6 +803,29 @@ export function App() {
             }}
             onPreviewSample={() => {
               handleUpdateWedding(SAMPLE_HALLOWEEN_PARTY_DATA);
+              setViewMode('guest');
+            }}
+            onNavigateHome={() => setViewMode('landing')}
+            onOpenLegal={(doc) => setLegalModalDoc(doc)}
+            onOpenCookieSettings={handleOpenCookieSettings}
+          />
+        )}
+
+        {viewMode === 'kids_party' && (
+          <KidsPartyLandingPage
+            onStartCreating={(eventType) => {
+              handleUpdateWedding({
+                ...SAMPLE_MERMAID_PARTY_DATA,
+                id: wedding?.id || SAMPLE_MERMAID_PARTY_DATA.id,
+              });
+              if (user) {
+                setViewMode('dashboard');
+              } else {
+                setIsOnboardingOpen(true);
+              }
+            }}
+            onPreviewSample={() => {
+              handleUpdateWedding(SAMPLE_MERMAID_PARTY_DATA);
               setViewMode('guest');
             }}
             onNavigateHome={() => setViewMode('landing')}

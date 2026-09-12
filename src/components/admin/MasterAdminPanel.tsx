@@ -39,7 +39,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
 
   const refreshData = async () => {
     try {
-      const serverData = await apiGetAdminStats('Fox@967777');
+      const serverData = await apiGetAdminStats('Meetminal@0406');
       if (serverData?.analytics && serverData?.users) {
         setAnalytics(serverData.analytics);
         setUsers(serverData.users);
@@ -61,7 +61,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
   const handleVerifyPasskey = (e: React.FormEvent) => {
     e.preventDefault();
     // Valid secret master passkey
-    if (passkey.trim() === 'Fox@967777') {
+    if (passkey.trim() === 'Meetminal@0406') {
       setIsAuthenticated(true);
       sessionStorage.setItem('eternelle_admin_authenticated', 'true');
       setPasskeyError(false);
@@ -73,7 +73,7 @@ export const MasterAdminPanel: React.FC<MasterAdminPanelProps> = ({
 
   const handlePlanChange = async (userId: string, newPlan: 'free' | 'pro' | 'lifetime') => {
     updateUserPlan(userId, newPlan);
-    await apiUpdateUserPlan(userId, newPlan, 'Fox@967777');
+    await apiUpdateUserPlan(userId, newPlan, 'Meetminal@0406');
     await refreshData();
     setToastMessage(`Updated user plan to ${newPlan.toUpperCase()} successfully.`);
     setTimeout(() => setToastMessage(null), 3000);

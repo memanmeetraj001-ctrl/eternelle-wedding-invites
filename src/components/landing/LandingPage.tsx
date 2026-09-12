@@ -27,6 +27,7 @@ interface LandingPageProps {
   onOpenCheckout: (plan: 'pro' | 'lifetime') => void;
   onSelectTheme: (themeId: ThemeId) => void;
   onOpenHalloween?: () => void;
+  onOpenKidsParty?: () => void;
   onOpenLegal: (doc: LegalDocType) => void;
   onOpenCookieSettings?: () => void;
 }
@@ -40,6 +41,7 @@ export function LandingPage({
   onOpenCheckout,
   onSelectTheme,
   onOpenHalloween,
+  onOpenKidsParty,
   onOpenLegal,
   onOpenCookieSettings,
 }: LandingPageProps) {
@@ -345,6 +347,16 @@ export function LandingPage({
                 </div>
               </div>
             </div>
+
+            {activeEventPreset.type === 'kids_party' && onOpenKidsParty && (
+              <button
+                onClick={onOpenKidsParty}
+                className="w-full mb-2.5 py-3 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-amber-400 hover:brightness-105 text-stone-950 font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+              >
+                <span>🧜‍♀️</span>
+                <span>Launch Dedicated Splish Splash Pool Party Page →</span>
+              </button>
+            )}
 
             <button
               onClick={onOpenStudio}
@@ -1253,6 +1265,17 @@ export function LandingPage({
                   <button onClick={() => { setSelectedEventType('engagement'); scrollToSection('milestones'); }} className="hover:text-rose-700 transition-colors">
                     Engagement Soirées
                   </button>
+                </li>
+                <li>
+                  {onOpenKidsParty ? (
+                    <button onClick={onOpenKidsParty} className="hover:text-cyan-700 transition-colors font-medium text-cyan-950">
+                      🧜‍♀️ Kids Pool Party
+                    </button>
+                  ) : (
+                    <button onClick={() => { setSelectedEventType('kids_party'); scrollToSection('milestones'); }} className="hover:text-cyan-700 transition-colors font-medium text-cyan-950">
+                      🧜‍♀️ Kids Pool Party
+                    </button>
+                  )}
                 </li>
                 <li>
                   <button onClick={() => { setSelectedEventType('gala'); scrollToSection('milestones'); }} className="hover:text-rose-700 transition-colors">

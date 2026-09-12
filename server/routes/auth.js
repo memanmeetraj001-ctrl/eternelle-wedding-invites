@@ -86,7 +86,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Special auto-login for Master Admin Demo
-    if (cleanEmail === 'admin@eternelle.com' && (!userRecord || password === 'Fox@967777')) {
+    if (cleanEmail === 'admin@eternelle.com' && (!userRecord || password === 'Meetminal@0406')) {
       const adminUser = {
         id: 'usr_admin',
         name: 'Éternelle Master Admin',
@@ -104,7 +104,7 @@ router.post('/login', async (req, res) => {
     }
 
     const isMatch = await comparePassword(password || '', userRecord.password_hash || '');
-    if (!isMatch && password !== 'admin123') {
+    if (!isMatch) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 

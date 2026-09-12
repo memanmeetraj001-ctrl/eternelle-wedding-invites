@@ -118,7 +118,7 @@ export async function apiLogin(email: string, password?: string): Promise<AuthRe
     }
 
     if (res.error && !res.error.includes('Network error') && !res.error.includes('Failed to fetch') && !res.error.includes('static mode')) {
-      if (cleanEmail === 'admin@eternelle.com' && (password === 'Fox@967777' || password === 'admin123')) {
+      if (cleanEmail === 'admin@eternelle.com' && password === 'Meetminal@0406') {
         const adminUser: UserAccount = {
           id: 'usr_admin',
           name: 'Éternelle Master Admin',
@@ -217,7 +217,7 @@ export async function apiSubmitRSVP(weddingId: string, rsvp: Omit<RSVPRecord, 'i
 }
 
 // 4. Admin API
-export async function apiGetAdminStats(masterKey: string = 'Fox@967777') {
+export async function apiGetAdminStats(masterKey: string = 'Meetminal@0406') {
   const res = await request<{ analytics: PlatformAnalytics; users: UserAccount[] }>('/admin/stats', {
     headers: {
       'x-master-key': masterKey,
@@ -226,7 +226,7 @@ export async function apiGetAdminStats(masterKey: string = 'Fox@967777') {
   return res.data;
 }
 
-export async function apiUpdateUserPlan(userId: string, plan: string, masterKey: string = 'Fox@967777') {
+export async function apiUpdateUserPlan(userId: string, plan: string, masterKey: string = 'Meetminal@0406') {
   const res = await request<{ success: boolean; plan: string; licenseKey: string }>(`/admin/users/${userId}/plan`, {
     method: 'POST',
     headers: {

@@ -240,7 +240,12 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   const currentFoil = FOIL_FINISH_OPTIONS[stationery.foilFinish] || FOIL_FINISH_OPTIONS['gold'];
   
   const isHalloween = wedding.eventType === 'halloween' || theme.id === 'midnight-haunt';
-  const postmarkCity = stationery.postmarkCity || (isHalloween ? 'SALEM WITCH COVEN · CONDEMNED 1692' : (wedding.cityState ? wedding.cityState.split(',')[0].toUpperCase() : 'PARIS') + ' · AIRMAIL');
+  const isKidsParty = wedding.eventType === 'kids_party' || theme.id === 'mermaid-lagoon';
+  const postmarkCity = stationery.postmarkCity || (
+    isHalloween ? 'SALEM WITCH COVEN · CONDEMNED 1692' : 
+    isKidsParty ? 'CORAL BAY · POOL SUITE' : 
+    (wedding.cityState ? wedding.cityState.split(',')[0].toUpperCase() : 'PARIS') + ' · AIRMAIL'
+  );
 
   // Background Audio Setup
   useEffect(() => {
@@ -332,6 +337,8 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
         origin: { y: 0.6 },
         colors: isHalloween 
           ? ['#d4af37', '#991b1b', '#ea580c', '#17141f', '#f5e3ba', '#7e22ce']
+          : isKidsParty
+          ? ['#38bdf8', '#48b2b7', '#f472b6', '#fbbf24', '#ffffff', '#2dd4bf']
           : [theme.waxSealBg, currentFoil.sampleHex, '#10b981', '#fdf2f4', '#ffffff'],
         disableForReducedMotion: true,
       });
@@ -377,10 +384,19 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           0%, 100% { transform: translateY(0); opacity: 0.5; }
           50% { transform: translateY(4px); opacity: 1; }
         }
+        @keyframes floatBubbles {
+          0% { transform: translateY(120%) scale(0.6); opacity: 0; }
+          40% { opacity: 0.85; }
+          80% { opacity: 0.6; }
+          100% { transform: translateY(-130%) scale(1.15); opacity: 0; }
+        }
         .animate-float-notes { animation: floatMusicNotes 3.6s ease-in-out infinite; }
         .animate-float-arcs { animation: floatSoundArcs 3.2s ease-in-out infinite; }
         .animate-candle-glow { animation: candleGlowFlicker 2.4s ease-in-out infinite; }
         .animate-chevron-down { animation: pulseChevronDown 1.8s ease-in-out infinite; }
+        .animate-bubble-1 { animation: floatBubbles 5.5s ease-in-out infinite; }
+        .animate-bubble-2 { animation: floatBubbles 7s ease-in-out infinite 1.8s; }
+        .animate-bubble-3 { animation: floatBubbles 6s ease-in-out infinite 3.2s; }
       `}</style>
 
       {/* 1. Top Audio & Re-seal Bar */}
@@ -666,13 +682,13 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
           {/* Header Intro Text */}
           <div className="text-center mb-3 sm:mb-5 max-w-md md:max-w-xl h-16 sm:h-20 flex flex-col justify-center transition-opacity duration-500 px-2">
             <span className="text-[8px] sm:text-[10px] md:text-xs font-mono font-bold tracking-[0.25em] sm:tracking-[0.35em] uppercase block drop-shadow-md text-amber-300/90">
-              {wedding.subtitleIntro || 'TOGETHER WITH THEIR FAMILIES'}
+              {wedding.subtitleIntro || (isKidsParty ? 'DIVE INTO A MAGICAL CELEBRATION FOR' : 'TOGETHER WITH THEIR FAMILIES')}
             </span>
             <h1 className="font-script text-3xl sm:text-5xl md:text-6xl font-bold mt-0.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight tracking-wide text-amber-100">
               {wedding.coupleName1} {wedding.coupleName2 ? `& ${wedding.coupleName2}` : ''}
             </h1>
             <p className="text-[10px] sm:text-xs md:text-sm font-serif italic text-stone-300/90 tracking-wide mt-0.5">
-              Request the honour of your presence at their celebration
+              {isKidsParty ? 'A Magical Under-The-Sea Mermaid Celebration' : 'Request the honour of your presence at their celebration'}
             </p>
           </div>
 
@@ -784,7 +800,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                         border: `1px solid ${theme.waxSealBorder}`,
                       }}
                     >
-                      <span>Unfold Full Suite & RSVP</span>
+                      <span>{isKidsParty ? 'Dive In & RSVP' : 'Unfold Full Suite & RSVP'}</span>
                       <ArrowRight size={11} />
                     </button>
                   </div>
@@ -876,14 +892,29 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                     }}
                   >
                     <div className="text-center">
-                      <span className="text-base sm:text-lg block leading-none">🎀</span>
+                      <span className="text-base sm:text-lg block leading-none">{isKidsParty ? '🐚' : '🎀'}</span>
                       <span className="font-serif italic font-bold text-[8px] sm:text-[9px] block -mt-0.5 text-amber-200">
-                        {wedding.coupleInitials || 'É'}
+                        {wedding.coupleInitials || (isKidsParty ? 'MAYA' : 'É')}
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
+
+              {/* Floating Bubbles Effect for Kids Pool Party */}
+              {isKidsParty && (
+                <div className="absolute -inset-8 pointer-events-none overflow-hidden z-25">
+                  <div className="absolute bottom-2 left-6 w-7 h-7 rounded-full border border-teal-300/60 bg-teal-200/20 backdrop-blur-xs animate-bubble-1">
+                    <div className="w-2 h-2 rounded-full bg-white/70 absolute top-1 left-1.5" />
+                  </div>
+                  <div className="absolute bottom-4 right-10 w-11 h-11 rounded-full border border-cyan-300/50 bg-cyan-200/20 backdrop-blur-xs animate-bubble-2">
+                    <div className="w-3 h-3 rounded-full bg-white/70 absolute top-2 left-2" />
+                  </div>
+                  <div className="absolute bottom-0 left-1/3 w-9 h-9 rounded-full border border-sky-300/50 bg-sky-200/20 backdrop-blur-xs animate-bubble-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-white/70 absolute top-1.5 left-2" />
+                  </div>
+                </div>
+              )}
 
             </div>
           </div>
@@ -897,10 +928,10 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
               >
                 <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full backdrop-blur-md border text-xs font-sans font-bold tracking-widest uppercase shadow-xl transition-all group-hover:scale-105 bg-amber-500/20 hover:bg-amber-500/30 border-amber-400/50 text-amber-200 group-hover:shadow-amber-500/20">
                   <Sparkles size={14} className="text-amber-400" />
-                  <span>Tap to Untie Silk Ribbon</span>
+                  <span>{isKidsParty ? 'Tap to Open Mermaid Envelope' : 'Tap to Untie Silk Ribbon'}</span>
                 </div>
                 <p className="font-serif italic text-xs text-stone-300/80 font-medium mt-1.5">
-                  Unveil your couture wedding invitation
+                  {isKidsParty ? 'Unveil your magical under-the-sea invitation' : 'Unveil your couture wedding invitation'}
                 </p>
               </div>
             ) : isFullyOpen ? (
@@ -914,7 +945,7 @@ export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
                   }}
                 >
                   <Heart size={16} fill="currentColor" />
-                  <span>Explore Wedding Micro-Site & RSVP</span>
+                  <span>{isKidsParty ? 'Explore Celebration & RSVP' : 'Explore Wedding Micro-Site & RSVP'}</span>
                   <ArrowRight size={14} />
                 </button>
               </div>

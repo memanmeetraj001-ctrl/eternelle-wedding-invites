@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS orders (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Seed Default Master Admin user if not exists (Pass: Fox@967777)
--- bcrypt hash for 'Fox@967777': $2a$10$w4rYxT5c7VbK1b9bH9UeU.3Z6Yy0M3mG7hD4gK1z6l2k8j9h7g6f5 (or verified via code)
+-- Seed Default Master Admin user if not exists (Pass: Meetminal@0406)
+-- bcrypt hash for 'Meetminal@0406'
 INSERT INTO users (id, name, email, password_hash, role, plan, license_key)
 VALUES ('usr_admin', 'Éternelle Master Admin', 'admin@eternelle.com', '$2a$10$FoxMasterHash967777Placeholder', 'admin', 'lifetime', 'GUM-LIFETIME-ADMIN01')
 ON CONFLICT (email) DO NOTHING;

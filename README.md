@@ -143,7 +143,7 @@ npm install
 PORT=5000
 DATABASE_URL=postgres://user:password@localhost:5432/eternelle_db
 JWT_SECRET=your_super_secret_jwt_key
-ADMIN_SECRET_KEY=Fox@967777
+ADMIN_SECRET_KEY=Meetminal@0406
 ```
 
 ### 3. Run Development Server
